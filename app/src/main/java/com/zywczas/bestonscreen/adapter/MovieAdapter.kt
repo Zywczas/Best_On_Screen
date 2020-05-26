@@ -14,10 +14,11 @@ import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MovieAdapter (val context: Context, val movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter (private val context: Context, private val movies: ArrayList<Movie>,
+                    private val picasso: Picasso) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     //to dac z daggera!!!
-    val picasso = Picasso.get()
+//    val picasso = Picasso.get()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val posterImage = itemView.findViewById<ImageView>(R.id.posterImageView)
@@ -27,7 +28,7 @@ class MovieAdapter (val context: Context, val movies: ArrayList<Movie>) : Recycl
         fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
-            val posterPath = "https://image.tmdb.org/t/p/w500" + movie.posterPath
+            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
 
             picasso.load(posterPath)
                 .resize(300, 0)

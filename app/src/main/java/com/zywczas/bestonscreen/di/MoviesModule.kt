@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.di
 
 import androidx.lifecycle.MutableLiveData
+import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.TMDBService
 import com.zywczas.bestonscreen.utilities.BASE_URL
@@ -35,4 +36,7 @@ class MoviesModule {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(TMDBService::class.java)
+
+    @Provides //sprawdzic czy moze byc singleton
+    fun providePicasso() : Picasso = Picasso.get()
 }

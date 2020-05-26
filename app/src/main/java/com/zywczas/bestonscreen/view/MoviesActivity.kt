@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
@@ -16,6 +17,7 @@ import com.zywczas.bestonscreen.viewModel.MoviesViewModel
 import com.zywczas.bestonscreen.viewModel.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
+import kotlinx.android.synthetic.main.nav_movies.*
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
@@ -23,6 +25,7 @@ class MoviesActivity : AppCompatActivity() {
     @Inject lateinit var factory: MoviesViewModelFactory
     lateinit var moviesViewModel : MoviesViewModel
     lateinit var movieAdapter: MovieAdapter
+    @Inject lateinit var picasso: Picasso
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +41,27 @@ class MoviesActivity : AppCompatActivity() {
         moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
 
         setupAdapter()
+        setupTags()
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, moviesViewModel.movies)
+        movieAdapter = MovieAdapter(this, moviesViewModel.movies, picasso)
         moviesRecyclerView.adapter = movieAdapter
         //dac to do daggera
         val layoutManager = GridLayoutManager(this, 2)
         moviesRecyclerView.layoutManager = layoutManager
+    }
+
+    //tags used to choose category of movie and passed to Repository
+    private fun setupTags() {
+        upcomingTextView.tag = MovieCategory.UPCOMING
+        topRatedTextView.tag = MovieCategory.TOP_RATED
+        popularTextView.tag = MovieCategory.POPULAR
+    }
+
+    fun movieCategoryClicked(view : View) {
+        closeDrawer()
+        getMovies(view.tag as MovieCategory)
     }
 
     private fun getMovies(movieCategory: MovieCategory){
@@ -58,23 +74,6 @@ class MoviesActivity : AppCompatActivity() {
                 }
             })
     }
-
-    fun popularTextViewClicked(view : View) {
-        closeDrawer()
-        getMovies(MovieCategory.POPULAR)
-    }
-
-    fun upcomingTextViewClicked(view: View) {
-        closeDrawer()
-        getMovies(MovieCategory.UPCOMING)
-    }
-
-    fun topRatedTextViewClicked(view: View) {
-        closeDrawer()
-//        view.tag sprawdzic jak by to bylo z tagami
-        getMovies(MovieCategory.TOP_RATED)
-    }
-
 
     override fun onDestroy() {
         moviesViewModel.clear()

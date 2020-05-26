@@ -28,34 +28,34 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="upcomingTextViewClicked"
+        android:onClick="movieCategoryClicked"
         android:text="Upcoming"
         android:textColor="@android:color/holo_purple"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView6"
+        app:layout_constraintBottom_toTopOf="@+id/popularTextView"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/popularTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="popularTextViewClicked"
+        android:onClick="movieCategoryClicked"
         android:text="Popular"
         android:textColor="@android:color/holo_blue_light"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintBottom_toTopOf="@+id/topRatedTextView"
         app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
         app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/topRatedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -63,12 +63,12 @@
         android:text="Top Rated"
         android:textSize="18sp"
         android:textColor="@android:color/holo_orange_dark"
-        android:onClick="topRatedTextViewClicked"
+        android:onClick="movieCategoryClicked"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
+        app:layout_constraintEnd_toEndOf="@+id/popularTextView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintStart_toStartOf="@+id/popularTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
 
     <TextView
         android:id="@+id/textView8"
@@ -79,9 +79,9 @@
         android:text="Crap"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
+        app:layout_constraintEnd_toEndOf="@+id/topRatedTextView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintStart_toStartOf="@+id/topRatedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/topRatedTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
