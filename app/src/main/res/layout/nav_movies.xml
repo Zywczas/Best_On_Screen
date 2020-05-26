@@ -14,7 +14,8 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
         android:text="Choose category"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,12 +23,15 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/upcomingTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="New releases"
+        android:onClick="upcomingTextViewClicked"
+        android:text="Upcoming"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/textView6"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
         app:layout_constraintHorizontal_bias="0.5"
@@ -43,11 +47,12 @@
         android:onClick="popularTextViewClicked"
         android:text="Popular"
         android:textColor="@android:color/holo_blue_light"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/textView7"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
 
     <TextView
         android:id="@+id/textView7"
@@ -55,7 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Above score 7.0"
+        android:text="Top Rated"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_orange_dark"
+        android:onClick="topRatedTextViewClicked"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintHorizontal_bias="0.5"
@@ -69,6 +77,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="Crap"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
         app:layout_constraintHorizontal_bias="0.5"

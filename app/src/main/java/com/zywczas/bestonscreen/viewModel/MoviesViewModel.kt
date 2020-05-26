@@ -1,20 +1,28 @@
 package com.zywczas.bestonscreen.viewModel
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.MovieCategory
 import com.zywczas.bestonscreen.model.Repository
+import java.util.ArrayList
 import javax.inject.Inject
 
 
-class MoviesViewModel @Inject constructor (private val repo: Repository) : ViewModel() {
+class MoviesViewModel @Inject constructor (
+    private val repo: Repository,
+    //list for activity
+    //sprawdzic czy mozna zamienic na kotlin.collections
+    val movies: ArrayList<Movie>
+) : ViewModel() {
 
-    val movies = ArrayList<Movie>()
+
 
     fun clear() = repo.clear()
 
-    fun getPopularMovies(context: Context) = repo.getPopularMoviesLiveData(context) as LiveData<List<Movie>>
+    fun getMoviesLiveData(context: Context, movieCategory: MovieCategory) =
+        repo.getMoviesLiveData(context, movieCategory) as LiveData<List<Movie>>
+
 
 }

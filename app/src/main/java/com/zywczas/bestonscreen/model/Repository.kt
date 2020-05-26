@@ -5,14 +5,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.utilities.API_KEY
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,36 +21,27 @@ class Repository @Inject constructor(
     private val moviesLiveData: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService) {
 
-//    companion object {
-//        @Volatile private var instance: Repository? = null
-//
-//        fun getInstance(compositeDisposable: CompositeDisposable) = instance ?: synchronized(this) {
-//            instance ?: Repository(compositeDisposable).also { instance = it }
-//        }
-//    }
+    lateinit var moviesObservable: Observable<MovieApiResponse>
 
-//    var moviesLiveData = MutableLiveData<List<Movie>>()
-//    val compositeDisposable = CompositeDisposable()
-//    val movies = ArrayList<Movie>()
+    fun clear() = compositeDisposable.clear()
 
+    fun getMoviesLiveData (context: Context, movieCategory: MovieCategory) : MutableLiveData<List<Movie>> {
+        movies.clear()
 
-    //trzeba wziac obiekt retrofit stad i wrzucic w daggera, albo caly service
-//    val tmdbService = Retrofit.Builder()
-//            .baseUrl("https://api.themoviedb.org/3/")
-//            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//            .create(TMDBService::class.java)
+        when (movieCategory) {
+            MovieCategory.POPULAR -> {moviesObservable = tmdbService.getPopularMovies(API_KEY)}
+            MovieCategory.TOP_RATED -> {moviesObservable = tmdbService.getTopRatedMovies(API_KEY)}
+            MovieCategory.UPCOMING -> {moviesObservable = tmdbService.getUpcomingMovies(API_KEY)}
+        }
 
-    fun getPopularMoviesLiveData (context: Context) : MutableLiveData<List<Movie>> {
-        val tmdbObservable = tmdbService.getPopularMovies(API_KEY)
-        compositeDisposable.add( tmdbObservable
+        compositeDisposable.add( moviesObservable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { moviesApiResponse -> Observable.fromArray(*moviesApiResponse.results!!.toTypedArray()) }
+            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
             .subscribeWith(object : DisposableObserver<Movie>(){
                 override fun onComplete() {
                     moviesLiveData.postValue(movies)
+                    Toast.makeText(context, "Coming soon", Toast.LENGTH_LONG).show()
                 }
                 override fun onNext(m: Movie?) {
                     if (m != null) {
@@ -69,6 +57,36 @@ class Repository @Inject constructor(
         return moviesLiveData
     }
 
-    fun clear() = compositeDisposable.clear()
+//    fun getUpcomingMoviesLiveData (context: Context) : MutableLiveData<List<Movie>> {
+//        val upcomingMoviesObservable = tmdbService.getUpcomingMovies(API_KEY)
+//        movies.clear()
+//
+//        compositeDisposable.add(
+//            upcomingMoviesObservable.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
+//                .subscribeWith(object : DisposableObserver<Movie>() {
+//                    override fun onComplete() {
+//                        moviesLiveData.postValue(movies)
+//
+//                    }
+//
+//                    override fun onNext(m: Movie?) {
+//                        if (m != null) {
+//                            movies.add(m)
+//                        }
+//                    }
+//
+//                    override fun onError(e: Throwable?) {
+//                        Toast.makeText(context, "Problem with downloading movies", Toast.LENGTH_LONG).show()
+//                        Log.d("ERROR", "${e?.localizedMessage}")
+//                    }
+//
+//                })
+//        )
+//        return moviesLiveData
+//    }
+
+
 
 }

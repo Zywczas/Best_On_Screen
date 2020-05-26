@@ -21,5 +21,5 @@ class MovieApiResponse {
 
     @SerializedName("results")
     @Expose
-    var results: List<Movie>? = null
+    var movies: List<Movie>? = null
 }

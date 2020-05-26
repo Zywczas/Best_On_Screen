@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
-import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.MovieCategory
 import com.zywczas.bestonscreen.viewModel.MoviesViewModel
 import com.zywczas.bestonscreen.viewModel.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.activity_movies.*
@@ -37,6 +37,10 @@ class MoviesActivity : AppCompatActivity() {
 
         moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
 
+        setupAdapter()
+    }
+
+    private fun setupAdapter() {
         movieAdapter = MovieAdapter(this, moviesViewModel.movies)
         moviesRecyclerView.adapter = movieAdapter
         //dac to do daggera
@@ -44,22 +48,33 @@ class MoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    fun popularTextViewClicked(view : View) {
-        closeDrawer()
-        getPopularMovies()
-    }
-
-    private fun getPopularMovies(){
-        moviesViewModel.getPopularMovies(this).observe(this,
-            Observer<List<Movie>> { m ->
-                if (m != null) {
+    private fun getMovies(movieCategory: MovieCategory){
+        moviesViewModel.getMoviesLiveData(this, movieCategory).observe(this,
+            Observer { movies ->
+                if (movies != null) {
                     moviesViewModel.movies.clear()
-                    moviesViewModel.movies.addAll(m)
+                    moviesViewModel.movies.addAll(movies)
                     movieAdapter.notifyDataSetChanged()
                 }
             })
-
     }
+
+    fun popularTextViewClicked(view : View) {
+        closeDrawer()
+        getMovies(MovieCategory.POPULAR)
+    }
+
+    fun upcomingTextViewClicked(view: View) {
+        closeDrawer()
+        getMovies(MovieCategory.UPCOMING)
+    }
+
+    fun topRatedTextViewClicked(view: View) {
+        closeDrawer()
+//        view.tag sprawdzic jak by to bylo z tagami
+        getMovies(MovieCategory.TOP_RATED)
+    }
+
 
     override fun onDestroy() {
         moviesViewModel.clear()
@@ -71,7 +86,7 @@ class MoviesActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    fun closeDrawer() {
+    private fun closeDrawer() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
         }

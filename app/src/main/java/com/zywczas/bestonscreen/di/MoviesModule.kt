@@ -19,12 +19,12 @@ class MoviesModule {
     @Provides @Singleton
     fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
 
-
-    @Provides @Singleton
+    //sprawdzic czy mozna zamienin na collection
+    @Provides
     fun provideArrayListOfMovies () : ArrayList<Movie> = ArrayList<Movie>()
 
 
-    @Provides @Singleton
+    @Provides //sprawdzic czy moze byc singeton - czy zmieniaja sie wyswietlane filmy
     fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<Movie>> =
        MutableLiveData<List<Movie>>()
 

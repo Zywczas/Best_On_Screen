@@ -25,7 +25,7 @@ class MovieAdapter (val context: Context, val movies: ArrayList<Movie>) : Recycl
         val rate = itemView.findViewById<TextView>(R.id.rateTextView)
 
         fun bindMovie (context: Context, movie: Movie) {
-            title.text = movie.originalTitle
+            title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
             val posterPath = "https://image.tmdb.org/t/p/w500" + movie.posterPath
 
