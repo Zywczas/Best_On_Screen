@@ -14,30 +14,36 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
+class Repository @Inject constructor(
+    private val compositeDisposable: CompositeDisposable,
+    private val movies: ArrayList<Movie>,
+    private val moviesLiveData: MutableLiveData<List<Movie>>,
+    private val tmdbService: TMDBService) {
 
-class Repository private constructor() {
+//    companion object {
+//        @Volatile private var instance: Repository? = null
+//
+//        fun getInstance(compositeDisposable: CompositeDisposable) = instance ?: synchronized(this) {
+//            instance ?: Repository(compositeDisposable).also { instance = it }
+//        }
+//    }
 
-    companion object {
-        @Volatile private var instance: Repository? = null
-
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: Repository().also { instance = it }
-        }
-    }
-
-    var moviesLiveData = MutableLiveData<List<Movie>>()
-    val compositeDisposable = CompositeDisposable()
-    val movies = ArrayList<Movie>()
+//    var moviesLiveData = MutableLiveData<List<Movie>>()
+//    val compositeDisposable = CompositeDisposable()
+//    val movies = ArrayList<Movie>()
 
 
     //trzeba wziac obiekt retrofit stad i wrzucic w daggera, albo caly service
-    val tmdbService = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(TMDBService::class.java)
+//    val tmdbService = Retrofit.Builder()
+//            .baseUrl("https://api.themoviedb.org/3/")
+//            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(TMDBService::class.java)
 
     fun getPopularMoviesLiveData (context: Context) : MutableLiveData<List<Movie>> {
         val tmdbObservable = tmdbService.getPopularMovies(API_KEY)

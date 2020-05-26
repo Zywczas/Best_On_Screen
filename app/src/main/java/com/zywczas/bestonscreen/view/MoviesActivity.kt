@@ -2,24 +2,25 @@ package com.zywczas.bestonscreen.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.GridLayoutManager
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
+import com.zywczas.bestonscreen.di.App
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.InjectorUtils
 import com.zywczas.bestonscreen.viewModel.MoviesViewModel
+import com.zywczas.bestonscreen.viewModel.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
+import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
 
+    @Inject lateinit var factory: MoviesViewModelFactory
     lateinit var moviesViewModel : MoviesViewModel
     lateinit var movieAdapter: MovieAdapter
 
@@ -27,12 +28,13 @@ class MoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
+        App.moviesComponent.inject(this)
+
         //setting up drawer layout and toggle button
         val toggleMovies = ActionBarDrawerToggle(this, drawer_layout_movies, moviesToolbar, R.string.nav_drawer_open, R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        val factory = InjectorUtils.provideMoviesViewModelFactory()
         moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
 
         movieAdapter = MovieAdapter(this, moviesViewModel.movies)
