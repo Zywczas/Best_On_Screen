@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.zywczas.bestonscreen.utilities.API_KEY
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -18,11 +17,12 @@ class Repository @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val moviesLiveData: MutableLiveData<List<Movie>>,
-    private val tmdbService: TMDBService,
-    private val movieDetailsLiveData: MutableLiveData<Movie>) {
+    private val tmdbService: TMDBService
+//    ,    private val movieDetailsLiveData: MutableLiveData<Movie>
+) {
 
     private lateinit var moviesObservable: Observable<MovieApiResponse>
-    private lateinit var movieDetailsObservable: Observable<Movie>
+//    private lateinit var movieDetailsObservable: Observable<Movie>
 
     fun clear() = compositeDisposable.clear()
 
@@ -39,6 +39,8 @@ class Repository @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
+            .map { movie -> movie.genreIds?.let { movie.convertGenres(it) }                         //converting genres 'IDs' to names (e.g. Family movie)
+                movie}
             .subscribeWith(object : DisposableObserver<Movie>(){
                 override fun onComplete() {
                     moviesLiveData.postValue(movies)

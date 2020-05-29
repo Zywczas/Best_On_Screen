@@ -2,4 +2,6 @@
     <string name="app_name">Best On Screen</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_closed">Close navigation drawer</string>
+    <string name="genres">Genres: </string>
+    <string name="movie_rate">Rate: </string>
 </resources>

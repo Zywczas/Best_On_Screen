@@ -1,5 +1,8 @@
 package com.zywczas.bestonscreen.model
 
+import android.os.Parcel
+import android.os.Parcelable
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -8,7 +11,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 //model class for API and database
 @Entity (tableName = "movies")
-class Movie {
+class Movie() : Parcelable {
 
     @PrimaryKey (autoGenerate = true)
     @ColumnInfo (name = "id")
@@ -81,23 +84,34 @@ class Movie {
     @Expose
     var releaseDate: String? = null
 
-    @SerializedName("revenue")
-    @Expose
-    var revenue: Int? = null
-
+    @ColumnInfo(name = "genre1")
     var genre1: String? = null
+
+    @ColumnInfo(name = "genre2")
     var genre2: String? = null
+
+    @ColumnInfo(name = "genre3")
     var genre3: String? = null
+
+    @ColumnInfo(name = "genre4")
     var genre4: String? = null
+
+    @ColumnInfo(name = "genre5")
     var genre5: String? = null
 
-    //this converter is required as API gives just 'ids' of genres instead of names
-    //I could download names of genres using TMDBService fun getMovieDetails() but it is unnecessary for now
-    //as I don't need any more details for now
+    @ColumnInfo(name = "genres_amount")
+    var genresAmount: Int = 0
+
+    /**
+    this converter is required as API gives just 'ids' of genres instead of names,
+    I could download names of genres using TMDBService fun getMovieDetails() but it is unnecessary for now
+    as I don't need any more data from getMovieDetails(),
+    this function is used in Repository class
+     */
     fun convertGenres(genreIds: List<Int>){
-        lateinit var genre: String
+        lateinit var genreTemp: String
         loop@ for (id in genreIds) {
-            genre = when (id) {
+            genreTemp = when (id) {
                 28 -> "Action"
                 12 -> "Adventure"
                 16 -> "Animation"
@@ -117,21 +131,79 @@ class Movie {
                 53 -> "Thriller"
                 10752 -> "War"
                 37 -> "Western"
-                else -> continue@loop
+                else -> { Log.d("error", "problem with genre converter")
+                    continue@loop
+                }
             }
-            if (genre1 == null) {
-                genre1 = genre
-            } else if (genre2 == null) {
-                genre2 = genre
-            } else if (genre3 == null) {
-                genre3 = genre
-            } else if (genre4 == null) {
-                genre4 = genre
-            } else if (genre5 == null) {
-                genre5 = genre
-                break@loop
+            when (genresAmount) {
+                0 -> {genre1 = genreTemp; genresAmount = 1}
+                1 -> {genre2 = genreTemp; genresAmount = 2}
+                2 -> {genre3 = genreTemp; genresAmount = 3}
+                3 -> {genre4 = genreTemp; genresAmount = 4}
+                4 -> {genre5 = genreTemp; genresAmount = 5; break@loop}
+                else -> { Log.d("error", "problem with genre converter")
+                    break@loop}
             }
         }
 
+    }
+
+    @Ignore
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readValue(Int::class.java.classLoader) as? Int
+        popularity = parcel.readValue(Double::class.java.classLoader) as? Double
+        voteCount = parcel.readValue(Int::class.java.classLoader) as? Int
+        video = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        posterPath = parcel.readString()
+        adult = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        backdropPath = parcel.readString()
+        originalLanguage = parcel.readString()
+        originalTitle = parcel.readString()
+        title = parcel.readString()
+        voteAverage = parcel.readValue(Double::class.java.classLoader) as? Double
+        overview = parcel.readString()
+        releaseDate = parcel.readString()
+        genre1 = parcel.readString()
+        genre2 = parcel.readString()
+        genre3 = parcel.readString()
+        genre4 = parcel.readString()
+        genre5 = parcel.readString()
+        genresAmount = parcel.readValue(Int::class.java.classLoader) as Int
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeValue(id)
+        parcel.writeValue(popularity)
+        parcel.writeValue(voteCount)
+        parcel.writeValue(video)
+        parcel.writeString(posterPath)
+        parcel.writeValue(adult)
+        parcel.writeString(backdropPath)
+        parcel.writeString(originalLanguage)
+        parcel.writeString(originalTitle)
+        parcel.writeString(title)
+        parcel.writeValue(voteAverage)
+        parcel.writeString(overview)
+        parcel.writeString(releaseDate)
+        parcel.writeString(genre1)
+        parcel.writeString(genre2)
+        parcel.writeString(genre3)
+        parcel.writeString(genre4)
+        parcel.writeString(genre5)
+        parcel.writeValue(genresAmount)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Movie> {
+        override fun createFromParcel(parcel: Parcel): Movie {
+            return Movie(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Movie?> {
+            return arrayOfNulls(size)
+        }
     }
 }

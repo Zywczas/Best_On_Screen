@@ -14,7 +14,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MovieAdapter (private val context: Context, private val movies: ArrayList<Movie>,
-                    private val picasso: Picasso) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+                    private val picasso: Picasso, private val itemClick: (Movie) -> Unit)
+    : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val posterImage = itemView.findViewById<ImageView>(R.id.posterImageViewMovies)
@@ -24,12 +25,14 @@ class MovieAdapter (private val context: Context, private val movies: ArrayList<
         fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
-            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+            val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
 
             picasso.load(posterPath)
-                .resize(300, 0)
+                .resize(200, 0)
                 .error(R.drawable.error_image)
                 .into(posterImage)
+
+            itemView.setOnClickListener { itemClick(movie) }
         }
     }
 

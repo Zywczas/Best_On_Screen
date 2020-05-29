@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MoviesVM
 import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
@@ -45,7 +47,11 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, moviesVM.movies, picasso)
+        movieAdapter = MovieAdapter(this, moviesVM.movies, picasso) {movie ->
+            val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
+            movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
+            startActivity(movieDetailsActivity)
+        }
         moviesRecyclerView.adapter = movieAdapter
         val layoutManager = GridLayoutManager(this, 2)
         moviesRecyclerView.layoutManager = layoutManager
