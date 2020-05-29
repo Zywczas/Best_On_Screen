@@ -10,20 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
-import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MovieAdapter (private val context: Context, private val movies: ArrayList<Movie>,
                     private val picasso: Picasso) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
-    //to dac z daggera!!!
-//    val picasso = Picasso.get()
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val posterImage = itemView.findViewById<ImageView>(R.id.posterImageView)
-        val title = itemView.findViewById<TextView>(R.id.titleTextView)
-        val rate = itemView.findViewById<TextView>(R.id.rateTextView)
+        val posterImage = itemView.findViewById<ImageView>(R.id.posterImageViewMovies)
+        val title = itemView.findViewById<TextView>(R.id.titleTextViewMovies)
+        val rate = itemView.findViewById<TextView>(R.id.rateTextViewMovies)
 
         fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title

@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
-import com.zywczas.bestonscreen.model.MovieCategory
-import com.zywczas.bestonscreen.viewModel.MoviesViewModel
-import com.zywczas.bestonscreen.viewModel.MoviesViewModelFactory
+import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.viewModel.MoviesVM
+import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
 
-    @Inject lateinit var factory: MoviesViewModelFactory
-    lateinit var moviesViewModel : MoviesViewModel
+    @Inject lateinit var factory: MoviesVMFactory
+    lateinit var moviesVM : MoviesVM
     lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
 
@@ -38,45 +38,44 @@ class MoviesActivity : AppCompatActivity() {
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
+        moviesVM = ViewModelProvider(this, factory).get(MoviesVM::class.java)
 
         setupAdapter()
         setupTags()
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, moviesViewModel.movies, picasso)
+        movieAdapter = MovieAdapter(this, moviesVM.movies, picasso)
         moviesRecyclerView.adapter = movieAdapter
-        //dac to do daggera
         val layoutManager = GridLayoutManager(this, 2)
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    //tags used to choose category of movie and passed to Repository
+    //tags used to choose category of movie and to be passed to Repository
     private fun setupTags() {
-        upcomingTextView.tag = MovieCategory.UPCOMING
-        topRatedTextView.tag = MovieCategory.TOP_RATED
-        popularTextView.tag = MovieCategory.POPULAR
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
-    fun movieCategoryClicked(view : View) {
+    fun categoryClicked(view : View) {
         closeDrawer()
-        getMovies(view.tag as MovieCategory)
+        getMovies(view.tag as Category)
     }
 
-    private fun getMovies(movieCategory: MovieCategory){
-        moviesViewModel.getMoviesLiveData(this, movieCategory).observe(this,
+    private fun getMovies(category: Category){
+        moviesVM.getMoviesLiveData(this, category).observe(this,
             Observer { movies ->
                 if (movies != null) {
-                    moviesViewModel.movies.clear()
-                    moviesViewModel.movies.addAll(movies)
+                    moviesVM.movies.clear()
+                    moviesVM.movies.addAll(movies)
                     movieAdapter.notifyDataSetChanged()
                 }
             })
     }
 
     override fun onDestroy() {
-        moviesViewModel.clear()
+        moviesVM.clear()
         super.onDestroy()
     }
 

@@ -7,11 +7,11 @@ import com.zywczas.bestonscreen.model.Repository
 import javax.inject.Inject
 
 
-class MoviesViewModelFactory @Inject constructor (private val repo: Repository, private val arrayList: ArrayList<Movie>)
+class MoviesVMFactory @Inject constructor (private val repo: Repository, private val arrayList: ArrayList<Movie>)
     : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MoviesViewModel(repo, arrayList) as T
+        return MoviesVM(repo, arrayList) as T
     }
 }

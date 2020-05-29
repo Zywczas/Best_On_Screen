@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/posterImageView"
+        android:id="@+id/posterImageViewMovies"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -21,27 +21,37 @@
         app:srcCompat="@drawable/poster_example" />
 
     <TextView
-        android:id="@+id/rateTextView"
+        android:id="@+id/rateTextViewMovies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="7.7"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/posterImageView"
-        app:layout_constraintTop_toBottomOf="@+id/posterImageView" />
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/posterImageViewMovies"
+        tools:text="7.7" />
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/titleTextViewMovies"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="movie title"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/posterImageView"
-        app:layout_constraintStart_toEndOf="@+id/rateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/posterImageView" />
+        app:layout_constraintEnd_toEndOf="@+id/posterImageViewMovies"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rateTextViewMovies"
+        tools:text="movie title" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rateTextViewMovies"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rateTextViewMovies"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
 </androidx.constraintlayout.widget.ConstraintLayout>

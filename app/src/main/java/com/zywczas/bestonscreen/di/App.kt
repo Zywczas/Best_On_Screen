@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
+import androidx.lifecycle.ViewModelStoreOwner
 
 class App : Application() {
 
