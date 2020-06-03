@@ -1,13 +1,12 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.model.webservice
 
 import com.zywczas.bestonscreen.utilities.API_KEY
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
 
-//interface for contacting with https://www.themoviedb.org/
+/**Interface for contacting with https://www.themoviedb.org/
+ *
+ */
 interface TMDBService {
 
     @GET("movie/popular?api_key=$API_KEY")
@@ -21,5 +20,5 @@ interface TMDBService {
 
     //this method is unnecessary for now
 //    @GET("movie/{movie_id}?api_key=$API_KEY")
-//    fun getMovieDetails(@Path ("movie_id") movieId : Int) : Observable<Movie>
+//    fun getMovieDetails(@Path ("movie_id") movieId : Int) : Observable<MovieFromApi>
 }

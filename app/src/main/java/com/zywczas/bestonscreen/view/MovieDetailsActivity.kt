@@ -2,13 +2,12 @@ package com.zywczas.bestonscreen.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.di.App
-import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVM
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVMFactory
@@ -33,7 +32,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupDetails() {
-        val movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+        val movie = intent.getParcelableExtra<MovieFromApi>(EXTRA_MOVIE)
         if (movie != null) {
             val posterPath = "https://image.tmdb.org/t/p/w500" + movie.posterPath
 

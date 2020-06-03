@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.model.webservice.MovieApiResponse
+import com.zywczas.bestonscreen.model.webservice.TMDBService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -13,20 +16,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Repository @Inject constructor(
+class MovieRepository @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
-    private val movies: ArrayList<Movie>,
-    private val moviesLiveData: MutableLiveData<List<Movie>>,
+    private val movies: ArrayList<MovieFromApi>,
+    private val moviesLiveData: MutableLiveData<List<MovieFromApi>>,
     private val tmdbService: TMDBService
-//    ,    private val movieDetailsLiveData: MutableLiveData<Movie>
+//    ,    private val movieDetailsLiveData: MutableLiveData<MovieFromApi>
 ) {
 
     private lateinit var moviesObservable: Observable<MovieApiResponse>
-//    private lateinit var movieDetailsObservable: Observable<Movie>
+//    private lateinit var movieDetailsObservable: Observable<MovieFromApi>
 
     fun clear() = compositeDisposable.clear()
 
-    fun getMoviesLiveData (context: Context, category: Category) : MutableLiveData<List<Movie>> {
+    fun downloadMovies (context: Context, category: Category) : MutableLiveData<List<MovieFromApi>> {
         movies.clear()
 
         moviesObservable = when (category) {
@@ -41,12 +44,12 @@ class Repository @Inject constructor(
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
             .map { movie -> movie.genreIds?.let { movie.convertGenres(it) }                         //converting genres 'IDs' to names (e.g. Family movie)
                 movie}
-            .subscribeWith(object : DisposableObserver<Movie>(){
+            .subscribeWith(object : DisposableObserver<MovieFromApi>(){
                 override fun onComplete() {
                     moviesLiveData.postValue(movies)
                     Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
                 }
-                override fun onNext(m: Movie?) {
+                override fun onNext(m: MovieFromApi?) {
                     if (m != null) {
                         movies.add(m)
                     }
@@ -61,7 +64,7 @@ class Repository @Inject constructor(
     }
 
     //this method is unnecessary for now
-//    fun getMovieDetailsLiveData (context: Context, movieId: Int) : MutableLiveData<Movie> {
+//    fun getMovieDetailsLiveData (context: Context, movieId: Int) : MutableLiveData<MovieFromApi> {
 //        movieDetailsObservable = tmdbService.getMovieDetails(movieId)
 //
 //        compositeDisposable.add(

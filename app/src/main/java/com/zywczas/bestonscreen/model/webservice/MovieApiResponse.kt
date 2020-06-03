@@ -1,9 +1,8 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.model.webservice
 
 import com.google.gson.annotations.Expose
 
 import com.google.gson.annotations.SerializedName
-import com.zywczas.bestonscreen.model.Movie
 
 
 class MovieApiResponse {
@@ -21,5 +20,5 @@ class MovieApiResponse {
 
     @SerializedName("results")
     @Expose
-    var movies: List<Movie>? = null
+    var movies: List<MovieFromApi>? = null
 }

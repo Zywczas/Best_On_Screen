@@ -1,9 +1,14 @@
 package com.zywczas.bestonscreen.di
 
+import android.app.Application
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.room.Room
 import com.squareup.picasso.Picasso
-import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.TMDBService
+import com.zywczas.bestonscreen.model.localstore.MovieDao
+import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
+import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.model.webservice.TMDBService
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -13,20 +18,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class MoviesModule {
+class MoviesModule(private val application: Application) {
 
     @Provides @Singleton
     fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
 
     @Provides
-    fun provideArrayListOfMovies () : ArrayList<Movie> = ArrayList()
+    fun provideArrayListOfMovies () : ArrayList<MovieFromApi> = ArrayList()
 
 
-    @Provides //sprawdzic czy moze byc singeton - czy zmieniaja sie wyswietlane filmy
-    fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<Movie>> = MutableLiveData()
+    @Provides @Singleton
+    fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<MovieFromApi>> = MutableLiveData()
 
     @Provides
-    fun provideMutableLiveDataOfMovie () : MutableLiveData<Movie> = MutableLiveData()
+    fun provideMutableLiveDataOfMovie () : MutableLiveData<MovieFromApi> = MutableLiveData()
 
     @Provides @Singleton
     fun provideTMDBService() : TMDBService = Retrofit.Builder()
@@ -36,7 +41,13 @@ class MoviesModule {
         .build()
         .create(TMDBService::class.java)
 
-    @Provides //sprawdzic czy moze byc singleton
+    @Provides @Singleton
     fun providePicasso() : Picasso = Picasso.get()
+
+    @Provides @Singleton
+    fun provideMovieDao() : MovieDao =
+        Room.databaseBuilder(application.applicationContext, MoviesDataBase::class.java, "MoviesDB")
+            .build()
+            .getMovieDao()
 
 }

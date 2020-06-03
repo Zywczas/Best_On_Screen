@@ -9,11 +9,13 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.room.Room
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MoviesVM
 import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
@@ -28,6 +30,7 @@ class MoviesActivity : AppCompatActivity() {
     lateinit var moviesVM : MoviesVM
     lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
+    lateinit var moviesDataBase: MoviesDataBase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +47,11 @@ class MoviesActivity : AppCompatActivity() {
 
         setupAdapter()
         setupTags()
+
+        moviesDataBase = Room.databaseBuilder(applicationContext, MoviesDataBase::class.java, "MoviesDB")
+            .build()
+        moviesDataBase.getMovieDao().getMoviesFromDB()
+
     }
 
     private fun setupAdapter() {
@@ -57,7 +65,7 @@ class MoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    //tags used to choose category of movie and to be passed to Repository
+    //tags used to choose category of movie and to be passed to MovieRepository
     private fun setupTags() {
         upcomingTextView.tag = Category.UPCOMING
         topRatedTextView.tag = Category.TOP_RATED
@@ -66,11 +74,11 @@ class MoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view : View) {
         closeDrawer()
-        getMovies(view.tag as Category)
+        showMovies(view.tag as Category)
     }
 
-    private fun getMovies(category: Category){
-        moviesVM.getMoviesLiveData(this, category).observe(this,
+    private fun showMovies(category: Category){
+        moviesVM.getMovies(this, category).observe(this,
             Observer { movies ->
                 if (movies != null) {
                     moviesVM.movies.clear()

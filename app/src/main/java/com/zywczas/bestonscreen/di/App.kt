@@ -12,6 +12,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         moviesComponent = DaggerMoviesComponent.builder()
+            .moviesModule(MoviesModule(this))
             .build()
     }
 
