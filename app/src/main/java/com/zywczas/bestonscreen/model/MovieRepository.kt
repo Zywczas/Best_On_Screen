@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.model.webservice.MovieApiResponse
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -18,10 +17,9 @@ import javax.inject.Singleton
 @Singleton
 class MovieRepository @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
-    private val movies: ArrayList<MovieFromApi>,
-    private val moviesLiveData: MutableLiveData<List<MovieFromApi>>,
+    private val movies: ArrayList<Movie>,
+    private val moviesLiveData: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService
-//    ,    private val movieDetailsLiveData: MutableLiveData<MovieFromApi>
 ) {
 
     private lateinit var moviesObservable: Observable<MovieApiResponse>
@@ -29,33 +27,48 @@ class MovieRepository @Inject constructor(
 
     fun clear() = compositeDisposable.clear()
 
-    fun downloadMovies (context: Context, category: Category) : MutableLiveData<List<MovieFromApi>> {
+    fun downloadMovies (context: Context, category: Category) : MutableLiveData<List<Movie>> {
         movies.clear()
 
         moviesObservable = when (category) {
-            Category.POPULAR -> {tmdbService.getPopularMovies()}
-            Category.TOP_RATED -> {tmdbService.getTopRatedMovies()}
-            Category.UPCOMING -> {tmdbService.getUpcomingMovies()}
+            Category.POPULAR -> {
+                tmdbService.getPopularMovies()
+            }
+            Category.TOP_RATED -> {
+                tmdbService.getTopRatedMovies()
+            }
+            Category.UPCOMING -> {
+                tmdbService.getUpcomingMovies()
+            }
         }
 
-        compositeDisposable.add( moviesObservable
+        compositeDisposable.add(moviesObservable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
-            .map { movie -> movie.genreIds?.let { movie.convertGenres(it) }                         //converting genres 'IDs' to names (e.g. Family movie)
-                movie}
-            .subscribeWith(object : DisposableObserver<MovieFromApi>(){
+            .flatMap { movieFromApi ->
+                    movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }                         //converts genres 'IDs' to names (e.g. 123 -> "Family movieFromApi")
+
+                    Observable.just(movieFromApi.toMovie(movieFromApi))
+            }
+            .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
                     moviesLiveData.postValue(movies)
                     Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
                 }
-                override fun onNext(m: MovieFromApi?) {
+
+                override fun onNext(m: Movie?) {
                     if (m != null) {
                         movies.add(m)
                     }
                 }
+
                 override fun onError(e: Throwable?) {
-                    Toast.makeText(context, "Problem with downloading movies", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "Problem with downloading movies",
+                        Toast.LENGTH_LONG
+                    ).show()
                     Log.d("ERROR", "${e?.localizedMessage}")
                 }
             })

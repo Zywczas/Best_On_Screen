@@ -14,7 +14,7 @@ import com.google.gson.annotations.SerializedName
  * Model class for Api response
  */
 
-class MovieFromApi() : Parcelable {
+class MovieFromApi {
 
     @SerializedName("id")
     @Expose
@@ -138,61 +138,4 @@ class MovieFromApi() : Parcelable {
 
     }
 
-    constructor(parcel: Parcel) : this() {
-        id = parcel.readValue(Int::class.java.classLoader) as? Int
-        popularity = parcel.readValue(Double::class.java.classLoader) as? Double
-        voteCount = parcel.readValue(Int::class.java.classLoader) as? Int
-        video = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
-        posterPath = parcel.readString()
-        adult = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
-        backdropPath = parcel.readString()
-        originalLanguage = parcel.readString()
-        originalTitle = parcel.readString()
-        title = parcel.readString()
-        voteAverage = parcel.readValue(Double::class.java.classLoader) as? Double
-        overview = parcel.readString()
-        releaseDate = parcel.readString()
-        genre1 = parcel.readString()
-        genre2 = parcel.readString()
-        genre3 = parcel.readString()
-        genre4 = parcel.readString()
-        genre5 = parcel.readString()
-        genresAmount = parcel.readValue(Int::class.java.classLoader) as Int
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
-        parcel.writeValue(popularity)
-        parcel.writeValue(voteCount)
-        parcel.writeValue(video)
-        parcel.writeString(posterPath)
-        parcel.writeValue(adult)
-        parcel.writeString(backdropPath)
-        parcel.writeString(originalLanguage)
-        parcel.writeString(originalTitle)
-        parcel.writeString(title)
-        parcel.writeValue(voteAverage)
-        parcel.writeString(overview)
-        parcel.writeString(releaseDate)
-        parcel.writeString(genre1)
-        parcel.writeString(genre2)
-        parcel.writeString(genre3)
-        parcel.writeString(genre4)
-        parcel.writeString(genre5)
-        parcel.writeValue(genresAmount)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<MovieFromApi> {
-        override fun createFromParcel(parcel: Parcel): MovieFromApi {
-            return MovieFromApi(parcel)
-        }
-
-        override fun newArray(size: Int): Array<MovieFromApi?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

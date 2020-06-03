@@ -47,11 +47,6 @@ class MoviesActivity : AppCompatActivity() {
 
         setupAdapter()
         setupTags()
-
-        moviesDataBase = Room.databaseBuilder(applicationContext, MoviesDataBase::class.java, "MoviesDB")
-            .build()
-        moviesDataBase.getMovieDao().getMoviesFromDB()
-
     }
 
     private fun setupAdapter() {

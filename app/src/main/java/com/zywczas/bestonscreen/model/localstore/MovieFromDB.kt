@@ -12,7 +12,7 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
  * Model class for local data base
  */
 @Entity (tableName = "movies")
-class MovieFromDB(movieFromApi: MovieFromApi) {
+class MovieFromDB() {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -72,25 +72,4 @@ class MovieFromDB(movieFromApi: MovieFromApi) {
     @ColumnInfo(name = "genres_amount")
     var genresAmount: Int = 0
 
-    init {
-        id = movieFromApi.id
-        popularity = movieFromApi.popularity
-        voteCount = movieFromApi.voteCount
-        video = movieFromApi.video
-        posterPath = movieFromApi.posterPath
-        adult = movieFromApi.adult
-        backdropPath = movieFromApi.backdropPath
-        originalLanguage = movieFromApi.originalLanguage
-        originalTitle = movieFromApi.originalTitle
-        title = movieFromApi.title
-        voteAverage = movieFromApi.voteAverage
-        overview
-        releaseDate
-        genre1
-        genre2
-        genre3
-        genre4
-        genre5
-        genresAmount
-    }
 }

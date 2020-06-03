@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.localstore.MovieDao
 import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
@@ -24,14 +25,14 @@ class MoviesModule(private val application: Application) {
     fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
 
     @Provides
-    fun provideArrayListOfMovies () : ArrayList<MovieFromApi> = ArrayList()
+    fun provideArrayListOfMovies () : ArrayList<Movie> = ArrayList()
 
 
     @Provides @Singleton
-    fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<MovieFromApi>> = MutableLiveData()
+    fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<Movie>> = MutableLiveData()
 
-    @Provides
-    fun provideMutableLiveDataOfMovie () : MutableLiveData<MovieFromApi> = MutableLiveData()
+//    @Provides
+//    fun provideMutableLiveDataOfMovie () : MutableLiveData<Movie> = MutableLiveData() - bylo do movie details
 
     @Provides @Singleton
     fun provideTMDBService() : TMDBService = Retrofit.Builder()

@@ -9,12 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MovieAdapter (private val context: Context, private val movies: ArrayList<MovieFromApi>,
-                    private val picasso: Picasso, private val itemClick: (MovieFromApi) -> Unit)
+class MovieAdapter (private val context: Context, private val movies: ArrayList<Movie>,
+                    private val picasso: Picasso, private val itemClick: (Movie) -> Unit)
     : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,7 +23,7 @@ class MovieAdapter (private val context: Context, private val movies: ArrayList<
         val title = itemView.findViewById<TextView>(R.id.titleTextViewMovies)
         val rate = itemView.findViewById<TextView>(R.id.rateTextViewMovies)
 
-        fun bindMovie (context: Context, movie: MovieFromApi) {
+        fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
             val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
