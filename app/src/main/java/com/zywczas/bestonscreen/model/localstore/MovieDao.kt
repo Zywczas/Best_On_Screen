@@ -14,8 +14,8 @@ interface MovieDao {
     fun addMovie(movieFromDB: MovieFromDB)
 
     @Query ("SELECT * FROM movies")
-    fun getMoviesFromDB() : Flowable<List<MovieFromDB>>
+    fun getMovies() : Flowable<List<MovieFromDB>>
 
     @Query ("SELECT * FROM movies WHERE id == :movieId")
-    fun getMovie (movieId: Int) : Observable<Movie>
+    fun getMovie (movieId: Int) : Observable<MovieFromDB>
 }

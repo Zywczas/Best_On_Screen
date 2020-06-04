@@ -25,14 +25,17 @@ class MoviesModule(private val application: Application) {
     fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
 
     @Provides
-    fun provideArrayListOfMovies () : ArrayList<Movie> = ArrayList()
+    fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
 
 
     @Provides @Singleton
-    fun provideMutableLiveDataOfListOfMovies () : MutableLiveData<List<Movie>> = MutableLiveData()
+    fun provideMutableLiveDataOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()
 
-//    @Provides
-//    fun provideMutableLiveDataOfMovie () : MutableLiveData<Movie> = MutableLiveData() - bylo do movie details
+    @Provides
+    fun provideMutableLiveDataOfMovie() : MutableLiveData<Movie> = MutableLiveData()
+
+    @Provides
+    fun provideMutableLiveDataOfBoolean() : MutableLiveData<Boolean> = MutableLiveData()
 
     @Provides @Singleton
     fun provideTMDBService() : TMDBService = Retrofit.Builder()

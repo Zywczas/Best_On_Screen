@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding4.view.clicks
 import com.squareup.picasso.Picasso
@@ -39,10 +40,12 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsVM = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
 
         setupMovieUIDetails()
+        checkIfMovieInDB()
     }
 
     fun addToListClicked (view: View) {
         movieDetailsVM.addMovieToWatchList(movie, this)
+        checkIfMovieInDB()
     }
 
     private fun setupMovieUIDetails() {
@@ -75,7 +78,20 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkIfMovieInDB(){
+        if (movie.id != null) {
+            movieDetailsVM.checkIfMovieInToWatchList(movie.id!!,this).observe(this,
+            Observer { movieInDB ->
+                if(movieInDB) {
+                    addToListBtn.isChecked = true
+                } else {
+                    addToListBtn.isChecked = false
+                }
 
+            })
+
+        }
+    }
 
     override fun onDestroy() {
         movieDetailsVM.clear()

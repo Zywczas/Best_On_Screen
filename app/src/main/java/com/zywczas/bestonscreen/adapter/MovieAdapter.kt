@@ -19,9 +19,9 @@ class MovieAdapter (private val context: Context, private val movies: ArrayList<
     : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val posterImage = itemView.findViewById<ImageView>(R.id.posterImageViewMovies)
-        val title = itemView.findViewById<TextView>(R.id.titleTextViewMovies)
-        val rate = itemView.findViewById<TextView>(R.id.rateTextViewMovies)
+        private val posterImage: ImageView = itemView.findViewById(R.id.posterImageViewMovies)
+        private val title: TextView = itemView.findViewById(R.id.titleTextViewMovies)
+        private val rate: TextView = itemView.findViewById(R.id.rateTextViewMovies)
 
         fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title
