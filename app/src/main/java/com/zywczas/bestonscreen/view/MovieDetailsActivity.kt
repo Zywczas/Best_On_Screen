@@ -2,8 +2,10 @@ package com.zywczas.bestonscreen.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.jakewharton.rxbinding4.view.clicks
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.di.App
@@ -12,6 +14,12 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVM
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVMFactory
+import hu.akarnokd.rxjava3.bridge.RxJavaBridge
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.observers.DisposableObserver
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import javax.inject.Inject
 
@@ -20,6 +28,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     lateinit var movieDetailsVM: MovieDetailsVM
     @Inject lateinit var factory: MovieDetailsVMFactory
     @Inject lateinit var picasso: Picasso
+    lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,16 +38,21 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         movieDetailsVM = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
 
-        setupDetails()
+        setupMovieUIDetails()
     }
 
-    private fun setupDetails() {
-        val movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+    fun addToListClicked (view: View) {
+        movieDetailsVM.addMovieToWatchList(movie, this)
+    }
+
+    private fun setupMovieUIDetails() {
+        movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         if (movie != null) {
-            val posterPath = "https://image.tmdb.org/t/p/w500" + movie.posterPath
+            //downloading image of width 300 because tmdb doesn't support 250, resized in picasso to 250
+            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
 
             picasso.load(posterPath)
-                .resize(500, 0)
+                .resize(250, 0)
                 .error(R.drawable.error_image)
                 .into(posterImageViewDetails)
 
@@ -60,6 +74,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             Toast.makeText(this, "Problem with getting the movie", Toast.LENGTH_LONG).show()
         }
     }
+
+
 
     override fun onDestroy() {
         movieDetailsVM.clear()

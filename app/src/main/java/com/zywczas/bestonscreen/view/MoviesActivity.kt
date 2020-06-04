@@ -30,7 +30,6 @@ class MoviesActivity : AppCompatActivity() {
     lateinit var moviesVM : MoviesVM
     lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
-    lateinit var moviesDataBase: MoviesDataBase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

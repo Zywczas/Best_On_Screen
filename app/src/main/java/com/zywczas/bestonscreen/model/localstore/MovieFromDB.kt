@@ -12,64 +12,63 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
  * Model class for local data base
  */
 @Entity (tableName = "movies")
-class MovieFromDB() {
+class MovieFromDB(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int? = null
+    var id: Int?,
 
     @ColumnInfo(name = "popularity")
-    var popularity: Double? = null
+    var popularity: Double?,
 
     @ColumnInfo(name = "vote_count")
-    var voteCount: Int? = null
+    var voteCount: Int?,
 
     @ColumnInfo(name = "video")
-    var video: Boolean? = null
+    var video: Boolean?,
 
     @ColumnInfo(name = "poster_path")
-    var posterPath: String? = null
+    var posterPath: String?,
 
     @ColumnInfo(name = "adult")
-    var adult: Boolean? = null
+    var adult: Boolean?,
 
     @ColumnInfo(name = "backdrop_path")
-    var backdropPath: String? = null
+    var backdropPath: String?,
 
     @ColumnInfo(name = "original_language")
-    var originalLanguage: String? = null
+    var originalLanguage: String?,
 
     @ColumnInfo(name = "original_title")
-    var originalTitle: String? = null
+    var originalTitle: String?,
 
     @ColumnInfo(name = "title")
-    var title: String? = null
+    var title: String?,
 
     @ColumnInfo(name = "vote_average")
-    var voteAverage: Double? = null
+    var voteAverage: Double?,
 
     @ColumnInfo(name = "overview")
-    var overview: String? = null
+    var overview: String?,
 
     @ColumnInfo(name = "release_date")
-    var releaseDate: String? = null
+    var releaseDate: String?,
 
     @ColumnInfo(name = "genre1")
-    var genre1: String? = null
+    var genre1: String?,
 
     @ColumnInfo(name = "genre2")
-    var genre2: String? = null
+    var genre2: String?,
 
     @ColumnInfo(name = "genre3")
-    var genre3: String? = null
+    var genre3: String?,
 
     @ColumnInfo(name = "genre4")
-    var genre4: String? = null
+    var genre4: String?,
 
     @ColumnInfo(name = "genre5")
-    var genre5: String? = null
+    var genre5: String?,
 
     @ColumnInfo(name = "genres_amount")
-    var genresAmount: Int = 0
-
-}
+    var genresAmount: Int?
+)

@@ -26,10 +26,11 @@ class MovieAdapter (private val context: Context, private val movies: ArrayList<
         fun bindMovie (context: Context, movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
+            //downloading image of width 200 because tmdb doesn't support 100, resized in picasso to 100
             val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
 
             picasso.load(posterPath)
-                .resize(200, 0)
+//                .resize(200, 0)
                 .error(R.drawable.error_image)
                 .into(posterImage)
 

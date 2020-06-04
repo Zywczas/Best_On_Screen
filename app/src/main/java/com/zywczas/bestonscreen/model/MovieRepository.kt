@@ -4,11 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.zywczas.bestonscreen.model.localstore.MovieDao
 import com.zywczas.bestonscreen.model.webservice.MovieApiResponse
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -19,7 +22,8 @@ class MovieRepository @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val moviesLiveData: MutableLiveData<List<Movie>>,
-    private val tmdbService: TMDBService
+    private val tmdbService: TMDBService,
+    private val movieDao: MovieDao
 ) {
 
     private lateinit var moviesObservable: Observable<MovieApiResponse>
@@ -49,7 +53,7 @@ class MovieRepository @Inject constructor(
             .flatMap { movieFromApi ->
                     movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }                         //converts genres 'IDs' to names (e.g. 123 -> "Family movieFromApi")
 
-                    Observable.just(movieFromApi.toMovie(movieFromApi))
+                    Observable.just(toMovie(movieFromApi))
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
@@ -75,6 +79,31 @@ class MovieRepository @Inject constructor(
         )
         return moviesLiveData
     }
+
+    /**
+     * Adds a movie to the local data base so it can be displayed later (different fun) in "To Watch List"
+     * @param movie Movie to be added
+     * @param context Context of Activity to show message
+     */
+    fun addMovieToDB (movie: Movie, context: Context) {
+        compositeDisposable.add(
+            Completable.fromAction { movieDao.addMovie(toMovieFromDB(movie)) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableCompletableObserver(){
+                    override fun onComplete() {
+                        Toast.makeText(context, "Movie added to your list", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        Log.d("error", "${e?.localizedMessage}")
+                        Toast.makeText(context, "Problem with adding the movie", Toast.LENGTH_SHORT).show()
+                    }
+                })
+        )
+    }
+
+
 
     //this method is unnecessary for now
 //    fun getMovieDetailsLiveData (context: Context, movieId: Int) : MutableLiveData<MovieFromApi> {
