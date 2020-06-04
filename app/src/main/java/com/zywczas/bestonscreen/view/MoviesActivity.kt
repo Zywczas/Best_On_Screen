@@ -6,16 +6,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.Room
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.di.App
 import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MoviesVM
 import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
@@ -34,6 +33,7 @@ class MoviesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
+        progressBarMovies.isVisible = false
 
         App.moviesComponent.inject(this)
 
@@ -68,6 +68,7 @@ class MoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view : View) {
         closeDrawer()
+        progressBarMovies.isVisible = true
         showMovies(view.tag as Category)
     }
 
@@ -78,6 +79,7 @@ class MoviesActivity : AppCompatActivity() {
                     moviesVM.movies.clear()
                     moviesVM.movies.addAll(movies)
                     movieAdapter.notifyDataSetChanged()
+                    progressBarMovies.isVisible = false
                 }
             })
     }

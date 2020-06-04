@@ -13,8 +13,10 @@ import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.observers.DisposableObserver
@@ -29,7 +31,7 @@ class MovieRepository @Inject constructor(
     private val moviesMutableLiveData: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
-    private val movieMutableLiveData: MutableLiveData<Movie>,
+//    private val movieMutableLiveData: MutableLiveData<Movie>,
     private val booleanLiveData: MutableLiveData<Boolean>
 ) {
 
@@ -55,9 +57,9 @@ class MovieRepository @Inject constructor(
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
             .flatMap { movieFromApi ->
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
-                    movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
+                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
                 //converts MovieFromAPI to Observable <Movie>
-                    Observable.just(toMovie(movieFromApi))
+                Observable.just(toMovie(movieFromApi))
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
