@@ -6,19 +6,47 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/toWatchListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
-        android:text="Choose category"
-        android:textSize="24sp"
+        android:onClick="categoryClicked"
+        android:text="Your To Watch List"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
+        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
+        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/topRatedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="categoryClicked"
+        android:text="Top Rated"
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="21sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Choose category"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/toWatchListTextView"
+        app:layout_constraintEnd_toEndOf="@+id/toWatchListTextView"
+        app:layout_constraintStart_toStartOf="@+id/toWatchListTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -31,12 +59,11 @@
         android:onClick="categoryClicked"
         android:text="Upcoming"
         android:textColor="@android:color/holo_purple"
-        android:textSize="24sp"
+        android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/popularTextView"
-        app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintEnd_toEndOf="@+id/popularTextView"
+        app:layout_constraintStart_toStartOf="@+id/popularTextView"
+        app:layout_constraintTop_toBottomOf="@+id/toWatchListTextView" />
 
     <TextView
         android:id="@+id/popularTextView"
@@ -47,41 +74,10 @@
         android:onClick="categoryClicked"
         android:text="Popular"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="24sp"
+        android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/topRatedTextView"
-        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
-        app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
-
-    <TextView
-        android:id="@+id/topRatedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="categoryClicked"
-        android:text="Top Rated"
-        android:textColor="@android:color/holo_orange_dark"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView8"
-        app:layout_constraintEnd_toEndOf="@+id/popularTextView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/popularTextView"
-        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Crap"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/topRatedTextView"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/topRatedTextView"
-        app:layout_constraintTop_toBottomOf="@+id/topRatedTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

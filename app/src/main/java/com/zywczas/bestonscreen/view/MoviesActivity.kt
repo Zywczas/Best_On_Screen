@@ -64,16 +64,34 @@ class MoviesActivity : AppCompatActivity() {
         upcomingTextView.tag = Category.UPCOMING
         topRatedTextView.tag = Category.TOP_RATED
         popularTextView.tag = Category.POPULAR
+        toWatchListTextView.tag = Category.TO_WATCH
     }
 
     fun categoryClicked(view : View) {
+        val category = view.tag as Category
         closeDrawer()
         progressBarMovies.isVisible = true
-        showMovies(view.tag as Category)
+
+        when (category) {
+            Category.TO_WATCH -> { showMoviesFromDB(category) }
+            else -> { showMoviesFromApi(category) }
+        }
     }
 
-    private fun showMovies(category: Category){
-        moviesVM.getMovies(this, category).observe(this,
+    private fun showMoviesFromDB(category: Category){
+        moviesVM.getDbMovies(this, category).observe(this,
+            Observer { movies ->
+                if (movies != null) {
+                    moviesVM.movies.clear()
+                    moviesVM.movies.addAll(movies)
+                    movieAdapter.notifyDataSetChanged()
+                    progressBarMovies.isVisible = false
+                }
+            })
+    }
+
+    private fun showMoviesFromApi(category: Category){
+        moviesVM.getApiMovies(this, category).observe(this,
             Observer { movies ->
                 if (movies != null) {
                     moviesVM.movies.clear()

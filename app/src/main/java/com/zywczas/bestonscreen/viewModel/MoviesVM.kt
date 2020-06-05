@@ -9,13 +9,18 @@ import com.zywczas.bestonscreen.model.MovieRepository
 
 
 class MoviesVM constructor (private val repo: MovieRepository,
+                            //list to store movies for Recycler view in Movie Activity
                             val movies: ArrayList<Movie>
 ) : ViewModel() {
 
     fun clear() = repo.clear()
 
-    fun getMovies(context: Context, category: Category) =
-        repo.downloadMovies(context, category) as LiveData<List<Movie>>
+    fun getApiMovies(context: Context, category: Category) =
+        repo.getMoviesFromApi(context, category) as LiveData<List<Movie>>
+
+    fun getDbMovies(context: Context, category: Category) =
+        repo.getMoviesFromDB(context, category) as LiveData<List<Movie>>
+
 
 
 }

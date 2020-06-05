@@ -8,21 +8,22 @@ import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.localstore.MovieDao
 import com.zywczas.bestonscreen.model.localstore.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieApiResponse
+import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subscribers.DisposableSubscriber
+import org.reactivestreams.Subscription
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.system.exitProcess
 
 @Singleton
 class MovieRepository @Inject constructor(
@@ -31,27 +32,22 @@ class MovieRepository @Inject constructor(
     private val moviesMutableLiveData: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
-//    private val movieMutableLiveData: MutableLiveData<Movie>,
     private val booleanLiveData: MutableLiveData<Boolean>
 ) {
 
     fun clear() = compositeDisposable.clear()
 
-    fun downloadMovies (context: Context, category: Category) : MutableLiveData<List<Movie>> {
+    fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<List<Movie>> {
         movies.clear()
-        val moviesObservable = when (category) {
-            Category.POPULAR -> {
-                tmdbService.getPopularMovies()
-            }
-            Category.TOP_RATED -> {
-                tmdbService.getTopRatedMovies()
-            }
-            Category.UPCOMING -> {
-                tmdbService.getUpcomingMovies()
-            }
+
+        val moviesObservableApi = when (category) {
+            Category.POPULAR -> { tmdbService.getPopularMovies() }
+            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
+            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
+            else -> { exitProcess(0)}
         }
 
-        compositeDisposable.add(moviesObservable
+        compositeDisposable.add(moviesObservableApi
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
@@ -75,9 +71,42 @@ class MovieRepository @Inject constructor(
 
                 override fun onError(e: Throwable?) {
                     Toast.makeText(context,"Problem with downloading movies",Toast.LENGTH_LONG).show()
-                    Log.d("ERROR", "${e?.localizedMessage}")
+                    Log.d("film error", "${e?.localizedMessage}")
                 }
             })
+        )
+        return moviesMutableLiveData
+    }
+
+    fun getMoviesFromDB (context: Context, category: Category) : MutableLiveData<List<Movie>> {
+        movies.clear()
+        val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
+
+        compositeDisposable.add(
+            moviesObservableDB
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap { moviesListFromDB -> Flowable.fromArray(*moviesListFromDB.toTypedArray()) }
+                .onBackpressureBuffer()
+                //converts MovieFromDB to general Movie class
+                .map { movieFromDB -> toMovie(movieFromDB) }
+                .subscribeWith(object : DisposableSubscriber<Movie>(){
+                    override fun onComplete() {
+                        moviesMutableLiveData.postValue(movies)
+                        Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onNext(t: Movie?) {
+                        if (t != null) {
+                            movies.add(t)
+                        }
+                    }
+
+                    override fun onError(t: Throwable?) {
+                        Log.d("film error", "${t?.localizedMessage}")
+                    }
+                }
+                )
         )
         return moviesMutableLiveData
     }
@@ -98,7 +127,7 @@ class MovieRepository @Inject constructor(
                     }
 
                     override fun onError(e: Throwable?) {
-                        Log.d("error", "${e?.localizedMessage}")
+                        Log.d("film error", "${e?.localizedMessage}")
                         Toast.makeText(context, "Problem with adding the movie", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -115,10 +144,11 @@ class MovieRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                     //Consumer which accepts single Movie and Throwable
                 .subscribe({ movieFromDB-> booleanLiveData.postValue(true)
-                    Log.d("film", "film w bazie: ${movieFromDB.title}")
+                    Log.d("film error", "film w bazie: ${movieFromDB.title}")
                 },
-                    { noMovieInDB -> Log.d("film", "nie ma filmu w bazie") //to poprawic, usunac komentarze jak dziala boolean
-                    Toast.makeText(context, "nie ma w bazie", Toast.LENGTH_LONG).show()
+                    { noMovieInDB ->
+                        Log.d("film error", "nie ma filmu w bazie") //to poprawic, usunac komentarze jak dziala boolean
+                        Toast.makeText(context, "nie ma w bazie", Toast.LENGTH_LONG).show()
                         booleanLiveData.postValue(false)
                     }
                 )
