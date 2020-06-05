@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -80,14 +81,12 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun checkIfMovieInDB(){
         if (movie.id != null) {
-            movieDetailsVM.checkIfMovieInToWatchList(movie.id!!,this).observe(this,
+            movieDetailsVM.checkIfMovieInToWatchList(movie.id!!).observe(this,
             Observer { movieInDB ->
+                Log.d("film test", "movie details: $movieInDB")
                 if(movieInDB) {
                     addToListBtn.isChecked = true
-                } else {
-                    addToListBtn.isChecked = false
                 }
-
             })
 
         }

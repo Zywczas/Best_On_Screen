@@ -31,8 +31,8 @@ class MoviesModule(private val application: Application) {
     @Provides @Singleton
     fun provideMutableLiveDataOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()
 
-//    @Provides
-//    fun provideMutableLiveDataOfMovie() : MutableLiveData<Movie> = MutableLiveData()
+    @Provides
+    fun provideMutableLiveDataOfMovie() : MutableLiveData<Movie> = MutableLiveData()
 
     @Provides
     fun provideMutableLiveDataOfBoolean() : MutableLiveData<Boolean> = MutableLiveData()

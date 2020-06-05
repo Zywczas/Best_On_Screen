@@ -3,6 +3,7 @@ package com.zywczas.bestonscreen.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -79,14 +80,15 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun showMoviesFromDB(category: Category){
+        moviesVM.movies.clear()
         moviesVM.getDbMovies(this, category).observe(this,
-            Observer { movies ->
-                if (movies != null) {
-                    moviesVM.movies.clear()
-                    moviesVM.movies.addAll(movies)
+            Observer { movie ->
+                Log.d("film test", "movies w activity")
+//                if (movie != null) {
+                    moviesVM.movies.add(movie)
                     movieAdapter.notifyDataSetChanged()
                     progressBarMovies.isVisible = false
-                }
+//                }
             })
     }
 

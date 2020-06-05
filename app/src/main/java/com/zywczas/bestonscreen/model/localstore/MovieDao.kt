@@ -3,9 +3,9 @@ package com.zywczas.bestonscreen.model.localstore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.zywczas.bestonscreen.model.Movie
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
@@ -17,5 +17,5 @@ interface MovieDao {
     fun getMovies() : Flowable<List<MovieFromDB>>
 
     @Query ("SELECT * FROM movies WHERE id == :movieId")
-    fun getMovie (movieId: Int) : Observable<MovieFromDB>
+    fun getMovie (movieId: Int) : Single<MovieFromDB>
 }
