@@ -20,7 +20,7 @@ class MoviesVM constructor (private val repo: MovieRepository,
         repo.getMoviesFromApi(context, category) as LiveData<List<Movie>>
 
     fun getDbMovies(context: Context, category: Category) =
-        repo.getMoviesFromDB(context, category) as LiveData<Movie>
+        repo.getMoviesFromDB(context, category) as LiveData<List<Movie>>
 
 
 

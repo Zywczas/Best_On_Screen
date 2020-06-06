@@ -80,12 +80,13 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun showMoviesFromDB(category: Category){
-        moviesVM.movies.clear()
+
         moviesVM.getDbMovies(this, category).observe(this,
-            Observer { movie ->
-                Log.d("film test", "movies w activity")
+            Observer { movies ->
+                Log.d("film test", "moviesDB w activity")
 //                if (movie != null) {
-                    moviesVM.movies.add(movie)
+                    moviesVM.movies.clear()
+                    moviesVM.movies.addAll(movies)
                     movieAdapter.notifyDataSetChanged()
                     progressBarMovies.isVisible = false
 //                }
@@ -95,6 +96,7 @@ class MoviesActivity : AppCompatActivity() {
     private fun showMoviesFromApi(category: Category){
         moviesVM.getApiMovies(this, category).observe(this,
             Observer { movies ->
+                Log.d("film test", "moviesAPI w activity")
                 if (movies != null) {
                     moviesVM.movies.clear()
                     moviesVM.movies.addAll(movies)
