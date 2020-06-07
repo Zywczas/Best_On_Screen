@@ -41,12 +41,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsVM = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
 
         setupMovieUIDetails()
-        checkIfMovieInDB()
+        checkIfMovieIsInDb()
     }
 
     fun addToListClicked (view: View) {
         movieDetailsVM.addMovieToWatchList(movie, this)
-        checkIfMovieInDB()
     }
 
     private fun setupMovieUIDetails() {
@@ -79,14 +78,17 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkIfMovieInDB(){
+    private fun checkIfMovieIsInDb(){
         if (movie.id != null) {
             movieDetailsVM.checkIfMovieInToWatchList(movie.id!!).observe(this,
-            Observer { movieInDB ->
-                Log.d("film test", "movie details: $movieInDB")
-                if(movieInDB) {
+            Observer { it.getContentIfNotHandled()?.let {rowsQuantity ->
+                Log.d("film test", "movie details: $rowsQuantity")
+                if (rowsQuantity == 1) {
                     addToListBtn.isChecked = true
+                } else if (rowsQuantity == 0) {
+                    addToListBtn.isChecked = false
                 }
+            }
             })
 
         }

@@ -95,16 +95,30 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun showMoviesFromApi(category: Category){
         moviesVM.getApiMovies(this, category).observe(this,
-            Observer { movies ->
+            Observer { it.getContentIfNotHandled()?.let {movies ->
                 Log.d("film test", "moviesAPI w activity")
-                if (movies != null) {
                     moviesVM.movies.clear()
                     moviesVM.movies.addAll(movies)
                     movieAdapter.notifyDataSetChanged()
                     progressBarMovies.isVisible = false
-                }
+
+            }
+
             })
     }
+
+//    private fun showMoviesFromApi(category: Category){
+//        moviesVM.getApiMovies(this, category).observe(this,
+//            Observer { movies ->
+//                Log.d("film test", "moviesAPI w activity")
+//                if (movies != null) {
+//                    moviesVM.movies.clear()
+//                    moviesVM.movies.addAll(movies)
+//                    movieAdapter.notifyDataSetChanged()
+//                    progressBarMovies.isVisible = false
+//                }
+//            })
+//    }
 
     override fun onDestroy() {
         moviesVM.clear()

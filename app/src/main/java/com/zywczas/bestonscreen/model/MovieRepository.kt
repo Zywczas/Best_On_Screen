@@ -31,16 +31,21 @@ class MovieRepository @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val movieMutableLiveData: MutableLiveData<Movie>,
-    private val moviesMutableLdApi: MutableLiveData<List<Movie>>,
+    private val moviesMutableLdApi: MutableLiveData<Event<List<Movie>>>,
     private val moviesMutableLdDB: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
-    private val booleanLiveData: MutableLiveData<Boolean>
+    private val booleanLiveData: MutableLiveData<Boolean>,
+    private val booleanEventLd: MutableLiveData<Event<Boolean>>,
+    private val intEventLd: MutableLiveData<Event<Int>>
 ) {
 
-    fun clear() = compositeDisposable.clear()
+    fun clear() {
+        compositeDisposable.clear()
+//        booleanLiveData.
+    }
 
-    fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<List<Movie>> {
+    fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<Event<List<Movie>>> {
         movies.clear()
 
         val moviesObservableApi = when (category) {
@@ -62,7 +67,7 @@ class MovieRepository @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
-                    moviesMutableLdApi.postValue(movies)
+                    moviesMutableLdApi.postValue(Event(movies))
                     Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
                 }
 
@@ -157,13 +162,15 @@ class MovieRepository @Inject constructor(
 
 
     /**
-     * Adds a movie to the local data base so it can be displayed later (different fun) in "To Watch List"
-     * @param movie Movie to be added
-     * @param context Context of Activity to show completion message
+     * Adds a movie to the local data base so it can be displayed later (different fun)
+     * in "To Watch List"
      */
     fun addMovieToDB (movie: Movie, context: Context) {
+        val completableRx3 = RxJavaBridge.toV3Completable(
+            movieDao.addMovie(toMovieFromDB(movie))
+        )
         compositeDisposable.add(
-            Completable.fromAction { movieDao.addMovie(toMovieFromDB(movie)) }
+            completableRx3
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
@@ -178,19 +185,19 @@ class MovieRepository @Inject constructor(
                 })
         )
     }
-//sprawdzic czy jak dam Single LiveData albo Event wrapper
-    fun checkIfMovieInDB (movieId: Int) : MutableLiveData<Boolean> {
 
-        val movieFromDBObservable = RxJavaBridge.toV3Single(movieDao.getMovie(movieId))
+    fun checkIfMovieInDB (movieId: Int) : MutableLiveData<Event<Int>> {
+
+        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
         compositeDisposable.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                    //Consumer which accepts single Movie and Throwable
-                .subscribe({success -> booleanLiveData.postValue(true)},
-                    {error -> booleanLiveData.postValue(false)})
+                .subscribe({rowsAmount -> intEventLd.postValue(Event(rowsAmount))},
+                    { throwable -> Log.d("film error", "${throwable?.localizedMessage}") }
+                )
         )
-        return booleanLiveData
+        return intEventLd
     }
 
 //    fun getMovieFromDB(movieId: Int, context: Context) : MutableLiveData<Movie>{
@@ -210,6 +217,29 @@ class MovieRepository @Inject constructor(
 //        )
 //        return movieMutableLiveData
 //    }
+
+    fun deleteMovieFromDB(movie : Movie, context: Context) {
+        val completableRx3 = RxJavaBridge.toV3Completable(
+            movieDao.deleteMovie(toMovieFromDB(movie))
+        )
+
+        compositeDisposable.add(
+            completableRx3
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableCompletableObserver(){
+                    override fun onComplete() {
+                        Toast.makeText(context, "The movie removed.", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        Toast.makeText(context, "Cannot remove the movie.", Toast.LENGTH_LONG).show()
+                        Log.d("film error", "${e?.localizedMessage}")
+                    }
+
+                })
+        )
+    }
 
 
 
