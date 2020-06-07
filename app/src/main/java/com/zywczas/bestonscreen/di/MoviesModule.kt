@@ -22,14 +22,14 @@ import javax.inject.Singleton
 @Module
 class MoviesModule(private val application: Application) {
 
-    @Provides @Singleton
+    @Provides
     fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
 
     @Provides
     fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
 
 
-    @Provides @Singleton
+    @Provides
     fun provideMutableLdOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()
 
     @Provides

@@ -1,5 +1,6 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.utilities
 
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.localstore.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
@@ -36,26 +37,26 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
  * @return Movie
  */
     fun toMovie(movieFromDB: MovieFromDB) = Movie(
-        movieFromDB.id,
-        movieFromDB.popularity,
-        movieFromDB.voteCount,
-        movieFromDB.video,
-        movieFromDB.posterPath,
-        movieFromDB.adult,
-        movieFromDB.backdropPath,
-        movieFromDB.originalLanguage,
-        movieFromDB.originalTitle,
-        movieFromDB.title,
-        movieFromDB.voteAverage,
-        movieFromDB.overview,
-        movieFromDB.releaseDate,
-        movieFromDB.genre1,
-        movieFromDB.genre2,
-        movieFromDB.genre3,
-        movieFromDB.genre4,
-        movieFromDB.genre5,
-        movieFromDB.genresAmount
-    )
+    movieFromDB.id,
+    movieFromDB.popularity,
+    movieFromDB.voteCount,
+    movieFromDB.video,
+    movieFromDB.posterPath,
+    movieFromDB.adult,
+    movieFromDB.backdropPath,
+    movieFromDB.originalLanguage,
+    movieFromDB.originalTitle,
+    movieFromDB.title,
+    movieFromDB.voteAverage,
+    movieFromDB.overview,
+    movieFromDB.releaseDate,
+    movieFromDB.genre1,
+    movieFromDB.genre2,
+    movieFromDB.genre3,
+    movieFromDB.genre4,
+    movieFromDB.genre5,
+    movieFromDB.genresAmount
+)
 
 /**
  * Function to convert Movie to MovieFromDB SQL entity class.

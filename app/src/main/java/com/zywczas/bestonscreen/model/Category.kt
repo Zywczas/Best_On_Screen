@@ -1,5 +1,8 @@
 package com.zywczas.bestonscreen.model
 
+/**
+ * Enum class to control categories of displayed movies: Popular, Upcoming, etc.
+ */
 enum class Category {
     POPULAR {
         override fun toString(): String {

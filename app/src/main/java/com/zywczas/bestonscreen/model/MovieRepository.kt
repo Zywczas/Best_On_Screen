@@ -3,32 +3,26 @@ package com.zywczas.bestonscreen.model
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.localstore.MovieDao
-import com.zywczas.bestonscreen.model.localstore.MovieFromDB
-import com.zywczas.bestonscreen.model.webservice.MovieApiResponse
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.model.webservice.TMDBService
+import com.zywczas.bestonscreen.utilities.toMovie
+import com.zywczas.bestonscreen.utilities.toMovieFromDB
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.observers.DisposableObserver
-import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subscribers.DisposableSubscriber
-import org.reactivestreams.Subscription
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.system.exitProcess
 
 @Singleton
 class MovieRepository @Inject constructor(
-    private val compositeDisposable: CompositeDisposable,
+    private val compositeDispMovies: CompositeDisposable,
+    private val compositeDispMovieDetails: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val movieMutableLiveData: MutableLiveData<Movie>,
     private val moviesMutableLdApi: MutableLiveData<Event<List<Movie>>>,
@@ -41,9 +35,12 @@ class MovieRepository @Inject constructor(
     private val stringEventLd : MutableLiveData<Event<String>>
 ) {
 
-    fun clear() {
-        compositeDisposable.clear()
-//        booleanLiveData.
+    fun clearMoviesActivity() {
+        compositeDispMovies.clear()
+    }
+
+    fun clearMovieDetailsActivity() {
+        compositeDispMovieDetails.clear()
     }
 
     fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<Event<List<Movie>>> {
@@ -56,7 +53,7 @@ class MovieRepository @Inject constructor(
             else -> { exitProcess(0)}
         }
 
-        compositeDisposable.add(moviesObservableApi
+        compositeDispMovies.add(moviesObservableApi
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
@@ -64,7 +61,11 @@ class MovieRepository @Inject constructor(
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
                 movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
                 //converts MovieFromAPI to Observable <Movie>
-                Observable.just(toMovie(movieFromApi))
+                Observable.just(
+                    toMovie(
+                        movieFromApi
+                    )
+                )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
@@ -134,7 +135,7 @@ class MovieRepository @Inject constructor(
 
         val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
-        compositeDisposable.add(
+        compositeDispMovies.add(
             moviesObservableDB
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -172,9 +173,13 @@ class MovieRepository @Inject constructor(
 //            : MutableLiveData<Event<String>>
     {
         val completableRx3 = RxJavaBridge.toV3Completable(
-            movieDao.addMovie(toMovieFromDB(movie))
+            movieDao.addMovie(
+                toMovieFromDB(
+                    movie
+                )
+            )
         )
-        compositeDisposable.add(
+        compositeDispMovieDetails.add(
             completableRx3
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -191,10 +196,10 @@ class MovieRepository @Inject constructor(
 //        return stringEventLd
     }
 
-    fun checkIfMovieInDB (movieId: Int) : MutableLiveData<Event<Int>> {
+    fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Int>> {
 
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
-        compositeDisposable.add(
+        compositeDispMovieDetails.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -228,7 +233,7 @@ class MovieRepository @Inject constructor(
             movieDao.deleteMovie(toMovieFromDB(movie))
         )
 
-        compositeDisposable.add(
+        compositeDispMovieDetails.add(
             completableRx3
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

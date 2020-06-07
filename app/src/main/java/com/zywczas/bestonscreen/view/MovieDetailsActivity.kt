@@ -4,24 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.jakewharton.rxbinding4.view.clicks
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.di.App
+import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVM
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVMFactory
-import hu.akarnokd.rxjava3.bridge.RxJavaBridge
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.observers.DisposableObserver
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import javax.inject.Inject
 
@@ -48,10 +39,10 @@ class MovieDetailsActivity : AppCompatActivity() {
     fun addToListClicked (view: View) {
 
         if(addToListBtn.text.toString() == addToListBtn.textOn.toString()) {
-            movieDetailsVM.addMovieToWatchList(movie)
+            movieDetailsVM.addMovieToDb(movie)
             Log.d("film test", "add movie")
         } else if (addToListBtn.text.toString() == addToListBtn.textOff.toString()) {
-            movieDetailsVM.deleteMovieFromToWatchList(movie)
+            movieDetailsVM.deleteMovieFromDb(movie)
             Log.d("film test", "delete movie")
         }
 
@@ -89,7 +80,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun checkIfMovieIsInDb(){
         if (movie.id != null) {
-            movieDetailsVM.checkIfMovieInToWatchList(movie.id!!).observe(this,
+            movieDetailsVM.checkIfMovieIsInDb(movie.id!!).observe(this,
             Observer { it.getContentIfNotHandled()?.let {rowsQuantity ->
                 Log.d("film test", "movie details: $rowsQuantity")
                 if (rowsQuantity == 1) {

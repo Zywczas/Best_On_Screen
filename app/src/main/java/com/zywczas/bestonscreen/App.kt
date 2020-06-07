@@ -1,7 +1,9 @@
-package com.zywczas.bestonscreen.di
+package com.zywczas.bestonscreen
 
 import android.app.Application
-import androidx.lifecycle.ViewModelStoreOwner
+import com.zywczas.bestonscreen.di.DaggerMoviesComponent
+import com.zywczas.bestonscreen.di.MoviesComponent
+import com.zywczas.bestonscreen.di.MoviesModule
 
 class App : Application() {
 

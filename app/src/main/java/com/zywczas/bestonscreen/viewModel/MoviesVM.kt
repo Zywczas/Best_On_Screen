@@ -15,7 +15,7 @@ class MoviesVM constructor (private val repo: MovieRepository,
                             val movies: ArrayList<Movie>
 ) : ViewModel() {
 
-    fun clear() = repo.clear()
+    fun clear() = repo.clearMoviesActivity()
 
     fun getApiMovies(context: Context, category: Category) =
         repo.getMoviesFromApi(context, category) as LiveData<Event<List<Movie>>>

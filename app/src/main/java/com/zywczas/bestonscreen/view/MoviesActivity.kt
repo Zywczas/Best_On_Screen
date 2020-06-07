@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.di.App
+import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MoviesVM
