@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.localstore.MovieDao
 import com.zywczas.bestonscreen.model.webservice.TMDBService
+import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.toMovie
 import com.zywczas.bestonscreen.utilities.toMovieFromDB
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -43,14 +44,15 @@ class MovieRepository @Inject constructor(
         compositeDispMovieDetails.clear()
     }
 
-    fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<Event<List<Movie>>> {
+    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
         movies.clear()
 
         val moviesObservableApi = when (category) {
             Category.POPULAR -> { tmdbService.getPopularMovies() }
             Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
             Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-            else -> { exitProcess(0)}
+            else -> { Log.d("film error", "getMoviesFromApi exit process: incorrect movie category")
+                exitProcess(0)}
         }
 
         compositeDispMovies.add(moviesObservableApi
@@ -70,7 +72,6 @@ class MovieRepository @Inject constructor(
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
                     moviesMutableLdApi.postValue(Event(movies))
-                    Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
                 }
 
                 override fun onNext(m: Movie?) {
@@ -80,7 +81,6 @@ class MovieRepository @Inject constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    Toast.makeText(context,"Problem with downloading movies",Toast.LENGTH_LONG).show()
                     Log.d("film error", "${e?.localizedMessage}")
                 }
             })
@@ -88,50 +88,7 @@ class MovieRepository @Inject constructor(
         return moviesMutableLdApi
     }
 
-//    fun getMoviesFromApi (context: Context, category: Category) : MutableLiveData<List<Movie>> {
-//        movies.clear()
-//
-//        val moviesObservableApi = when (category) {
-//            Category.POPULAR -> { tmdbService.getPopularMovies() }
-//            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
-//            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-//            else -> { exitProcess(0)}
-//        }
-//
-//        compositeDisposable.add(moviesObservableApi
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
-//            .flatMap { movieFromApi ->
-//                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
-//                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
-//                //converts MovieFromAPI to Observable <Movie>
-//                Observable.just(toMovie(movieFromApi))
-//            }
-//            .subscribeWith(object : DisposableObserver<Movie>() {
-//                override fun onComplete() {
-//                    moviesMutableLdApi.postValue(movies)
-//                    Toast.makeText(context, category.toString(), Toast.LENGTH_LONG).show()
-//                }
-//
-//                override fun onNext(m: Movie?) {
-//                    if (m != null) {
-//                        movies.add(m)
-//                    }
-//                }
-//
-//                override fun onError(e: Throwable?) {
-//                    Toast.makeText(context,"Problem with downloading movies",Toast.LENGTH_LONG).show()
-//                    Log.d("film error", "${e?.localizedMessage}")
-//                }
-//            })
-//        )
-//        return moviesMutableLdApi
-//    }
-
-
-
-    fun getMoviesFromDB (context: Context, category: Category) : MutableLiveData<List<Movie>> {
+    fun getMoviesFromDB () : MutableLiveData<Event<List<Movie>>> {
 
         val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
@@ -139,29 +96,25 @@ class MovieRepository @Inject constructor(
             moviesObservableDB
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-//                .flatMap { moviesListFromDB ->
-//                    Log.d("film test", "flatmap z list na movieFromDb")
-//                    Flowable.fromArray(*moviesListFromDB.toTypedArray()) }
                 .onBackpressureBuffer()
                 //converts MovieFromDB to list of general Movie class
                 .map { moviesFromDB ->
                     movies.clear()
-                    Log.d("film test", "map")
+//                    Log.d("film test", "map")
                     for (e in moviesFromDB) {
                         movies.add(toMovie(e))
                     }
                     movies
                 }
-                    //Consumer onNext & onError
-                .subscribe({ listOfMovies ->  moviesMutableLdDB.postValue(listOfMovies)
-                    Log.d("film test", "get movies on onNext")
+                //Consumer onNext & onError
+                .subscribe({ listOfMovies ->  moviesMutableLdApi.postValue(Event(listOfMovies))
+//                    Log.d("film test", "get movies on onNext")
                 }, {throwable -> Log.d("film error", throwable?.localizedMessage)
-                    Log.d("film test", "getmovies onError")
                 })
 //
 
         )
-        return moviesMutableLdDB
+        return moviesMutableLdApi
     }
 
 
@@ -169,15 +122,9 @@ class MovieRepository @Inject constructor(
      * Adds a movie to the local data base so it can be displayed later (different fun)
      * in "To Watch List"
      */
-    fun addMovieToDB (movie: Movie)
-//            : MutableLiveData<Event<String>>
-    {
+    fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
         val completableRx3 = RxJavaBridge.toV3Completable(
-            movieDao.addMovie(
-                toMovieFromDB(
-                    movie
-                )
-            )
+            movieDao.addMovie(toMovieFromDB(movie))
         )
         compositeDispMovieDetails.add(
             completableRx3
@@ -185,15 +132,15 @@ class MovieRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-//                        stringEventLd.postValue(Event("Movie added to your list"))
+                        stringEventLd.postValue(Event("Movie added to your list"))
                     }
                     override fun onError(e: Throwable?) {
                         Log.d("film error", "${e?.localizedMessage}")
-//                        stringEventLd.postValue(Event("Problem with adding the movie"))
+                        stringEventLd.postValue(Event("Problem with adding the movie"))
                     }
                 })
         )
-//        return stringEventLd
+        return stringEventLd
     }
 
     fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Int>> {
@@ -203,7 +150,11 @@ class MovieRepository @Inject constructor(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({rowsAmount -> intEventLd.postValue(Event(rowsAmount))},
+                .subscribe({rowsAmount -> intEventLd.postValue(
+                    Event(
+                        rowsAmount
+                    )
+                )},
                     { throwable -> Log.d("film error", "${throwable?.localizedMessage}") }
                 )
         )
@@ -228,7 +179,7 @@ class MovieRepository @Inject constructor(
 //        return movieMutableLiveData
 //    }
 
-    fun deleteMovieFromDB(movie : Movie) {
+    fun deleteMovieFromDB(movie : Movie) :  MutableLiveData<Event<String>> {
         val completableRx3 = RxJavaBridge.toV3Completable(
             movieDao.deleteMovie(toMovieFromDB(movie))
         )
@@ -239,16 +190,17 @@ class MovieRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-
+                        stringEventLd.postValue(Event("Movie deleted from your list"))
                     }
 
                     override fun onError(e: Throwable?) {
-
+                        stringEventLd.postValue(Event("Problem with deleting the movie"))
                         Log.d("film error", "${e?.localizedMessage}")
                     }
 
                 })
         )
+        return stringEventLd
     }
 
 

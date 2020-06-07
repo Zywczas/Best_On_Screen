@@ -1,15 +1,13 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
-import com.zywczas.bestonscreen.model.Event
+import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.localstore.MovieDao
 import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import dagger.Module
 import dagger.Provides

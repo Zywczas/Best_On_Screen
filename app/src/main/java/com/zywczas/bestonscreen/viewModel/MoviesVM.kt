@@ -4,10 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Event
+import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.MovieRepository
-import com.zywczas.bestonscreen.model.localstore.MovieFromDB
 
 
 class MoviesVM constructor (private val repo: MovieRepository,
@@ -17,11 +16,11 @@ class MoviesVM constructor (private val repo: MovieRepository,
 
     fun clear() = repo.clearMoviesActivity()
 
-    fun getApiMovies(context: Context, category: Category) =
-        repo.getMoviesFromApi(context, category) as LiveData<Event<List<Movie>>>
+    fun getApiMovies(category: Category) =
+        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
 
-    fun getDbMovies(context: Context, category: Category) =
-        repo.getMoviesFromDB(context, category) as LiveData<List<Movie>>
+    fun getDbMovies() =
+        repo.getMoviesFromDB() as LiveData<Event<List<Movie>>>
 
 
 

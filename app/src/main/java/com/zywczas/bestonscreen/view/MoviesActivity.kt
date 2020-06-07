@@ -16,6 +16,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.viewModel.MoviesVM
 import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
@@ -74,51 +75,41 @@ class MoviesActivity : AppCompatActivity() {
         progressBarMovies.isVisible = true
 
         when (category) {
-            Category.TO_WATCH -> { showMoviesFromDB(category) }
+            Category.TO_WATCH -> { showMoviesFromDB() }
             else -> { showMoviesFromApi(category) }
         }
+
+        moviesToolbar.title = "Movies: $category"
     }
 
-    private fun showMoviesFromDB(category: Category){
+    private fun showMoviesFromDB(){
 
-        moviesVM.getDbMovies(this, category).observe(this,
-            Observer { movies ->
+        moviesVM.getDbMovies().observe(this,
+            Observer { it.getContentIfNotHandled()?.let {
+                    movies -> updateRecyclerView(movies)
                 Log.d("film test", "moviesDB w activity")
-//                if (movie != null) {
-                    moviesVM.movies.clear()
-                    moviesVM.movies.addAll(movies)
-                    movieAdapter.notifyDataSetChanged()
-                    progressBarMovies.isVisible = false
-//                }
+            }
             })
     }
 
     private fun showMoviesFromApi(category: Category){
-        moviesVM.getApiMovies(this, category).observe(this,
-            Observer { it.getContentIfNotHandled()?.let {movies ->
+        moviesVM.getApiMovies(category).observe(this,
+            Observer { it.getContentIfNotHandled()?.let {
+                    movies -> updateRecyclerView(movies)
                 Log.d("film test", "moviesAPI w activity")
-                    moviesVM.movies.clear()
-                    moviesVM.movies.addAll(movies)
-                    movieAdapter.notifyDataSetChanged()
-                    progressBarMovies.isVisible = false
-
             }
-
             })
     }
 
-//    private fun showMoviesFromApi(category: Category){
-//        moviesVM.getApiMovies(this, category).observe(this,
-//            Observer { movies ->
-//                Log.d("film test", "moviesAPI w activity")
-//                if (movies != null) {
-//                    moviesVM.movies.clear()
-//                    moviesVM.movies.addAll(movies)
-//                    movieAdapter.notifyDataSetChanged()
-//                    progressBarMovies.isVisible = false
-//                }
-//            })
-//    }
+    private fun updateRecyclerView (movies: List<Movie>){
+        moviesVM.movies.clear()
+        moviesVM.movies.addAll(movies)
+        movieAdapter.notifyDataSetChanged()
+        moviesRecyclerView.scrollToPosition(0)
+        progressBarMovies.isVisible = false
+    }
+
+
 
     override fun onDestroy() {
         moviesVM.clear()

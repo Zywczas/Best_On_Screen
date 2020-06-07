@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
@@ -39,13 +40,21 @@ class MovieDetailsActivity : AppCompatActivity() {
     fun addToListClicked (view: View) {
 
         if(addToListBtn.text.toString() == addToListBtn.textOn.toString()) {
-            movieDetailsVM.addMovieToDb(movie)
-            Log.d("film test", "add movie")
-        } else if (addToListBtn.text.toString() == addToListBtn.textOff.toString()) {
-            movieDetailsVM.deleteMovieFromDb(movie)
-            Log.d("film test", "delete movie")
-        }
 
+            movieDetailsVM.addMovieToDb(movie).observe(this,
+                Observer { it.getContentIfNotHandled()?.let {message ->
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                }
+            })
+
+        } else if (addToListBtn.text.toString() == addToListBtn.textOff.toString()) {
+
+            movieDetailsVM.deleteMovieFromDb(movie).observe(this,
+            Observer { it.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+            })
+        }
     }
 
     private fun setupMessageObserver(){

@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.utilities
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
