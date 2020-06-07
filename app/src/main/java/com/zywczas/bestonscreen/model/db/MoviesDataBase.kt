@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.model.localstore
+package com.zywczas.bestonscreen.model.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

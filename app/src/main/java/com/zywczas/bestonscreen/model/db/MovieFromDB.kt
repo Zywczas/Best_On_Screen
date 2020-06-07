@@ -1,12 +1,8 @@
-package com.zywczas.bestonscreen.model.localstore
+package com.zywczas.bestonscreen.model.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 /**
  * Model class for local data base

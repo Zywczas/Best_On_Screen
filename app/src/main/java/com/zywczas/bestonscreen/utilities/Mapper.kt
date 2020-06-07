@@ -1,7 +1,7 @@
 package com.zywczas.bestonscreen.utilities
 
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.localstore.MovieFromDB
+import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 /**

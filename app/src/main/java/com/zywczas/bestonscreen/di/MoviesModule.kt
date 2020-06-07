@@ -6,8 +6,8 @@ import androidx.room.Room
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.localstore.MovieDao
-import com.zywczas.bestonscreen.model.localstore.MoviesDataBase
+import com.zywczas.bestonscreen.model.db.MovieDao
+import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import dagger.Module
 import dagger.Provides

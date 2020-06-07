@@ -1,10 +1,8 @@
 package com.zywczas.bestonscreen.model
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.zywczas.bestonscreen.model.localstore.MovieDao
+import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.toMovie
@@ -26,8 +24,7 @@ class MovieRepository @Inject constructor(
     private val compositeDispMovieDetails: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val movieMutableLiveData: MutableLiveData<Movie>,
-    private val moviesMutableLdApi: MutableLiveData<Event<List<Movie>>>,
-    private val moviesMutableLdDB: MutableLiveData<List<Movie>>,
+    private val moviesMutableLiveData: MutableLiveData<Event<List<Movie>>>,
     private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
     private val booleanLiveData: MutableLiveData<Boolean>,
@@ -44,6 +41,15 @@ class MovieRepository @Inject constructor(
         compositeDispMovieDetails.clear()
     }
 
+    /**
+     * Function used to reduce boilerplate of Log.d.
+     * @param t Throwable?
+     * @return Log.d
+     */
+    private fun logD(t: Throwable?) = Log.d(MovieRepository::class.java.name, "${t?.localizedMessage}")
+
+
+
     fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
         movies.clear()
 
@@ -51,8 +57,7 @@ class MovieRepository @Inject constructor(
             Category.POPULAR -> { tmdbService.getPopularMovies() }
             Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
             Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-            else -> { Log.d("film error", "getMoviesFromApi exit process: incorrect movie category")
-                exitProcess(0)}
+            else -> { exitProcess(0)}
         }
 
         compositeDispMovies.add(moviesObservableApi
@@ -63,15 +68,11 @@ class MovieRepository @Inject constructor(
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
                 movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
                 //converts MovieFromAPI to Observable <Movie>
-                Observable.just(
-                    toMovie(
-                        movieFromApi
-                    )
-                )
+                Observable.just( toMovie(movieFromApi) )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
-                    moviesMutableLdApi.postValue(Event(movies))
+                    moviesMutableLiveData.postValue(Event(movies))
                 }
 
                 override fun onNext(m: Movie?) {
@@ -81,11 +82,11 @@ class MovieRepository @Inject constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    Log.d("film error", "${e?.localizedMessage}")
+                    logD(e)
                 }
             })
         )
-        return moviesMutableLdApi
+        return moviesMutableLiveData
     }
 
     fun getMoviesFromDB () : MutableLiveData<Event<List<Movie>>> {
@@ -107,14 +108,14 @@ class MovieRepository @Inject constructor(
                     movies
                 }
                 //Consumer onNext & onError
-                .subscribe({ listOfMovies ->  moviesMutableLdApi.postValue(Event(listOfMovies))
+                .subscribe({ listOfMovies ->  moviesMutableLiveData.postValue(Event(listOfMovies))
 //                    Log.d("film test", "get movies on onNext")
-                }, {throwable -> Log.d("film error", throwable?.localizedMessage)
-                })
+                }, {logD(it)}
+                )
 //
 
         )
-        return moviesMutableLdApi
+        return moviesMutableLiveData
     }
 
 
@@ -135,7 +136,7 @@ class MovieRepository @Inject constructor(
                         stringEventLd.postValue(Event("Movie added to your list"))
                     }
                     override fun onError(e: Throwable?) {
-                        Log.d("film error", "${e?.localizedMessage}")
+                        logD(e)
                         stringEventLd.postValue(Event("Problem with adding the movie"))
                     }
                 })
@@ -143,22 +144,20 @@ class MovieRepository @Inject constructor(
         return stringEventLd
     }
 
-    fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Int>> {
+    fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Boolean>> {
 
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
         compositeDispMovieDetails.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({rowsAmount -> intEventLd.postValue(
-                    Event(
-                        rowsAmount
-                    )
-                )},
-                    { throwable -> Log.d("film error", "${throwable?.localizedMessage}") }
+                .subscribe({when(it){
+                    1 -> booleanEventLd.postValue(Event(true))
+                    0 -> booleanEventLd.postValue(Event(false))
+                }}, { logD(it)}
                 )
         )
-        return intEventLd
+        return booleanEventLd
     }
 
 //    fun getMovieFromDB(movieId: Int, context: Context) : MutableLiveData<Movie>{
@@ -195,14 +194,12 @@ class MovieRepository @Inject constructor(
 
                     override fun onError(e: Throwable?) {
                         stringEventLd.postValue(Event("Problem with deleting the movie"))
-                        Log.d("film error", "${e?.localizedMessage}")
+                        logD(e)
                     }
 
                 })
         )
         return stringEventLd
     }
-
-
 
 }

@@ -1,10 +1,9 @@
-package com.zywczas.bestonscreen.model.localstore
+package com.zywczas.bestonscreen.model.db
 
 import androidx.room.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
 
 @Dao
 interface MovieDao {

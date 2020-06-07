@@ -70,9 +70,10 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     fun categoryClicked(view : View) {
-        val category = view.tag as Category
         closeDrawer()
         progressBarMovies.isVisible = true
+
+        val category = view.tag as Category
 
         when (category) {
             Category.TO_WATCH -> { showMoviesFromDB() }

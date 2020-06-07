@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.view
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,7 +35,6 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         setupMovieUIDetails()
         checkIfMovieIsInDb()
-        setupMessageObserver()
     }
 
     fun addToListClicked (view: View) {
@@ -42,27 +42,21 @@ class MovieDetailsActivity : AppCompatActivity() {
         if(addToListBtn.text.toString() == addToListBtn.textOn.toString()) {
 
             movieDetailsVM.addMovieToDb(movie).observe(this,
-                Observer { it.getContentIfNotHandled()?.let {message ->
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                }
+                Observer { it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })
 
         } else if (addToListBtn.text.toString() == addToListBtn.textOff.toString()) {
 
             movieDetailsVM.deleteMovieFromDb(movie).observe(this,
-            Observer { it.getContentIfNotHandled()?.let { message ->
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            }
+            Observer { it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })
         }
     }
 
-    private fun setupMessageObserver(){
-
-    }
-
+    @SuppressLint("SetTextI18n")
     private fun setupMovieUIDetails() {
         movie = intent.getParcelableExtra(EXTRA_MOVIE)!!
+
         //downloading image of width 300 because tmdb Api doesn't support 250, resized in picasso to 250
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
 
@@ -76,30 +70,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
         genresTextViewDetails.text = "Genres: ${movie.genre1}"
         overviewTextViewDetails.text = movie.overview
-
-        genresTextViewDetails.text = when (movie.genresAmount) {
-            1 -> "Genre: ${movie.genre1}"
-            2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
-            3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
-            4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
-            5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
-            else -> "no information about genres"
-        }
+        genresTextViewDetails.text = movieDetailsVM.getGenresDescription(movie)
     }
 
     private fun checkIfMovieIsInDb(){
         if (movie.id != null) {
             movieDetailsVM.checkIfMovieIsInDb(movie.id!!).observe(this,
-            Observer { it.getContentIfNotHandled()?.let {rowsQuantity ->
-                Log.d("film test", "movie details: $rowsQuantity")
-                if (rowsQuantity == 1) {
-                    addToListBtn.isChecked = true
-                } else if (rowsQuantity == 0) {
-                    addToListBtn.isChecked = false
-                }
-            }
+            Observer { it.getContentIfNotHandled()?.let { b -> addToListBtn.isChecked = b }
             })
-
         }
     }
 
@@ -107,4 +85,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsVM.clear()
         super.onDestroy()
     }
+
+    private fun showToast(message: String) =
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
