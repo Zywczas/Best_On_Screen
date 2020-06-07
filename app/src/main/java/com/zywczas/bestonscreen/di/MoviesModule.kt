@@ -47,6 +47,9 @@ class MoviesModule(private val application: Application) {
     @Provides
     fun provideMovieListEventLd() : MutableLiveData<Event<List<Movie>>> = MutableLiveData()
 
+    @Provides
+    fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
+
     @Provides @Singleton
     fun provideTMDBService() : TMDBService = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")

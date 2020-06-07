@@ -4,7 +4,7 @@ import com.zywczas.bestonscreen.model.localstore.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 /**
- * Extension function to convert MovieFromApi to general Movie class.
+ * Function to convert MovieFromApi to general Movie class.
  * @param movieFromApi MovieFromApi which is converted to Movie
  * @return Movie
  */
@@ -31,7 +31,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
 )
 
 /**
- * Extension function to convert MovieFromDB to general Movie class.
+ * Function to convert movie from data base (MovieFromDB) to general Movie class.
  * @param movieFromDB MovieFromDB which is converted to Movie
  * @return Movie
  */
@@ -58,7 +58,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
     )
 
 /**
- * Extension function to convert Movie to MovieFromDB SQL entity class.
+ * Function to convert Movie to MovieFromDB SQL entity class.
  * @param movie Movie which is converted to Movie
  * @return Movie
  */

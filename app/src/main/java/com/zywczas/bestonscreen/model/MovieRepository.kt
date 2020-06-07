@@ -37,7 +37,8 @@ class MovieRepository @Inject constructor(
     private val movieDao: MovieDao,
     private val booleanLiveData: MutableLiveData<Boolean>,
     private val booleanEventLd: MutableLiveData<Event<Boolean>>,
-    private val intEventLd: MutableLiveData<Event<Int>>
+    private val intEventLd: MutableLiveData<Event<Int>>,
+    private val stringEventLd : MutableLiveData<Event<String>>
 ) {
 
     fun clear() {
@@ -149,11 +150,13 @@ class MovieRepository @Inject constructor(
                         movies.add(toMovie(e))
                     }
                     movies
-
                 }
                     //Consumer onNext & onError
-                .subscribe({ listOfMovies ->  moviesMutableLdDB.postValue(listOfMovies)},
-                    {throwable -> Log.d("film error", throwable?.localizedMessage)})
+                .subscribe({ listOfMovies ->  moviesMutableLdDB.postValue(listOfMovies)
+                    Log.d("film test", "get movies on onNext")
+                }, {throwable -> Log.d("film error", throwable?.localizedMessage)
+                    Log.d("film test", "getmovies onError")
+                })
 //
 
         )
@@ -165,7 +168,9 @@ class MovieRepository @Inject constructor(
      * Adds a movie to the local data base so it can be displayed later (different fun)
      * in "To Watch List"
      */
-    fun addMovieToDB (movie: Movie, context: Context) {
+    fun addMovieToDB (movie: Movie)
+//            : MutableLiveData<Event<String>>
+    {
         val completableRx3 = RxJavaBridge.toV3Completable(
             movieDao.addMovie(toMovieFromDB(movie))
         )
@@ -175,15 +180,15 @@ class MovieRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-                        Toast.makeText(context, "Movie added to your list", Toast.LENGTH_SHORT).show()
+//                        stringEventLd.postValue(Event("Movie added to your list"))
                     }
-
                     override fun onError(e: Throwable?) {
                         Log.d("film error", "${e?.localizedMessage}")
-                        Toast.makeText(context, "Problem with adding the movie", Toast.LENGTH_SHORT).show()
+//                        stringEventLd.postValue(Event("Problem with adding the movie"))
                     }
                 })
         )
+//        return stringEventLd
     }
 
     fun checkIfMovieInDB (movieId: Int) : MutableLiveData<Event<Int>> {
@@ -218,7 +223,7 @@ class MovieRepository @Inject constructor(
 //        return movieMutableLiveData
 //    }
 
-    fun deleteMovieFromDB(movie : Movie, context: Context) {
+    fun deleteMovieFromDB(movie : Movie) {
         val completableRx3 = RxJavaBridge.toV3Completable(
             movieDao.deleteMovie(toMovieFromDB(movie))
         )
@@ -229,11 +234,11 @@ class MovieRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-                        Toast.makeText(context, "The movie removed.", Toast.LENGTH_LONG).show()
+
                     }
 
                     override fun onError(e: Throwable?) {
-                        Toast.makeText(context, "Cannot remove the movie.", Toast.LENGTH_LONG).show()
+
                         Log.d("film error", "${e?.localizedMessage}")
                     }
 

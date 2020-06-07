@@ -42,39 +42,48 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         setupMovieUIDetails()
         checkIfMovieIsInDb()
+        setupMessageObserver()
     }
 
     fun addToListClicked (view: View) {
-        movieDetailsVM.addMovieToWatchList(movie, this)
+
+        if(addToListBtn.text.toString() == addToListBtn.textOn.toString()) {
+            movieDetailsVM.addMovieToWatchList(movie)
+            Log.d("film test", "add movie")
+        } else if (addToListBtn.text.toString() == addToListBtn.textOff.toString()) {
+            movieDetailsVM.deleteMovieFromToWatchList(movie)
+            Log.d("film test", "delete movie")
+        }
+
+    }
+
+    private fun setupMessageObserver(){
+
     }
 
     private fun setupMovieUIDetails() {
-        movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-        if (movie != null) {
-            //downloading image of width 300 because tmdb doesn't support 250, resized in picasso to 250
-            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+        movie = intent.getParcelableExtra(EXTRA_MOVIE)!!
+        //downloading image of width 300 because tmdb Api doesn't support 250, resized in picasso to 250
+        val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
 
-            picasso.load(posterPath)
-                .resize(250, 0)
-                .error(R.drawable.error_image)
-                .into(posterImageViewDetails)
+        picasso.load(posterPath)
+            .resize(250, 0)
+            .error(R.drawable.error_image)
+            .into(posterImageViewDetails)
 
-            titleTextViewDetails.text = movie.title
-            rateTextViewDetails.text = "Rate: ${movie.voteAverage.toString()}"
-            releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
-            genresTextViewDetails.text = "Genres: ${movie.genre1}"
-            overviewTextViewDetails.text = movie.overview
+        titleTextViewDetails.text = movie.title
+        rateTextViewDetails.text = "Rate: ${movie.voteAverage.toString()}"
+        releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
+        genresTextViewDetails.text = "Genres: ${movie.genre1}"
+        overviewTextViewDetails.text = movie.overview
 
-            genresTextViewDetails.text = when (movie.genresAmount) {
-                1 -> "Genre: ${movie.genre1}"
-                2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
-                3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
-                4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
-                5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
-                else -> "no information about genres"
-            }
-        } else {
-            Toast.makeText(this, "Problem with getting the movie", Toast.LENGTH_LONG).show()
+        genresTextViewDetails.text = when (movie.genresAmount) {
+            1 -> "Genre: ${movie.genre1}"
+            2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
+            3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
+            4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
+            5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
+            else -> "no information about genres"
         }
     }
 
