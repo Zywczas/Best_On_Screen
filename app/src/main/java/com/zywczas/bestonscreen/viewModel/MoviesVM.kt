@@ -16,11 +16,18 @@ class MoviesVM constructor (private val repo: MovieRepository,
 
     fun clear() = repo.clearMoviesActivity()
 
-    fun getApiMovies(category: Category) =
-        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
+//    fun getApiMovies(category: Category) =
+//        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
+//
+//    fun getDbMovies() =
+//        repo.getMoviesFromDB() as LiveData<Event<List<Movie>>>
 
-    fun getDbMovies() =
-        repo.getMoviesFromDB() as LiveData<Event<List<Movie>>>
+    fun getMovies(category: Category) : LiveData<Event<List<Movie>>> {
+        return when(category) {
+            Category.TO_WATCH -> repo.getMoviesFromDB()
+            else -> repo.getMoviesFromApi(category)
+        }
+    }
 
 
 

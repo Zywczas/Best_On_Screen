@@ -75,31 +75,11 @@ class MoviesActivity : AppCompatActivity() {
 
         val category = view.tag as Category
 
-        when (category) {
-            Category.TO_WATCH -> { showMoviesFromDB() }
-            else -> { showMoviesFromApi(category) }
-        }
+        moviesVM.getMovies(category).observe(this, Observer {
+            it.getContentIfNotHandled()?.let { l -> updateRecyclerView(l) }
+        })
 
         moviesToolbar.title = "Movies: $category"
-    }
-
-    private fun showMoviesFromDB(){
-
-        moviesVM.getDbMovies().observe(this,
-            Observer { it.getContentIfNotHandled()?.let {
-                    movies -> updateRecyclerView(movies)
-                Log.d("film test", "moviesDB w activity")
-            }
-            })
-    }
-
-    private fun showMoviesFromApi(category: Category){
-        moviesVM.getApiMovies(category).observe(this,
-            Observer { it.getContentIfNotHandled()?.let {
-                    movies -> updateRecyclerView(movies)
-                Log.d("film test", "moviesAPI w activity")
-            }
-            })
     }
 
     private fun updateRecyclerView (movies: List<Movie>){
