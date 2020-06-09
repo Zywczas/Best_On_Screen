@@ -171,7 +171,7 @@ class MovieRepository @Inject constructor(
 //                    //Consumer which accepts single Movie and Throwable
 //                .subscribe({ movie-> movieMutableLiveData.postValue(movie) },
 //                    { t -> Log.d("error", "${t?.localizedMessage}")
-//                    Toast.makeText(context, "Problem with receiving the movie from DB", Toast.LENGTH_LONG).show()
+//                    showToast("Problem with receiving the movie from DB")
 //                    }
 //                )
 //        )

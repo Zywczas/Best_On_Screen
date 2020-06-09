@@ -14,23 +14,30 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MovieAdapter (private val context: Context, private val movies: ArrayList<Movie>,
+class MovieAdapter (private val context: Context,
+//                    private val movies: ArrayList<Movie>,
                     private val picasso: Picasso, private val itemClick: (Movie) -> Unit)
     : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+
+    private var movies = ArrayList<Movie>()
+
+    fun setMovies(movies: List<Movie>){
+        this.movies = movies as ArrayList<Movie>
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val posterImage: ImageView = itemView.findViewById(R.id.posterImageViewMovies)
         private val title: TextView = itemView.findViewById(R.id.titleTextViewMovies)
         private val rate: TextView = itemView.findViewById(R.id.rateTextViewMovies)
 
-        fun bindMovie (context: Context, movie: Movie) {
+        fun bindMovie (movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
-            //downloading image of width 200 because tmdb doesn't support 100, resized in picasso to 100
+            //downloading image of width 200
             val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
 
             picasso.load(posterPath)
-//                .resize(200, 0)
                 .error(R.drawable.error_image)
                 .into(posterImage)
 
@@ -48,7 +55,7 @@ class MovieAdapter (private val context: Context, private val movies: ArrayList<
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindMovie(context, movies[position])
+        holder.bindMovie(movies[position])
     }
 
 }

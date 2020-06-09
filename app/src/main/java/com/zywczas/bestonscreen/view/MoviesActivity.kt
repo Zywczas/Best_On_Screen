@@ -51,7 +51,9 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, moviesVM.movies, picasso) {movie ->
+        movieAdapter = MovieAdapter(this, picasso)
+        //custom onClick method for recycler view
+        {movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
@@ -76,21 +78,18 @@ class MoviesActivity : AppCompatActivity() {
         val category = view.tag as Category
 
         moviesVM.getMovies(category).observe(this, Observer {
-            it.getContentIfNotHandled()?.let { l -> updateRecyclerView(l) }
+            it.getContentIfNotHandled()?.let { movies ->
+//                moviesVM.movies.clear()
+//        moviesVM.movies.addAll(movies)
+//        movieAdapter.notifyDataSetChanged()
+                movieAdapter.setMovies(movies)
+                moviesRecyclerView.scrollToPosition(0) //to mozna do MovieAdapter wrzucic pozniej
+                progressBarMovies.isVisible = false
+            }
         })
 
         moviesToolbar.title = "Movies: $category"
     }
-
-    private fun updateRecyclerView (movies: List<Movie>){
-        moviesVM.movies.clear()
-        moviesVM.movies.addAll(movies)
-        movieAdapter.notifyDataSetChanged()
-        moviesRecyclerView.scrollToPosition(0)
-        progressBarMovies.isVisible = false
-    }
-
-
 
     override fun onDestroy() {
         moviesVM.clear()

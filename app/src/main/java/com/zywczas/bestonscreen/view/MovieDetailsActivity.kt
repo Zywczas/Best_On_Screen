@@ -3,9 +3,7 @@ package com.zywczas.bestonscreen.view
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
@@ -13,6 +11,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVM
 import com.zywczas.bestonscreen.viewModel.MovieDetailsVMFactory
 import kotlinx.android.synthetic.main.activity_movie_details.*
@@ -85,7 +84,4 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsVM.clear()
         super.onDestroy()
     }
-
-    private fun showToast(message: String) =
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
