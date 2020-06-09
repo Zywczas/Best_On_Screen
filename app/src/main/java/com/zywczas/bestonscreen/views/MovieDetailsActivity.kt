@@ -46,7 +46,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     fun addToListClicked (view: View) {
 
-        movieDetailsVM.addOrDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
+        movieDetailsVM.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) } })
 
@@ -63,7 +63,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-
+//pozniej poprawic te teksty i do string je wrzucic
         titleTextViewDetails.text = movieFromParcel.title
         rateTextViewDetails.text = "Rate: ${movieFromParcel.voteAverage.toString()}"
         releaseDateTextViewDetails.text = "Release date: ${movieFromParcel.releaseDate}"

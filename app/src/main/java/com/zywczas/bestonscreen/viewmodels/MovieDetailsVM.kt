@@ -25,13 +25,14 @@ class MovieDetailsVM (private val repo: MovieRepository
 
 //    fun deleteMovieFromDb(movie: Movie) = repo.deleteMovieFromDB(movie) as LiveData<Event<String>>
 
-    fun addOrDeleteMovie(movie: Movie, buttonIsChecked: String) =
+    fun addDeleteMovie(movie: Movie, buttonIsChecked: String) =
         when(buttonIsChecked){
             "false" -> repo.addMovieToDB(movie)
             "true" -> repo.deleteMovieFromDB(movie)
             else -> {logD("incorrect tag on the button")
                 exitProcess(0)}
         } as LiveData<Event<String>>
+
 
     fun getGenresDescription(movie: Movie) : String {
         return when (movie.genresAmount) {

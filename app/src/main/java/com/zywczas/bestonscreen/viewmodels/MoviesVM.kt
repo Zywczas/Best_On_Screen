@@ -21,12 +21,19 @@ class MoviesVM constructor (private val repo: MovieRepository,
 //    fun getDbMovies() =
 //        repo.getMoviesFromDB() as LiveData<Event<List<Movie>>>
 
-    fun getMovies(category: Category) : LiveData<Event<List<Movie>>> {
+    fun getMovies(category: Category) : LiveData<List<Movie>> {
         return when(category) {
             Category.TO_WATCH -> repo.getMoviesFromDB()
             else -> repo.getMoviesFromApi(category)
         }
     }
+
+//    fun getMovies(category: Category) : LiveData<Event<List<Movie>>> {
+//        return when(category) {
+//            Category.TO_WATCH -> repo.getMoviesFromDB()
+//            else -> repo.getMoviesFromApi(category)
+//        }
+//    }
 
 
 

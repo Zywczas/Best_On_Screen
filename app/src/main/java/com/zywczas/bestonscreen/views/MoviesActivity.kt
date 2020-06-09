@@ -59,6 +59,7 @@ class MoviesActivity : AppCompatActivity() {
         moviesRecyclerView.adapter = movieAdapter
         val layoutManager = GridLayoutManager(this, 2)
         moviesRecyclerView.layoutManager = layoutManager
+        movieAdapter
     }
 
     //tags used to choose category of movie and to be passed to MovieRepository
@@ -76,14 +77,14 @@ class MoviesActivity : AppCompatActivity() {
         val category = view.tag as Category
 
         moviesVM.getMovies(category).observe(this, Observer {
-            it.getContentIfNotHandled()?.let { movies ->
+             movies ->
 //                moviesVM.movies.clear()
 //        moviesVM.movies.addAll(movies)
 //        movieAdapter.notifyDataSetChanged()
                 movieAdapter.setMovies(movies)
                 moviesRecyclerView.scrollToPosition(0) //to mozna do MovieAdapter wrzucic pozniej
                 progressBarMovies.isVisible = false
-            }
+
         })
 
         moviesToolbar.title = "Movies: $category"
