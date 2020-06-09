@@ -144,6 +144,22 @@ class MovieRepository @Inject constructor(
         return stringEventLd
     }
 
+//    fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Boolean> {
+//
+//        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
+//        compositeDispMovieDetails.add(
+//            movieFromDBObservable
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({when(it){
+//                    1 -> booleanLiveData.postValue(true)
+//                    0 -> booleanLiveData.postValue(false)
+//                }}, { logD(it)}
+//                )
+//        )
+//        return booleanLiveData
+//    }
+
     fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Boolean>> {
 
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))

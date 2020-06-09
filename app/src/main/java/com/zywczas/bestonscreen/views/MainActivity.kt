@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.view
+package com.zywczas.bestonscreen.views
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

@@ -1,25 +1,37 @@
-package com.zywczas.bestonscreen.viewModel
+package com.zywczas.bestonscreen.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.MovieRepository
+import com.zywczas.bestonscreen.utilities.logD
+import kotlin.system.exitProcess
 
 class MovieDetailsVM (private val repo: MovieRepository
-//                      private val stringMutableLd: MutableLiveData<String>,
-//                      private val stringLiveData: LiveData<String>
+//                      , private val errorEventStringLd: MutableLiveData<Event<String>>
+//                      ,  private val stringLiveData: LiveData<String>
                       ) : ViewModel(){
 
     fun clear() = repo.clearMovieDetailsActivity()
 
-    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
+//    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
 
 //    fun getMovie(movieId: Int, context: Context) = repo.getMovieFromDB(movieId, context) as LiveData<Movie>
     fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Event<Boolean>>
+//    fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 
-    fun deleteMovieFromDb(movie: Movie) = repo.deleteMovieFromDB(movie) as LiveData<Event<String>>
+//    fun deleteMovieFromDb(movie: Movie) = repo.deleteMovieFromDB(movie) as LiveData<Event<String>>
+
+    fun addOrDeleteMovie(movie: Movie, buttonIsChecked: String) =
+        when(buttonIsChecked){
+            "false" -> repo.addMovieToDB(movie)
+            "true" -> repo.deleteMovieFromDB(movie)
+            else -> {logD("incorrect tag on the button")
+                exitProcess(0)}
+        } as LiveData<Event<String>>
 
     fun getGenresDescription(movie: Movie) : String {
         return when (movie.genresAmount) {

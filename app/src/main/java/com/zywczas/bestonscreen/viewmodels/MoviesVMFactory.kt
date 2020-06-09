@@ -1,9 +1,8 @@
-package com.zywczas.bestonscreen.viewModel
+package com.zywczas.bestonscreen.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.model.MovieRepository
 import javax.inject.Inject
 

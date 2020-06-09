@@ -1,6 +1,5 @@
-package com.zywczas.bestonscreen.viewModel
+package com.zywczas.bestonscreen.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Category

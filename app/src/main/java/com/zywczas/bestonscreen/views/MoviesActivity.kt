@@ -1,9 +1,8 @@
-package com.zywczas.bestonscreen.view
+package com.zywczas.bestonscreen.views
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -16,10 +15,9 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.viewModel.MoviesVM
-import com.zywczas.bestonscreen.viewModel.MoviesVMFactory
+import com.zywczas.bestonscreen.viewmodels.MoviesVM
+import com.zywczas.bestonscreen.viewmodels.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
