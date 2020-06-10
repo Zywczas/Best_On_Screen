@@ -80,9 +80,9 @@ class MoviesActivity : AppCompatActivity() {
 
         moviesVM.getMovies(category).observe(this, Observer { movies ->
             logD("list adapter dostaje liste")
-            movieAdapter.submitList(movies)
+            movieAdapter.submitList(movies.toMutableList())
             progressBarMovies.isVisible = false
-                moviesRecyclerView.scrollToPosition(0)
+                moviesRecyclerView.smoothScrollToPosition(0)
 //                moviesRecyclerView.smoothScrollToPosition(0)//to mozna do MovieAdapter wrzucic pozniej
         })
 
