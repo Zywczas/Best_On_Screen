@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Category
@@ -13,7 +14,7 @@ class MoviesVM constructor (private val repo: MovieRepository,
                             val movies: ArrayList<Movie>
 ) : ViewModel() {
 
-    fun clear() = repo.clearMoviesActivity()
+    fun clear() = repo.clearMoviesDisposables()
 
 //    fun getApiMovies(category: Category) =
 //        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>

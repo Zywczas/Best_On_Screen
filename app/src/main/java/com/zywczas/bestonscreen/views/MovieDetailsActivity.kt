@@ -44,17 +44,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         checkIfMovieIsInDb()
     }
 
-    fun addToListClicked (view: View) {
-
-        movieDetailsVM.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
-            .observe(this, Observer {
-                it.getContentIfNotHandled()?.let { m -> showToast(m) } })
-
-    }
-
-
     private fun setupMovieUIDetails() {
-
 
         //downloading image of width 300 because tmdb Api doesn't support 250, resized in picasso to 250
         val posterPath = "https://image.tmdb.org/t/p/w300" + movieFromParcel.posterPath
@@ -71,18 +61,20 @@ class MovieDetailsActivity : AppCompatActivity() {
         genresTextViewDetails.text = movieDetailsVM.getGenresDescription(movieFromParcel)
     }
 
-//    private fun checkIfMovieIsInDb(){
-//        if (movieFromParcel.id != null) {
-//            movieDetailsVM.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
-//            Observer {  b -> addToListBtn.isChecked = b })
-//        }
-//    }
+    fun addToListClicked (view: View) {
+
+        movieDetailsVM.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
+            .observe(this, Observer {
+                it.getContentIfNotHandled()?.let { m -> showToast(m) } })
+
+    }
 
     private fun checkIfMovieIsInDb(){
             movieDetailsVM.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
-                Observer { it.getContentIfNotHandled()?.let { b ->
-                    addToListBtn.isChecked = b
-                    addToListBtn.tag = b.toString()
+                Observer { it.getContentIfNotHandled()?.let { boolean ->
+                    addToListBtn.isChecked = boolean
+                    //this tag is used in addToListClicked() so it know whether to add or delete movie
+                    addToListBtn.tag = boolean.toString()
                 }
                 })
     }

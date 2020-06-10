@@ -14,7 +14,7 @@ interface MovieDao {
     @Delete
     fun deleteMovie(movieFromDB: MovieFromDB) : Completable
 
-    @Query ("SELECT * FROM movies")
+    @Query ("SELECT * FROM movies ORDER BY title ASC")
     fun getMovies() : Flowable<List<MovieFromDB>>
 
     @Query ("SELECT * FROM movies WHERE id == :movieId")

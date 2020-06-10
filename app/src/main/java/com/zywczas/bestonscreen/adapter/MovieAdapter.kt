@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
@@ -14,16 +16,25 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MovieAdapter (private val context: Context,
-//                    private val movies: ArrayList<Movie>,
-                    private val picasso: Picasso, private val itemClick: (Movie) -> Unit)
-    : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter(
+    private val context: Context,
+    private val picasso: Picasso,
+    private val itemClick: (Movie) -> Unit
+) : ListAdapter<Movie, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var movies = ArrayList<Movie>()
+    //DIFF_CALLBACK as static val so it can be created before ListAdapter and passed to the constructor
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
+            //checks if object is the same, 'id' is unique so if ids are the same then the same object
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    fun setMovies(movies: List<Movie>){
-        this.movies = movies as ArrayList<Movie>
-        notifyDataSetChanged()
+            //checks if value is the same, could be used on 'id' but for practice 'title: String' is used
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,7 +42,7 @@ class MovieAdapter (private val context: Context,
         private val title: TextView = itemView.findViewById(R.id.titleTextViewMovies)
         private val rate: TextView = itemView.findViewById(R.id.rateTextViewMovies)
 
-        fun bindMovie (movie: Movie) {
+        fun bindMovie(movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
             //downloading image of width 200
@@ -50,12 +61,10 @@ class MovieAdapter (private val context: Context,
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return movies.count()
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindMovie(movies[position])
+        if (position < itemCount && position != RecyclerView.NO_POSITION) {
+            holder.bindMovie(getItem(position))
+        }
     }
 
 }

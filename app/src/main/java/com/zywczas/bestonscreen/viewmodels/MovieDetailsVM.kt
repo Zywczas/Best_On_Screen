@@ -15,7 +15,7 @@ class MovieDetailsVM (private val repo: MovieRepository
 //                      ,  private val stringLiveData: LiveData<String>
                       ) : ViewModel(){
 
-    fun clear() = repo.clearMovieDetailsActivity()
+    fun clear() = repo.clearMovieDetailsDisposables()
 
 //    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
 

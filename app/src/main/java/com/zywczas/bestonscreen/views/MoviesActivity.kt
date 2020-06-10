@@ -10,12 +10,14 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.viewmodels.MoviesVM
 import com.zywczas.bestonscreen.viewmodels.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
@@ -58,8 +60,8 @@ class MoviesActivity : AppCompatActivity() {
         }
         moviesRecyclerView.adapter = movieAdapter
         val layoutManager = GridLayoutManager(this, 2)
+//        val layoutManager = LinearLayoutManager(this)
         moviesRecyclerView.layoutManager = layoutManager
-        movieAdapter
     }
 
     //tags used to choose category of movie and to be passed to MovieRepository
@@ -76,15 +78,12 @@ class MoviesActivity : AppCompatActivity() {
 
         val category = view.tag as Category
 
-        moviesVM.getMovies(category).observe(this, Observer {
-             movies ->
-//                moviesVM.movies.clear()
-//        moviesVM.movies.addAll(movies)
-//        movieAdapter.notifyDataSetChanged()
-                movieAdapter.setMovies(movies)
-                moviesRecyclerView.scrollToPosition(0) //to mozna do MovieAdapter wrzucic pozniej
-                progressBarMovies.isVisible = false
-
+        moviesVM.getMovies(category).observe(this, Observer { movies ->
+            logD("list adapter dostaje liste")
+            movieAdapter.submitList(movies)
+            progressBarMovies.isVisible = false
+                moviesRecyclerView.scrollToPosition(0)
+//                moviesRecyclerView.smoothScrollToPosition(0)//to mozna do MovieAdapter wrzucic pozniej
         })
 
         moviesToolbar.title = "Movies: $category"

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.toMovie
 import com.zywczas.bestonscreen.utilities.toMovieFromDB
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -25,7 +26,7 @@ class MovieRepository @Inject constructor(
     private val movies: ArrayList<Movie>,
     private val movieLd: MutableLiveData<Movie>,
     private val moviesEventLd: MutableLiveData<Event<List<Movie>>>,
-    private val moviesLd: MutableLiveData<List<Movie>>,
+    val moviesLd: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
     private val booleanLd: MutableLiveData<Boolean>,
@@ -34,22 +35,16 @@ class MovieRepository @Inject constructor(
     val stringEventLd : MutableLiveData<Event<String>>
 ) {
 
-    fun clearMoviesActivity() {
+    fun clearMoviesDisposables() {
         compositeDispMovies.clear()
     }
 
-    fun clearMovieDetailsActivity() {
+    fun clearMovieDetailsDisposables() {
         compositeDispMovieDetails.clear()
     }
 
-    /**
-     * Function used to reduce boilerplate of Log.d.
-     * @param t Throwable?
-     * @return Log.d
-     */
-    private fun logD(t: Throwable?) = Log.d(MovieRepository::class.java.name, "${t?.localizedMessage}")
-
-
+    private fun log(t: Throwable?) =
+        Log.d("film error", "${t?.localizedMessage}")
 
 //    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
 //        movies.clear()
@@ -73,7 +68,7 @@ class MovieRepository @Inject constructor(
 //            }
 //            .subscribeWith(object : DisposableObserver<Movie>() {
 //                override fun onComplete() {
-//                    moviesMutableLiveData.postValue(Event(movies))
+//                    moviesEventLd.postValue(Event(movies))
 //                }
 //
 //                override fun onNext(m: Movie?) {
@@ -83,11 +78,11 @@ class MovieRepository @Inject constructor(
 //                }
 //
 //                override fun onError(e: Throwable?) {
-//                    logD(e)
+//                    e?.localizedMessage?.let { logD(it) }
 //                }
 //            })
 //        )
-//        return moviesMutableLiveData
+//        return moviesEventLd
 //    }
 
     fun getMoviesFromApi (category: Category) : MutableLiveData<List<Movie>> {
@@ -112,17 +107,19 @@ class MovieRepository @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
+                    logD("wysyla liste z API")
                     moviesLd.postValue(movies)
                 }
 
                 override fun onNext(m: Movie?) {
                     if (m != null) {
+                        logD("pobiera filmy z API")
                         movies.add(m)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    logD(e)
+                    log(e)
                 }
             })
         )
@@ -148,14 +145,14 @@ class MovieRepository @Inject constructor(
 //                    movies
 //                }
 //                //Consumer onNext & onError
-//                .subscribe({ listOfMovies ->  moviesMutableLiveData.postValue(Event(listOfMovies))
+//                .subscribe({ listOfMovies ->  moviesEventLd.postValue(Event(listOfMovies))
 ////                    Log.d("film test", "get movies on onNext")
-//                }, {logD(it)}
+//                }, { it?.localizedMessage?.let { it1 -> logD(it1) } }
 //                )
 ////
 //
 //        )
-//        return moviesMutableLiveData
+//        return moviesEventLd
 //    }
 
     fun getMoviesFromDB () : MutableLiveData<List<Movie>> {
@@ -169,6 +166,7 @@ class MovieRepository @Inject constructor(
                 .onBackpressureBuffer()
                 //converts MovieFromDB to list of general Movie class
                 .map { moviesFromDB ->
+                    logD("pobiera liste z db")
                     movies.clear()
 //                    Log.d("film test", "map")
                     for (e in moviesFromDB) {
@@ -179,12 +177,11 @@ class MovieRepository @Inject constructor(
                 //Consumer onNext & onError
                 .subscribe({ movies ->  moviesLd.postValue(movies)
 //                    Log.d("film test", "get movies on onNext")
-                }, {logD(it)}
+                }, { log(it) }
                 )
         )
         return moviesLd
     }
-
 
     /**
      * Adds a movie to the local data base so it can be displayed later (different fun)
@@ -203,7 +200,7 @@ class MovieRepository @Inject constructor(
                         stringEventLd.postValue(Event("Movie added to your list"))
                     }
                     override fun onError(e: Throwable?) {
-                        logD(e)
+                         log(e)
                         stringEventLd.postValue(Event("Problem with adding the movie"))
                     }
                 })
@@ -237,7 +234,7 @@ class MovieRepository @Inject constructor(
                 .subscribe({when(it){
                     1 -> booleanEventLd.postValue(Event(true))
                     0 -> booleanEventLd.postValue(Event(false))
-                }}, { logD(it)}
+                }}, { log(it) }
                 )
         )
         return booleanEventLd
@@ -277,7 +274,7 @@ class MovieRepository @Inject constructor(
 
                     override fun onError(e: Throwable?) {
                         stringEventLd.postValue(Event("Problem with deleting the movie"))
-                        logD(e)
+                        log(e)
                     }
 
                 })
