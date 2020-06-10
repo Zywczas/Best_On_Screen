@@ -113,7 +113,6 @@ class MovieRepository @Inject constructor(
 
                 override fun onNext(m: Movie?) {
                     if (m != null) {
-                        logD("pobiera filmy z API")
                         movies.add(m)
                     }
                 }

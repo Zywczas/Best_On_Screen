@@ -4,11 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
@@ -16,8 +18,10 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.MovieRepository
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.logD
+import com.zywczas.bestonscreen.viewmodels.GenericSavedStateViewModelFactory
 import com.zywczas.bestonscreen.viewmodels.MoviesVM
 import com.zywczas.bestonscreen.viewmodels.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
@@ -28,8 +32,10 @@ import javax.inject.Inject
 class MoviesActivity : AppCompatActivity() {
 
     @Inject lateinit var factory: MoviesVMFactory
-    lateinit var moviesVM : MoviesVM
-    lateinit var movieAdapter: MovieAdapter
+//    @Inject lateinit var repo: MovieRepository
+    private val moviesVM: MoviesVM by viewModels {GenericSavedStateViewModelFactory(factory, this)}
+//    MoviesVMFactory(repo, this)
+    private lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +46,23 @@ class MoviesActivity : AppCompatActivity() {
         App.moviesComponent.inject(this)
 
         //setting up drawer layout and toggle button
-        val toggleMovies = ActionBarDrawerToggle(this, drawer_layout_movies, moviesToolbar, R.string.nav_drawer_open, R.string.nav_drawer_closed)
+        val toggleMovies = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,R.string.nav_drawer_open,R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        moviesVM = ViewModelProvider(this, factory).get(MoviesVM::class.java)
+//        moviesVM = ViewModelProvider(this, factory).get(MoviesVM::class.java)
 
         setupAdapter()
         setupTags()
+        setupObserver()
     }
+
+
 
     private fun setupAdapter() {
         movieAdapter = MovieAdapter(this, picasso)
         //custom onClick method for recycler view
-        {movie ->
+        { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
@@ -64,6 +73,12 @@ class MoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
+    private fun setupObserver() {
+        moviesVM.getMovies(Category.TOP_RATED).observe(this, Observer { movies -> logD("otrzymuje listte w onCreate")
+            movieAdapter.submitList(movies.toMutableList())
+        })
+    }
+
     //tags used to choose category of movie and to be passed to MovieRepository
     private fun setupTags() {
         upcomingTextView.tag = Category.UPCOMING
@@ -72,7 +87,7 @@ class MoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = Category.TO_WATCH
     }
 
-    fun categoryClicked(view : View) {
+    fun categoryClicked(view: View) {
         closeDrawer()
         progressBarMovies.isVisible = true
 
@@ -82,7 +97,7 @@ class MoviesActivity : AppCompatActivity() {
             logD("list adapter dostaje liste")
             movieAdapter.submitList(movies.toMutableList())
             progressBarMovies.isVisible = false
-                moviesRecyclerView.smoothScrollToPosition(0)
+            moviesRecyclerView.smoothScrollToPosition(0)
 //                moviesRecyclerView.smoothScrollToPosition(0)//to mozna do MovieAdapter wrzucic pozniej
         })
 
