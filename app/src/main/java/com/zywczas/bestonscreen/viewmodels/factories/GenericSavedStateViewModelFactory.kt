@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.viewmodels
+package com.zywczas.bestonscreen.viewmodels.factories
 
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory

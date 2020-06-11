@@ -9,32 +9,31 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.MovieRepository
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.logD
-import com.zywczas.bestonscreen.viewmodels.GenericSavedStateViewModelFactory
+import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
 import com.zywczas.bestonscreen.viewmodels.MoviesVM
-import com.zywczas.bestonscreen.viewmodels.MoviesVMFactory
+import com.zywczas.bestonscreen.viewmodels.factories.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
 import javax.inject.Inject
 
+/**
+ * Second activity for displaying movies. This activity focuses only on movies downloaded from API.
+ * It is separated from DBMoviesActivity to make Live data of movies from local data base easier
+ * to manage.
+ */
 class MoviesActivity : AppCompatActivity() {
 
     @Inject lateinit var factory: MoviesVMFactory
-//    @Inject lateinit var repo: MovieRepository
-    private val moviesVM: MoviesVM by viewModels {GenericSavedStateViewModelFactory(factory, this)}
-//    MoviesVMFactory(repo, this)
+    private val moviesVM: MoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
 
@@ -74,9 +73,11 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun setupObserver() {
-        moviesVM.getMovies(Category.TOP_RATED).observe(this, Observer { movies -> logD("otrzymuje listte w onCreate")
-            movieAdapter.submitList(movies.toMutableList())
-        })
+        moviesVM.getApiMovies(Category.TOP_RATED).observe(this, Observer {
+                it.getContentIfNotHandled()?.let {movies -> logD("otrzymuje API liste w onCreate")
+                    movieAdapter.submitList(movies.toMutableList())
+                }
+    })
     }
 
     //tags used to choose category of movie and to be passed to MovieRepository

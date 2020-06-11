@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.views
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -15,7 +14,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
-import com.zywczas.bestonscreen.viewmodels.MovieDetailsVMFactory
+import com.zywczas.bestonscreen.viewmodels.factories.MovieDetailsVMFactory
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import javax.inject.Inject
 

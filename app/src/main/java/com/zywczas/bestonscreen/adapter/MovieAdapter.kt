@@ -62,6 +62,7 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //sprawdzic czy to mozna usunac
         if (position < itemCount && position != RecyclerView.NO_POSITION) {
             holder.bindMovie(getItem(position))
         }

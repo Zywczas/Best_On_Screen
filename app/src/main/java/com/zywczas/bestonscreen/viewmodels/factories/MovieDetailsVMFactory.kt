@@ -1,16 +1,13 @@
-package com.zywczas.bestonscreen.viewmodels
+package com.zywczas.bestonscreen.viewmodels.factories
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zywczas.bestonscreen.model.MovieRepository
-import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
 import javax.inject.Inject
 
 class MovieDetailsVMFactory
-@Inject constructor(private val repo: MovieRepository
-//                    , private val errorEventStringLd: MutableLiveData<Event<String>>
-) :
+@Inject constructor(private val repo: MovieRepository) :
     ViewModelProvider.NewInstanceFactory(){
 
     @Suppress("UNCHECKED_CAST")

@@ -13,9 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".views.MovieDetailsActivity" />
-        <activity android:name=".views.ShowsActivity" />
         <activity android:name=".views.MoviesActivity" />
-        <activity android:name=".views.MainActivity">
+        <activity android:name=".views.DBMoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

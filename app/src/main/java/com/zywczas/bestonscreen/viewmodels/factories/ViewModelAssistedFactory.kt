@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.viewmodels
+package com.zywczas.bestonscreen.viewmodels.factories
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

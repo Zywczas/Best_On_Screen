@@ -46,46 +46,7 @@ class MovieRepository @Inject constructor(
     private fun log(t: Throwable?) =
         Log.d("film error", "${t?.localizedMessage}")
 
-//    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
-//        movies.clear()
-//
-//        val moviesObservableApi = when (category) {
-//            Category.POPULAR -> { tmdbService.getPopularMovies() }
-//            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
-//            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-//            else -> { exitProcess(0)}
-//        }
-//
-//        compositeDispMovies.add(moviesObservableApi
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
-//            .flatMap { movieFromApi ->
-//                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
-//                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
-//                //converts MovieFromAPI to Observable <Movie>
-//                Observable.just( toMovie(movieFromApi) )
-//            }
-//            .subscribeWith(object : DisposableObserver<Movie>() {
-//                override fun onComplete() {
-//                    moviesEventLd.postValue(Event(movies))
-//                }
-//
-//                override fun onNext(m: Movie?) {
-//                    if (m != null) {
-//                        movies.add(m)
-//                    }
-//                }
-//
-//                override fun onError(e: Throwable?) {
-//                    e?.localizedMessage?.let { logD(it) }
-//                }
-//            })
-//        )
-//        return moviesEventLd
-//    }
-
-    fun getMoviesFromApi (category: Category) : MutableLiveData<List<Movie>> {
+    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
         movies.clear()
 
         val moviesObservableApi = when (category) {
@@ -107,8 +68,7 @@ class MovieRepository @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
-                    logD("wysyla liste z API")
-                    moviesLd.postValue(movies)
+                    moviesEventLd.postValue(Event(movies))
                 }
 
                 override fun onNext(m: Movie?) {
@@ -118,43 +78,54 @@ class MovieRepository @Inject constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    log(e)
+                    e?.localizedMessage?.let { logD(it) }
                 }
             })
         )
-        return moviesLd
+        return moviesEventLd
     }
 
-//    fun getMoviesFromDB () : MutableLiveData<Event<List<Movie>>> {
+//    fun getMoviesFromApi (category: Category) : MutableLiveData<List<Movie>> {
+//        movies.clear()
 //
-//        val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
+//        val moviesObservableApi = when (category) {
+//            Category.POPULAR -> { tmdbService.getPopularMovies() }
+//            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
+//            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
+//            else -> { exitProcess(0)}
+//        }
 //
-//        compositeDispMovies.add(
-//            moviesObservableDB
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .onBackpressureBuffer()
-//                //converts MovieFromDB to list of general Movie class
-//                .map { moviesFromDB ->
-//                    movies.clear()
-////                    Log.d("film test", "map")
-//                    for (e in moviesFromDB) {
-//                        movies.add(toMovie(e))
-//                    }
-//                    movies
+//        compositeDispMovies.add(moviesObservableApi
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
+//            .flatMap { movieFromApi ->
+//                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
+//                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
+//                //converts MovieFromAPI to Observable <Movie>
+//                Observable.just( toMovie(movieFromApi) )
+//            }
+//            .subscribeWith(object : DisposableObserver<Movie>() {
+//                override fun onComplete() {
+//                    logD("wysyla liste z API")
+//                    moviesLd.postValue(movies)
 //                }
-//                //Consumer onNext & onError
-//                .subscribe({ listOfMovies ->  moviesEventLd.postValue(Event(listOfMovies))
-////                    Log.d("film test", "get movies on onNext")
-//                }, { it?.localizedMessage?.let { it1 -> logD(it1) } }
-//                )
-////
 //
+//                override fun onNext(m: Movie?) {
+//                    if (m != null) {
+//                        movies.add(m)
+//                    }
+//                }
+//
+//                override fun onError(e: Throwable?) {
+//                    log(e)
+//                }
+//            })
 //        )
-//        return moviesEventLd
+//        return moviesLd
 //    }
 
-    fun getMoviesFromDB () : MutableLiveData<List<Movie>> {
+    fun getMoviesFromDB () : MutableLiveData<Event<List<Movie>>> {
 
         val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
@@ -165,7 +136,6 @@ class MovieRepository @Inject constructor(
                 .onBackpressureBuffer()
                 //converts MovieFromDB to list of general Movie class
                 .map { moviesFromDB ->
-                    logD("pobiera liste z db")
                     movies.clear()
 //                    Log.d("film test", "map")
                     for (e in moviesFromDB) {
@@ -174,13 +144,43 @@ class MovieRepository @Inject constructor(
                     movies
                 }
                 //Consumer onNext & onError
-                .subscribe({ movies ->  moviesLd.postValue(movies)
+                .subscribe({ listOfMovies ->  moviesEventLd.postValue(Event(listOfMovies))
 //                    Log.d("film test", "get movies on onNext")
-                }, { log(it) }
+                }, { it?.localizedMessage?.let { it1 -> logD(it1) } }
                 )
+//
+
         )
-        return moviesLd
+        return moviesEventLd
     }
+
+//    fun getMoviesFromDB () : MutableLiveData<List<Movie>> {
+//
+//        val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
+//
+//        compositeDispMovies.add(
+//            moviesObservableDB
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .onBackpressureBuffer()
+//                //converts MovieFromDB to list of general Movie class
+//                .map { moviesFromDB ->
+//                    logD("pobiera liste z db")
+//                    movies.clear()
+////                    Log.d("film test", "map")
+//                    for (e in moviesFromDB) {
+//                        movies.add(toMovie(e))
+//                    }
+//                    movies
+//                }
+//                //Consumer onNext & onError
+//                .subscribe({ movies ->  moviesLd.postValue(movies)
+////                    Log.d("film test", "get movies on onNext")
+//                }, { log(it) }
+//                )
+//        )
+//        return moviesLd
+//    }
 
     /**
      * Adds a movie to the local data base so it can be displayed later (different fun)

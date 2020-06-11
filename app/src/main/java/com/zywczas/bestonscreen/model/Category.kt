@@ -16,9 +16,6 @@ enum class Category {
         override fun toString(): String {
             return "Top rated"
         }
-    }, TO_WATCH {
-        override fun toString(): String {
-            return "To Watch List"
-        }
     }
+
 }
