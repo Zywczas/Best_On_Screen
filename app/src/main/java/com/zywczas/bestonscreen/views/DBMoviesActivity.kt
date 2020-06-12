@@ -50,6 +50,7 @@ class DBMoviesActivity : AppCompatActivity() {
 
         setupAdapter()
         setupTags()
+        setupObserver()
     }
 
     private fun setupAdapter() {
@@ -80,7 +81,7 @@ class DBMoviesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        setupObserver()
+
     }
 
     private fun setupObserver() {
@@ -92,17 +93,18 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     fun toWatchClicked (view: View) {
-        closeDrawer()
+        closeDrawerOrMinimizeApp()
         showToast("This is your list.")
     }
 
     fun categoryClicked(view: View) {
-        closeDrawer()
+        closeDrawerOrMinimizeApp()
         val category = view.tag as String
 
         val moviesIntent = Intent(this, MoviesActivity::class.java)
         moviesIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(moviesIntent)
+        finish()
     }
 
     override fun onDestroy() {
@@ -111,13 +113,15 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        closeDrawer()
-        super.onBackPressed()
+        closeDrawerOrMinimizeApp()
+//        super.onBackPressed()
     }
 
-    private fun closeDrawer() {
+    private fun closeDrawerOrMinimizeApp() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
+        } else {
+            this.moveTaskToBack(true);
         }
     }
 

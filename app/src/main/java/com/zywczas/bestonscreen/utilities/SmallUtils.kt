@@ -7,6 +7,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
+/**
+ * Extension function replacing Toast.makeText(...)
+ */
 fun Context.showToast(message : String) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 

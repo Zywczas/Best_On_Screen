@@ -120,12 +120,14 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     fun toWatchClicked(view: View) {
+        closeDrawerOrMinimizeApp()
         val toWatchIntent = Intent(this, DBMoviesActivity::class.java)
         startActivity(toWatchIntent)
+        finish()
     }
 
     fun categoryClicked(view: View) {
-        closeDrawer()
+        closeDrawerOrMinimizeApp()
 //        progressBarMovies.isVisible = true
 //
 //        val category = view.tag as Category
@@ -148,13 +150,15 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        closeDrawer()
-        super.onBackPressed()
+        closeDrawerOrMinimizeApp()
+//        super.onBackPressed()
     }
 
-    private fun closeDrawer() {
+    private fun closeDrawerOrMinimizeApp() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
+        } else {
+            this.moveTaskToBack(true);
         }
     }
 }
