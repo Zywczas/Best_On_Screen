@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.views
 
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 /**
  * Second activity for displaying movies. This activity focuses only on movies downloaded from API.
@@ -36,11 +38,13 @@ class MoviesActivity : AppCompatActivity() {
     private val moviesVM: MoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
+    var orientation by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
         progressBarMovies.isVisible = false
+        orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
 
@@ -48,8 +52,6 @@ class MoviesActivity : AppCompatActivity() {
         val toggleMovies = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,R.string.nav_drawer_open,R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
-
-//        moviesVM = ViewModelProvider(this, factory).get(MoviesVM::class.java)
 
         setupAdapter()
         setupTags()
@@ -67,8 +69,11 @@ class MoviesActivity : AppCompatActivity() {
             startActivity(movieDetailsActivity)
         }
         moviesRecyclerView.adapter = movieAdapter
-        val layoutManager = GridLayoutManager(this, 2)
-//        val layoutManager = LinearLayoutManager(this)
+        var spanCount = 2
+        if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
+            spanCount = 4
+        }
+        val layoutManager = GridLayoutManager(this, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
     }
 
@@ -85,7 +90,10 @@ class MoviesActivity : AppCompatActivity() {
         upcomingTextView.tag = Category.UPCOMING
         topRatedTextView.tag = Category.TOP_RATED
         popularTextView.tag = Category.POPULAR
-        toWatchListTextView.tag = Category.TO_WATCH
+    }
+
+    fun toWatchClicked (view: View) {
+
     }
 
     fun categoryClicked(view: View) {
@@ -94,12 +102,13 @@ class MoviesActivity : AppCompatActivity() {
 
         val category = view.tag as Category
 
-        moviesVM.getMovies(category).observe(this, Observer { movies ->
-            logD("list adapter dostaje liste")
-            movieAdapter.submitList(movies.toMutableList())
-            progressBarMovies.isVisible = false
-            moviesRecyclerView.smoothScrollToPosition(0)
-//                moviesRecyclerView.smoothScrollToPosition(0)//to mozna do MovieAdapter wrzucic pozniej
+        moviesVM.getApiMovies(category).observe(this, Observer {
+                it.getContentIfNotHandled()?.let { movies ->
+                    logD("list adapter dostaje liste")
+                    movieAdapter.submitList(movies.toMutableList())
+                    moviesRecyclerView.scrollToPosition(0)
+                    progressBarMovies.isVisible = false
+                }
         })
 
         moviesToolbar.title = "Movies: $category"
