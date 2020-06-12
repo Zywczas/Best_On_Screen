@@ -1,13 +1,10 @@
 package com.zywczas.bestonscreen.model
 
-import android.util.Log
+
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.webservice.TMDBService
-import com.zywczas.bestonscreen.utilities.Event
-import com.zywczas.bestonscreen.utilities.logD
-import com.zywczas.bestonscreen.utilities.toMovie
-import com.zywczas.bestonscreen.utilities.toMovieFromDB
+import com.zywczas.bestonscreen.utilities.*
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.*
@@ -43,56 +40,14 @@ class MovieRepository @Inject constructor(
         compositeDispMovieDetails.clear()
     }
 
-    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
-        movies.clear()
-
-        val moviesObservableApi = when (category) {
-            Category.POPULAR -> { tmdbService.getPopularMovies() }
-            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
-            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-            else -> { exitProcess(0)}
-        }
-
-        compositeDispMovies.add(moviesObservableApi
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
-            .flatMap { movieFromApi ->
-                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
-                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
-                //converts MovieFromAPI to Observable <Movie>
-                Observable.just( toMovie(movieFromApi) )
-            }
-            .subscribeWith(object : DisposableObserver<Movie>() {
-                override fun onComplete() {
-                    moviesEventLd.postValue(Event(movies))
-                    logD("wysyla liste z API")
-                }
-
-                override fun onNext(m: Movie?) {
-                    if (m != null) {
-                        movies.add(m)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                     logD(e)
-                }
-            })
-        )
-        return moviesEventLd
-    }
-
-//    fun getMoviesFromApi (category: Category) : MutableLiveData<List<Movie>> {
+//    fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
 //        movies.clear()
 //
 //        val moviesObservableApi = when (category) {
 //            Category.POPULAR -> { tmdbService.getPopularMovies() }
 //            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
 //            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-//            else -> {
-//                logD("incorrect movie category passed to 'getMoviesFromApi'")
-//                exitProcess(0)}
+//            else -> { exitProcess(0)}
 //        }
 //
 //        compositeDispMovies.add(moviesObservableApi
@@ -107,8 +62,8 @@ class MovieRepository @Inject constructor(
 //            }
 //            .subscribeWith(object : DisposableObserver<Movie>() {
 //                override fun onComplete() {
+//                    moviesEventLd.postValue(Event(movies))
 //                    logD("wysyla liste z API")
-//                    moviesLd.postValue(movies)
 //                }
 //
 //                override fun onNext(m: Movie?) {
@@ -118,12 +73,54 @@ class MovieRepository @Inject constructor(
 //                }
 //
 //                override fun onError(e: Throwable?) {
-//                    logD(e)
+//                     logD(e)
 //                }
 //            })
 //        )
-//        return moviesLd
+//        return moviesEventLd
 //    }
+
+    fun getMoviesFromApi (category: String) : MutableLiveData<List<Movie>> {
+        movies.clear()
+
+        val moviesObservableApi = when (category) {
+            POPULAR -> { tmdbService.getPopularMovies() }
+            TOP_RATED -> { tmdbService.getTopRatedMovies() }
+            UPCOMING -> { tmdbService.getUpcomingMovies() }
+            else -> {
+                logD("incorrect movie category passed to 'getMoviesFromApi'")
+                exitProcess(0)}
+        }
+
+        compositeDispMovies.add(moviesObservableApi
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
+            .flatMap { movieFromApi ->
+                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
+                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
+                //converts MovieFromAPI to Observable <Movie>
+                Observable.just( toMovie(movieFromApi) )
+            }
+            .subscribeWith(object : DisposableObserver<Movie>() {
+                override fun onComplete() {
+                    logD("wysyla liste z API")
+                    moviesLd.postValue(movies)
+                }
+
+                override fun onNext(m: Movie?) {
+                    if (m != null) {
+                        movies.add(m)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    logD(e)
+                }
+            })
+        )
+        return moviesLd
+    }
 
     fun getMoviesFromDB () : MutableLiveData<Event<List<Movie>>> {
 

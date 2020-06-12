@@ -15,10 +15,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.logD
-import com.zywczas.bestonscreen.utilities.showToast
+import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBMoviesVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBMoviesVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
@@ -53,7 +50,6 @@ class DBMoviesActivity : AppCompatActivity() {
 
         setupAdapter()
         setupTags()
-        setupObserver()
     }
 
     private fun setupAdapter() {
@@ -74,20 +70,25 @@ class DBMoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
+    //tags used to choose category of movie and to be passed to MovieRepository
+    private fun setupTags() {
+        upcomingTextView.tag = UPCOMING
+        topRatedTextView.tag = TOP_RATED
+        popularTextView.tag = POPULAR
+        toWatchListTextView.tag = TO_WATCH
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupObserver()
+    }
+
     private fun setupObserver() {
         dBMoviesVM.getDbMovies().observe(this, Observer {
             it.getContentIfNotHandled()?.let {movies -> logD("otrzymuje DB liste w onCreate")
                 movieAdapter.submitList(movies.toMutableList())
             }
         })
-    }
-
-    //tags used to choose category of movie and to be passed to MovieRepository
-    private fun setupTags() {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
-        toWatchListTextView.tag = Category.TO_WATCH
     }
 
     fun toWatchClicked (view: View) {
@@ -97,7 +98,11 @@ class DBMoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawer()
+        val category = view.tag as String
 
+        val moviesIntent = Intent(this, MoviesActivity::class.java)
+        moviesIntent.putExtra(EXTRA_CATEGORY, category)
+        startActivity(moviesIntent)
     }
 
     override fun onDestroy() {

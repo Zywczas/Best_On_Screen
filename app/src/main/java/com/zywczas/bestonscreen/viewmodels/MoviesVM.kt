@@ -1,14 +1,10 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.MovieRepository
-import com.zywczas.bestonscreen.utilities.KEY_MOVIE
 
 
 class MoviesVM (private val repo: MovieRepository,
@@ -23,8 +19,8 @@ class MoviesVM (private val repo: MovieRepository,
 
 
 
-    fun getApiMovies(category: Category) =
-        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
+    fun getApiMovies(category: String) =
+        repo.getMoviesFromApi(category) as LiveData<List<Movie>>
 
 
 
