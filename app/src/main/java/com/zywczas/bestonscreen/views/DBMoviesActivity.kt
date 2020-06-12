@@ -20,10 +20,8 @@ import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DBMoviesVM
-import com.zywczas.bestonscreen.viewmodels.MoviesVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBMoviesVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
-import com.zywczas.bestonscreen.viewmodels.factories.MoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
@@ -89,32 +87,21 @@ class DBMoviesActivity : AppCompatActivity() {
         upcomingTextView.tag = Category.UPCOMING
         topRatedTextView.tag = Category.TOP_RATED
         popularTextView.tag = Category.POPULAR
+        toWatchListTextView.tag = Category.TO_WATCH
     }
 
     fun toWatchClicked (view: View) {
+        closeDrawer()
         showToast("This is your list.")
     }
 
     fun categoryClicked(view: View) {
         closeDrawer()
-//        progressBarMovies.isVisible = true
-//
-//        val category = view.tag as Category
-//
-//        moviesVM.getApiMovies(category).observe(this, Observer {
-//            it.getContentIfNotHandled()?.let { movies ->
-//                logD("list adapter dostaje liste")
-//                movieAdapter.submitList(movies.toMutableList())
-//                moviesRecyclerView.scrollToPosition(0)
-//                progressBarMovies.isVisible = false
-//            }
-//        })
-//
-//        moviesToolbar.title = "Movies: $category"
+
     }
 
     override fun onDestroy() {
-        dBMoviesVM.clear()
+        dBMoviesVM.clearDisposables()
         super.onDestroy()
     }
 

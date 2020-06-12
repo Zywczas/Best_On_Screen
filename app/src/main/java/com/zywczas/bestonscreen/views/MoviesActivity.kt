@@ -9,6 +9,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
@@ -26,6 +28,20 @@ import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
+
+/**
+ * Extension function allowing to observe Live Data once and remove Observer straight away to
+ * not allow user to create multiple observers by clicking the same button few times or by changing
+ * categories.
+ */
+fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
+    observe(owner, object: Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer(value)
+        }
+    })
+}
 
 /**
  * Second activity for displaying movies. This activity focuses only on movies downloaded from API.
@@ -115,7 +131,7 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        moviesVM.clear()
+        moviesVM.clearDisposables()
         super.onDestroy()
     }
 

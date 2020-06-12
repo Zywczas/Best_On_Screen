@@ -12,7 +12,7 @@ class DBMoviesVM (private val repo: MovieRepository,
                   private val handle: SavedStateHandle
 ) : ViewModel() {
 
-    fun clear() = repo.clearMoviesDisposables()
+    fun clearDisposables() = repo.clearMoviesDisposables()
 
     fun getDbMovies() = repo.getMoviesFromDB() as LiveData<Event<List<Movie>>>
 

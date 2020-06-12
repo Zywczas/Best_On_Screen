@@ -19,7 +19,7 @@ class MoviesVM (private val repo: MovieRepository,
 //    fun getLd() = handle.getLiveData<List<Movie>>(KEY_MOVIE)
 //    fun saveNewLd(movies: List<Movie>) = handle.set(KEY_MOVIE, movies)
 
-    fun clear() = repo.clearMoviesDisposables()
+    fun clearDisposables() = repo.clearMoviesDisposables()
 
 
 
@@ -34,13 +34,7 @@ class MoviesVM (private val repo: MovieRepository,
 //            else -> repo.getMoviesFromApi(category)
 //        }
 //    }
-
-//    fun getMovies(category: Category) : LiveData<Event<List<Movie>>> {
-//        return when(category) {
-//            Category.TO_WATCH -> repo.getMoviesFromDB()
-//            else -> repo.getMoviesFromApi(category)
-//        }
-//    }
+    
 
 
 

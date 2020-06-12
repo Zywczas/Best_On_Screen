@@ -43,9 +43,6 @@ class MovieRepository @Inject constructor(
         compositeDispMovieDetails.clear()
     }
 
-    private fun log(t: Throwable?) =
-        Log.d("film error", "${t?.localizedMessage}")
-
     fun getMoviesFromApi (category: Category) : MutableLiveData<Event<List<Movie>>> {
         movies.clear()
 
@@ -69,6 +66,7 @@ class MovieRepository @Inject constructor(
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
                     moviesEventLd.postValue(Event(movies))
+                    logD("wysyla liste z API")
                 }
 
                 override fun onNext(m: Movie?) {
@@ -78,7 +76,7 @@ class MovieRepository @Inject constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    e?.localizedMessage?.let { logD(it) }
+                     logD(e)
                 }
             })
         )
@@ -92,7 +90,9 @@ class MovieRepository @Inject constructor(
 //            Category.POPULAR -> { tmdbService.getPopularMovies() }
 //            Category.TOP_RATED -> { tmdbService.getTopRatedMovies() }
 //            Category.UPCOMING -> { tmdbService.getUpcomingMovies() }
-//            else -> { exitProcess(0)}
+//            else -> {
+//                logD("incorrect movie category passed to 'getMoviesFromApi'")
+//                exitProcess(0)}
 //        }
 //
 //        compositeDispMovies.add(moviesObservableApi
@@ -118,7 +118,7 @@ class MovieRepository @Inject constructor(
 //                }
 //
 //                override fun onError(e: Throwable?) {
-//                    log(e)
+//                    logD(e)
 //                }
 //            })
 //        )
@@ -145,11 +145,9 @@ class MovieRepository @Inject constructor(
                 }
                 //Consumer onNext & onError
                 .subscribe({ listOfMovies ->  moviesEventLd.postValue(Event(listOfMovies))
-//                    Log.d("film test", "get movies on onNext")
-                }, { it?.localizedMessage?.let { it1 -> logD(it1) } }
+                    logD("wysyla liste z DB")
+                }, { logD(it) }
                 )
-//
-
         )
         return moviesEventLd
     }
@@ -176,7 +174,7 @@ class MovieRepository @Inject constructor(
 //                //Consumer onNext & onError
 //                .subscribe({ movies ->  moviesLd.postValue(movies)
 ////                    Log.d("film test", "get movies on onNext")
-//                }, { log(it) }
+//                }, { logD(it) }
 //                )
 //        )
 //        return moviesLd
@@ -199,7 +197,7 @@ class MovieRepository @Inject constructor(
                         stringEventLd.postValue(Event("Movie added to your list"))
                     }
                     override fun onError(e: Throwable?) {
-                         log(e)
+                        logD(e)
                         stringEventLd.postValue(Event("Problem with adding the movie"))
                     }
                 })
@@ -233,7 +231,7 @@ class MovieRepository @Inject constructor(
                 .subscribe({when(it){
                     1 -> booleanEventLd.postValue(Event(true))
                     0 -> booleanEventLd.postValue(Event(false))
-                }}, { log(it) }
+                }}, { logD(it) }
                 )
         )
         return booleanEventLd
@@ -273,7 +271,7 @@ class MovieRepository @Inject constructor(
 
                     override fun onError(e: Throwable?) {
                         stringEventLd.postValue(Event("Problem with deleting the movie"))
-                        log(e)
+                        logD(e)
                     }
 
                 })
