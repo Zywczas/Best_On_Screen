@@ -99,7 +99,7 @@ class DBMoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        dBMoviesVM.clearDisposables()
+//        dBMoviesVM.clearDisposables()
         val category = view.tag as String
 
         val moviesIntent = Intent(this, ApiMoviesActivity::class.java)

@@ -49,7 +49,6 @@ class ApiMoviesActivity : AppCompatActivity() {
     var categoryFromIntent: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        logD("oncreate startuje")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
         progressBarMovies.isVisible = false
@@ -63,12 +62,10 @@ class ApiMoviesActivity : AppCompatActivity() {
         toggleMovies.syncState()
 
         categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
-        logD("intent: $categoryFromIntent")
 
         setupAdapter()
         setupTags()
         setupObserver()
-        logD("oncreate konczy")
     }
 
     private fun setupAdapter() {
@@ -97,21 +94,21 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
 
     private fun setupObserver() {
-        logD("setup observer")
+        progressBarMovies.isVisible = true
+
         if (categoryFromIntent != null) {
-            logD("po 1 if")
             apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<Event<List<Movie>>>{
                 override fun onChanged(t: Event<List<Movie>>?) {
                     logD("onChanged rozpoczety")
                     if (t != null) {
-                        logD("po drugim if")
+                        logD("odbiera event")
                         val movies = t.getContentIfNotHandled()
                         if (movies != null) {
-                            logD("po trzecim if")
-                            logD("adapter otrzymuje API liste w onCreate")
+                            logD("adapter odbiera liste")
                             movieAdapter.submitList(movies.toMutableList())
-                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObservers(this@ApiMoviesActivity)
-                            logD("observery usuniete")
+                            progressBarMovies.isVisible = false
+//                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObserver(this)
+//                            logD("observer usuniety")
                         }
                     }
                 }
@@ -156,20 +153,20 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-//        progressBarMovies.isVisible = true
-//
-//        val category = view.tag as Category
-//
-//        apiMoviesVM.getApiMovies(category).observe(this, Observer {
-//                it.getContentIfNotHandled()?.let { movies ->
-//                    logD("list adapter dostaje liste")
-//                    movieAdapter.submitList(movies.toMutableList())
-//                    moviesRecyclerView.scrollToPosition(0)
-//                    progressBarMovies.isVisible = false
-//                }
-//        })
-//
-//        moviesToolbar.title = "Movies: $category"
+        progressBarMovies.isVisible = true
+        val category = view.tag as String
+//        apiMoviesVM.getApiMovies(category).removeObservers(this)
+
+        apiMoviesVM.getApiMovies(category).observe(this, Observer {
+                it.getContentIfNotHandled()?.let { movies ->
+                    logD("category clicked list adapter dostaje liste")
+                    moviesRecyclerView.scrollToPosition(0)
+                    movieAdapter.submitList(movies.toMutableList())
+                    progressBarMovies.isVisible = false
+                }
+        })
+
+        moviesToolbar.title = "Movies: $category"
     }
 
     override fun onDestroy() {
