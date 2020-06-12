@@ -71,7 +71,7 @@ class DBMoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    //tags used to choose category of movie and to be passed to MovieRepository
+    //tags used to choose category of movie and to be passed to ApiMoviesRepo
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
@@ -99,9 +99,10 @@ class DBMoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
+        dBMoviesVM.clearDisposables()
         val category = view.tag as String
 
-        val moviesIntent = Intent(this, MoviesActivity::class.java)
+        val moviesIntent = Intent(this, ApiMoviesActivity::class.java)
         moviesIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(moviesIntent)
         finish()

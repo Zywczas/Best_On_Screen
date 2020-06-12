@@ -88,7 +88,7 @@ class MovieFromApi {
     This converter is required as API gives List<Int> of genres instead of names (String).
     I could download names of genres using TMDBService fun getMovieDetails() but it is unnecessary
     for now as I don't need any more data from getMovieDetails(). This function is used in
-    MovieRepository class.
+    ApiMoviesRepo class.
      *@param genreIds - a list of Int from API, which needs to be converted to Strings and assigned
      * to variables genre1 - genre5
      */

@@ -79,7 +79,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        movieDetailsVM.clear()
+        movieDetailsVM.clearDisposables()
         super.onDestroy()
     }
 }

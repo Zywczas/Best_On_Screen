@@ -2,7 +2,7 @@ package com.zywczas.bestonscreen.di
 
 import com.zywczas.bestonscreen.views.DBMoviesActivity
 import com.zywczas.bestonscreen.views.MovieDetailsActivity
-import com.zywczas.bestonscreen.views.MoviesActivity
+import com.zywczas.bestonscreen.views.ApiMoviesActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -11,6 +11,6 @@ import javax.inject.Singleton
     interface MoviesComponent {
 
     fun inject (app: DBMoviesActivity)
-    fun inject (app: MoviesActivity)
+    fun inject (app: ApiMoviesActivity)
     fun inject (app: MovieDetailsActivity)
 }

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.zywczas.bestonscreen.viewmodels.MoviesVM" />
+            type="com.zywczas.bestonscreen.viewmodels.ApiMoviesVM" />
     </data>
     
 <androidx.constraintlayout.widget.ConstraintLayout 

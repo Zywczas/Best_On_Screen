@@ -17,10 +17,11 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
-import com.zywczas.bestonscreen.viewmodels.MoviesVM
-import com.zywczas.bestonscreen.viewmodels.factories.MoviesVMFactory
+import com.zywczas.bestonscreen.viewmodels.ApiMoviesVM
+import com.zywczas.bestonscreen.viewmodels.factories.ApiMoviesVMFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.nav_movies.*
@@ -28,28 +29,14 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 /**
- * Extension function allowing to observe Live Data once and remove Observer straight away to
- * not allow user to create multiple observers by clicking the same button few times or by changing
- * categories.
- */
-fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
-    observe(owner, object : Observer<T> {
-        override fun onChanged(value: T) {
-            removeObserver(this)
-            observer(value)
-        }
-    })
-}
-
-/**
  * Second activity for displaying movies. This activity focuses only on movies downloaded from API.
  * It is separated from DBMoviesActivity to make Live data easier to manage.
  */
-class MoviesActivity : AppCompatActivity() {
+class ApiMoviesActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var factory: MoviesVMFactory
-    private val moviesVM: MoviesVM by viewModels {
+    lateinit var factory: ApiMoviesVMFactory
+    private val apiMoviesVM: ApiMoviesVM by viewModels {
         GenericSavedStateViewModelFactory(
             factory,
             this
@@ -62,6 +49,7 @@ class MoviesActivity : AppCompatActivity() {
     var categoryFromIntent: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        logD("oncreate startuje")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
         progressBarMovies.isVisible = false
@@ -75,12 +63,13 @@ class MoviesActivity : AppCompatActivity() {
         toggleMovies.syncState()
 
         categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+        logD("intent: $categoryFromIntent")
 
         setupAdapter()
         setupTags()
         setupObserver()
+        logD("oncreate konczy")
     }
-
 
     private fun setupAdapter() {
         movieAdapter = MovieAdapter(this, picasso)
@@ -99,7 +88,7 @@ class MoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    //tags used to choose category of movie and to be passed to MovieRepository
+    //tags used to choose category of movie and to be passed to ApiMoviesRepo
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
@@ -108,16 +97,55 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun setupObserver() {
+        logD("setup observer")
         if (categoryFromIntent != null) {
-            moviesVM.getApiMovies(categoryFromIntent!!).observe(this, Observer { movies ->
-                logD("otrzymuje API liste w onCreate")
-                movieAdapter.submitList(movies.toMutableList())
+            logD("po 1 if")
+            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<Event<List<Movie>>>{
+                override fun onChanged(t: Event<List<Movie>>?) {
+                    logD("onChanged rozpoczety")
+                    if (t != null) {
+                        logD("po drugim if")
+                        val movies = t.getContentIfNotHandled()
+                        if (movies != null) {
+                            logD("po trzecim if")
+                            logD("adapter otrzymuje API liste w onCreate")
+                            movieAdapter.submitList(movies.toMutableList())
+                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObservers(this@ApiMoviesActivity)
+                            logD("observery usuniete")
+                        }
+                    }
+                }
             })
+
         } else {
-            showToast("Cannot download movies")
+            logD("pusty intent")
         }
+
         moviesToolbar.title = "Movies: $categoryFromIntent"
     }
+
+//    private fun setupObserver() {
+//        logD("seyup observer")
+//        if (categoryFromIntent != null) {
+//            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<List<Movie>>{
+//                override fun onChanged(t: List<Movie>?) {
+//                    if (t != null) {
+//                        logD("adapter otrzymuje liste w onCreate")
+//                        movieAdapter.submitList(t.toMutableList())
+//                        apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObservers(this@ApiMoviesActivity)
+//                        logD("observery usuniete")
+//                    } else {
+//                        logD("t jest null")
+//                    }
+//                }
+//            })
+//
+//        } else {
+//            logD("pusty intent")
+//        }
+//
+//        moviesToolbar.title = "Movies: $categoryFromIntent"
+//    }
 
     fun toWatchClicked(view: View) {
         closeDrawerOrMinimizeApp()
@@ -132,7 +160,7 @@ class MoviesActivity : AppCompatActivity() {
 //
 //        val category = view.tag as Category
 //
-//        moviesVM.getApiMovies(category).observe(this, Observer {
+//        apiMoviesVM.getApiMovies(category).observe(this, Observer {
 //                it.getContentIfNotHandled()?.let { movies ->
 //                    logD("list adapter dostaje liste")
 //                    movieAdapter.submitList(movies.toMutableList())
@@ -145,7 +173,7 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        moviesVM.clearDisposables()
+        apiMoviesVM.clearDisposables()
         super.onDestroy()
     }
 

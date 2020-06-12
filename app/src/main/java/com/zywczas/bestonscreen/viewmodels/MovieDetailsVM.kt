@@ -1,21 +1,20 @@
 package com.zywczas.bestonscreen.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.MovieRepository
+import com.zywczas.bestonscreen.model.ApiMoviesRepo
+import com.zywczas.bestonscreen.model.MovieDetailsRepo
 import com.zywczas.bestonscreen.utilities.logD
 import kotlin.system.exitProcess
 
-class MovieDetailsVM (private val repo: MovieRepository
+class MovieDetailsVM (private val repo: MovieDetailsRepo
 //                      , private val errorEventStringLd: MutableLiveData<Event<String>>
 //                      ,  private val stringLiveData: LiveData<String>
                       ) : ViewModel(){
 
-    fun clear() = repo.clearMovieDetailsDisposables()
+    fun clearDisposables() = repo.clearDisposables()
 
 //    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
 
@@ -34,6 +33,7 @@ class MovieDetailsVM (private val repo: MovieRepository
         } as LiveData<Event<String>>
 
 
+    //to chyba trzeba poprawic
     fun getGenresDescription(movie: Movie) : String {
         return when (movie.genresAmount) {
             1 -> "Genre: ${movie.genre1}"
