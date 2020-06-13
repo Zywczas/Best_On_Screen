@@ -9,6 +9,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.TMDBService
+import com.zywczas.bestonscreen.utilities.LiveEvent
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -44,6 +45,9 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideMovieListEventLd() : MutableLiveData<Event<List<Movie>>> = MutableLiveData()
+
+    @Provides
+    fun provideLiveEventListMovies() : LiveEvent<List<Movie>> = LiveEvent()
 
     @Provides
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()

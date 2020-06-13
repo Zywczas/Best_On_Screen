@@ -93,46 +93,23 @@ class ApiMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun setupObserver() {
-        progressBarMovies.isVisible = true
-
-        if (categoryFromIntent != null) {
-            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<Event<List<Movie>>>{
-                override fun onChanged(t: Event<List<Movie>>?) {
-                    logD("onChanged rozpoczety")
-                    if (t != null) {
-                        logD("odbiera event")
-                        val movies = t.getContentIfNotHandled()
-                        if (movies != null) {
-                            logD("adapter odbiera liste")
-                            movieAdapter.submitList(movies.toMutableList())
-                            progressBarMovies.isVisible = false
-//                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObserver(this)
-//                            logD("observer usuniety")
-                        }
-                    }
-                }
-            })
-
-        } else {
-            logD("pusty intent")
-        }
-
-        moviesToolbar.title = "Movies: $categoryFromIntent"
-    }
-
 //    private fun setupObserver() {
-//        logD("seyup observer")
+//        progressBarMovies.isVisible = true
+//
 //        if (categoryFromIntent != null) {
-//            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<List<Movie>>{
-//                override fun onChanged(t: List<Movie>?) {
+//            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<Event<List<Movie>>>{
+//                override fun onChanged(t: Event<List<Movie>>?) {
+//                    logD("onChanged rozpoczety")
 //                    if (t != null) {
-//                        logD("adapter otrzymuje liste w onCreate")
-//                        movieAdapter.submitList(t.toMutableList())
-//                        apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObservers(this@ApiMoviesActivity)
-//                        logD("observery usuniete")
-//                    } else {
-//                        logD("t jest null")
+//                        logD("odbiera event")
+//                        val movies = t.getContentIfNotHandled()
+//                        if (movies != null) {
+//                            logD("adapter odbiera liste")
+//                            movieAdapter.submitList(movies.toMutableList())
+//                            progressBarMovies.isVisible = false
+////                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObserver(this)
+////                            logD("observer usuniety")
+//                        }
 //                    }
 //                }
 //            })
@@ -144,6 +121,26 @@ class ApiMoviesActivity : AppCompatActivity() {
 //        moviesToolbar.title = "Movies: $categoryFromIntent"
 //    }
 
+    private fun setupObserver() {
+        progressBarMovies.isVisible = true
+        if (categoryFromIntent != null) {
+            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<List<Movie>>{
+                override fun onChanged(t: List<Movie>?) {
+                    if (t != null) {
+                        logD("adapter otrzymuje liste w onCreate")
+                        movieAdapter.submitList(t.toMutableList())
+                        progressBarMovies.isVisible = false
+                        apiMoviesVM.getApiMovies("any String here").removeObservers(this@ApiMoviesActivity)
+                        logD("observery usuniete")
+                    }
+                }
+            })
+
+        }
+
+        moviesToolbar.title = "Movies: $categoryFromIntent"
+    }
+
     fun toWatchClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val toWatchIntent = Intent(this, DBMoviesActivity::class.java)
@@ -151,19 +148,37 @@ class ApiMoviesActivity : AppCompatActivity() {
         finish()
     }
 
+//    fun categoryClicked(view: View) {
+//        closeDrawerOrMinimizeApp()
+//        progressBarMovies.isVisible = true
+//        val category = view.tag as String
+//        apiMoviesVM.getApiMovies(category).removeObservers(this)
+//
+//        apiMoviesVM.getApiMovies(category).observe(this, Observer {
+//                it.getContentIfNotHandled()?.let { movies ->
+//                    logD("category clicked list adapter dostaje liste")
+//                    moviesRecyclerView.scrollToPosition(0)
+//                    movieAdapter.submitList(movies.toMutableList())
+//                    progressBarMovies.isVisible = false
+//                }
+//        })
+//
+//        moviesToolbar.title = "Movies: $category"
+//    }
+
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         progressBarMovies.isVisible = true
         val category = view.tag as String
-//        apiMoviesVM.getApiMovies(category).removeObservers(this)
 
-        apiMoviesVM.getApiMovies(category).observe(this, Observer {
-                it.getContentIfNotHandled()?.let { movies ->
-                    logD("category clicked list adapter dostaje liste")
-                    moviesRecyclerView.scrollToPosition(0)
-                    movieAdapter.submitList(movies.toMutableList())
-                    progressBarMovies.isVisible = false
-                }
+        apiMoviesVM.getApiMovies("jakis napis").removeObservers(this)
+
+        apiMoviesVM.getApiMovies(category).observe(this, Observer { movies ->
+                logD("category clicked list adapter dostaje liste")
+                moviesRecyclerView.scrollToPosition(0)
+                movieAdapter.submitList(movies.toMutableList())
+                progressBarMovies.isVisible = false
+
         })
 
         moviesToolbar.title = "Movies: $category"

@@ -18,11 +18,11 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
 
     fun clearDisposables() = repo.clearDisposables()
 
-    fun getApiMovies(category: String) =
-        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
-
 //    fun getApiMovies(category: String) =
-//        repo.getMoviesFromApi(category) as LiveData<List<Movie>>
+//        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
+
+    fun getApiMovies(category: String) =
+        repo.getMoviesFromApi(category) as LiveData<List<Movie>>
 
 
 }

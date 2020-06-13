@@ -10,4 +10,5 @@ const val TO_WATCH = "To Watch List"
 const val POPULAR = "Popular"
 const val TOP_RATED = "Top Rated"
 const val UPCOMING = "Upcoming"
+const val REMOVE_OBSERVER = "remove observer"
 
