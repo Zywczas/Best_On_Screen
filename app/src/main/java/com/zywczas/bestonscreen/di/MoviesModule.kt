@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
+import com.zywczas.bestonscreen.adapter.OnBottomReachedListener
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
@@ -27,6 +28,8 @@ class MoviesModule(private val application: Application) {
     @Provides
     fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
 
+    @Provides
+    fun provideOnBottomReachedListener() : OnBottomReachedListener = JustForDagger()
 
     @Provides
     fun provideMutableLdOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()

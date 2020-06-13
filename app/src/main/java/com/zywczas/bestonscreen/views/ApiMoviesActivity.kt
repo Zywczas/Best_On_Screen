@@ -13,10 +13,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
+import com.zywczas.bestonscreen.adapter.OnBottomReachedListener
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
@@ -66,10 +68,20 @@ class ApiMoviesActivity : AppCompatActivity() {
         setupAdapter()
         setupTags()
         setupObserver()
+
+        val listener = object: RecyclerView.OnScrollListener() {
+
+        }
+
+
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, picasso)
+        movieAdapter = MovieAdapter(this, picasso, object : OnBottomReachedListener{
+            override fun onBottomReached(position: Int) {
+                logD("dol osiagniety")
+            }
+        })
         //custom onClick method for recycler view
         { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
@@ -83,6 +95,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         }
         val layoutManager = GridLayoutManager(this, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
+
     }
 
     //tags used to choose category of movie and to be passed to ApiMoviesRepo
