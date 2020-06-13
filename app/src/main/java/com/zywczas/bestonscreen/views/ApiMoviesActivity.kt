@@ -9,8 +9,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +16,6 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.App
-import com.zywczas.bestonscreen.adapter.OnBottomReachedListener
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
@@ -68,20 +65,11 @@ class ApiMoviesActivity : AppCompatActivity() {
         setupAdapter()
         setupTags()
         setupObserver()
-
-        val listener = object: RecyclerView.OnScrollListener() {
-
-        }
-
-
+        setupOnScrollListener()
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, picasso, object : OnBottomReachedListener{
-            override fun onBottomReached(position: Int) {
-                logD("dol osiagniety")
-            }
-        })
+        movieAdapter = MovieAdapter(this, picasso)
         //custom onClick method for recycler view
         { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
@@ -105,6 +93,8 @@ class ApiMoviesActivity : AppCompatActivity() {
         popularTextView.tag = POPULAR
         toWatchListTextView.tag = TO_WATCH
     }
+
+
 
 //    private fun setupObserver() {
 //        progressBarMovies.isVisible = true
@@ -152,6 +142,18 @@ class ApiMoviesActivity : AppCompatActivity() {
         }
 
         moviesToolbar.title = "Movies: $categoryFromIntent"
+    }
+
+    private fun setupOnScrollListener() {
+        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (!recyclerView.canScrollVertically(1) && newState ==RecyclerView.SCROLL_STATE_IDLE){
+                    logD("this is the end")
+                }
+            }
+        })
     }
 
     fun toWatchClicked(view: View) {

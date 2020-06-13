@@ -19,7 +19,6 @@ import kotlin.collections.ArrayList
 class MovieAdapter(
     private val context: Context,
     private val picasso: Picasso,
-    private var onBottomReachedListener: OnBottomReachedListener,
     private val itemClick: (Movie) -> Unit
 ) : ListAdapter<Movie, MovieAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
     //checks if object is the same, 'id' is unique so if ids are the same then the same object
@@ -28,7 +27,7 @@ class MovieAdapter(
     }
 
     override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem.title == newItem.title
+        return oldItem.id == newItem.id
     }
 }) {
 
@@ -61,14 +60,6 @@ class MovieAdapter(
         if (position < itemCount && position != RecyclerView.NO_POSITION) {
             holder.bindMovie(getItem(position))
         }
-        if (position == itemCount - 1){
-            onBottomReachedListener.onBottomReached(position)
-        }
-    }
-
-    //sprawdzic czy to musi byc jak podaje listenera w konstruktorze
-    fun setOnBottomReachedListener(onBottomReachedListener: OnBottomReachedListener) {
-        this.onBottomReachedListener = onBottomReachedListener
     }
 
 }

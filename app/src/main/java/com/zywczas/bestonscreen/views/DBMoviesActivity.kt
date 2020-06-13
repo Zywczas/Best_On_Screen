@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.adapter.OnBottomReachedListener
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBMoviesVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBMoviesVMFactory
@@ -52,14 +51,11 @@ class DBMoviesActivity : AppCompatActivity() {
         setupAdapter()
         setupTags()
         setupObserver()
+
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, picasso, object : OnBottomReachedListener {
-            override fun onBottomReached(position: Int) {
-                logD("dol osiagniety")
-            }
-        })
+        movieAdapter = MovieAdapter(this, picasso)
         //custom onClick method for recycler view
         { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
@@ -96,6 +92,8 @@ class DBMoviesActivity : AppCompatActivity() {
             }
         })
     }
+
+
 
     fun toWatchClicked (view: View) {
         closeDrawerOrMinimizeApp()
