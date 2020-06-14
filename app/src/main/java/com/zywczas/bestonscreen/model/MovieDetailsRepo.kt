@@ -17,15 +17,8 @@ import javax.inject.Singleton
 @Singleton
 class MovieDetailsRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
-    private val movies: ArrayList<Movie>,
-    private val movieLd: MutableLiveData<Movie>,
-    private val moviesEventLd: MutableLiveData<Event<List<Movie>>>,
-    val moviesLd: MutableLiveData<List<Movie>>,
-    private val tmdbService: TMDBService,
     private val movieDao: MovieDao,
-    private val booleanLd: MutableLiveData<Boolean>,
     private val booleanEventLd: MutableLiveData<Event<Boolean>>,
-    private val intEventLd: MutableLiveData<Event<Int>>,
     val stringEventLd : MutableLiveData<Event<String>>
 ){
     fun clearDisposables() = compositeDisposables.clear()
@@ -50,7 +43,7 @@ class MovieDetailsRepo @Inject constructor(
         )
         return stringEventLd
     }
-
+//zamienic wszedzie Event na LiveEvent
     fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Boolean>> {
 
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))

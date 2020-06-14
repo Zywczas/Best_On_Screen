@@ -17,11 +17,7 @@ import kotlin.system.exitProcess
 class ApiMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
-    private val movieLd: MutableLiveData<Movie>,
-    private val moviesEventLd: MutableLiveData<Event<List<Movie>>>,
-    private val moviesLd: MutableLiveData<List<Movie>>,
     private val tmdbService: TMDBService,
-    private val intEventLd: MutableLiveData<Event<Int>>,
     private val movieListLE : LiveEvent<List<Movie>>
 ) {
 

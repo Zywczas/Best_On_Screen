@@ -15,12 +15,8 @@ import javax.inject.Inject
 class DBMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
-    private val movieLd: MutableLiveData<Movie>,
     private val moviesEventLd: MutableLiveData<Event<List<Movie>>>,
-    private val moviesLd: MutableLiveData<List<Movie>>,
-    private val movieDao: MovieDao,
-    private val intEventLd: MutableLiveData<Event<Int>>,
-    val stringEventLd : MutableLiveData<Event<String>>
+    private val movieDao: MovieDao
 ) {
     fun clearDisposables() = compositeDisposables.clear()
 
@@ -41,6 +37,7 @@ class DBMoviesRepo @Inject constructor(
                     movies
                 }
                 //Consumer onNext & onError
+                    //zamienic Event na LiveEvent!!!!!!!!!!!!!!!!!!!!!!!!
                 .subscribe({ listOfMovies ->  moviesEventLd.postValue(Event(listOfMovies))
                     logD("wysyla liste z DB")
                 }, { logD(it) }

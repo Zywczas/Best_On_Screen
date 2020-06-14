@@ -130,11 +130,11 @@ class ApiMoviesActivity : AppCompatActivity() {
             apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<List<Movie>>{
                 override fun onChanged(t: List<Movie>?) {
                     if (t != null) {
-                        logD("adapter otrzymuje liste w onCreate")
+//                        logD("adapter otrzymuje liste w onCreate")
                         movieAdapter.submitList(t.toMutableList())
                         progressBarMovies.isVisible = false
-                        apiMoviesVM.getApiMovies("any String here").removeObservers(this@ApiMoviesActivity)
-                        logD("observery usuniete")
+//                        apiMoviesVM.getApiMovies(REMOVE_OBSERVER).removeObservers(this@ApiMoviesActivity)
+//                        logD("observery usuniete")
                     }
                 }
             })
@@ -163,38 +163,21 @@ class ApiMoviesActivity : AppCompatActivity() {
         finish()
     }
 
-//    fun categoryClicked(view: View) {
-//        closeDrawerOrMinimizeApp()
-//        progressBarMovies.isVisible = true
-//        val category = view.tag as String
-//        apiMoviesVM.getApiMovies(category).removeObservers(this)
-//
-//        apiMoviesVM.getApiMovies(category).observe(this, Observer {
-//                it.getContentIfNotHandled()?.let { movies ->
-//                    logD("category clicked list adapter dostaje liste")
-//                    moviesRecyclerView.scrollToPosition(0)
-//                    movieAdapter.submitList(movies.toMutableList())
-//                    progressBarMovies.isVisible = false
-//                }
-//        })
-//
-//        moviesToolbar.title = "Movies: $category"
-//    }
-
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         progressBarMovies.isVisible = true
         val category = view.tag as String
 
-        apiMoviesVM.getApiMovies("jakis napis").removeObservers(this)
+//        apiMoviesVM.getApiMovies(REMOVE_OBSERVER).removeObservers(this)
 
-        apiMoviesVM.getApiMovies(category).observe(this, Observer { movies ->
-                logD("category clicked list adapter dostaje liste")
-                moviesRecyclerView.scrollToPosition(0)
-                movieAdapter.submitList(movies.toMutableList())
-                progressBarMovies.isVisible = false
-
-        })
+        apiMoviesVM.getApiMovies(category)
+//            .observe(this, Observer { movies ->
+//                logD("category clicked list adapter dostaje liste")
+//                moviesRecyclerView.scrollToPosition(0)
+//                movieAdapter.submitList(movies.toMutableList())
+//                progressBarMovies.isVisible = false
+//
+//        })
 
         moviesToolbar.title = "Movies: $category"
     }
