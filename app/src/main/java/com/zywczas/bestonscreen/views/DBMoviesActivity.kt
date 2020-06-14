@@ -29,7 +29,7 @@ class DBMoviesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBMoviesVMFactory
-    private val dBMoviesVM: DBMoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
+    private val moviesVM: DBMoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
     var orientation by Delegates.notNull<Int>()
@@ -86,7 +86,7 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     private fun setupObserver() {
-        dBMoviesVM.getDbMovies().observe(this, Observer {
+        moviesVM.getDbMovies().observe(this, Observer {
             it.getContentIfNotHandled()?.let {movies -> logD("otrzymuje DB liste w onCreate")
                 movieAdapter.submitList(movies.toMutableList())
             }
@@ -112,7 +112,7 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        dBMoviesVM.clearDisposables()
+        moviesVM.clearDisposables()
         super.onDestroy()
     }
 

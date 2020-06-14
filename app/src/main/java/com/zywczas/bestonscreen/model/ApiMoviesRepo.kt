@@ -56,13 +56,7 @@ class ApiMoviesRepo @Inject constructor(
             .flatMap { movieApiResponse ->
                 movieApiResponse.page?.let { currentPage = it
                 logD("leci strona: $it")}
-
-                movieApiResponse.totalPages?.let { lastPage = it
-
-                    logD("total pages: $it") }
-
-
-
+                movieApiResponse.totalPages?.let { lastPage = it }
                 Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
             .flatMap { movieFromApi ->
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
@@ -72,8 +66,8 @@ class ApiMoviesRepo @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
+                    logD("wysyla liste z API")
                     movieListLE.postValue(Pair(movies, currentPage))
-                    logD("wysyla liste z API, strona $currentPage")
                 }
 
                 override fun onNext(m: Movie?) {

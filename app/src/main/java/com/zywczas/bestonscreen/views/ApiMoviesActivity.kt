@@ -35,7 +35,7 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiMoviesVMFactory
-    private val apiMoviesVM: ApiMoviesVM by viewModels {
+    private val moviesVM: ApiMoviesVM by viewModels {
         GenericSavedStateViewModelFactory(
             factory,
             this
@@ -43,10 +43,13 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
     private lateinit var movieAdapter: MovieAdapter
     @Inject
+    lateinit var moviesList: List<Movie>
+    @Inject
     lateinit var picasso: Picasso
-    var orientation by Delegates.notNull<Int>()
-    var movieCategory = POPULAR
-    var nextPage = 2
+    private var orientation by Delegates.notNull<Int>()
+    private var movieCategory = POPULAR
+    private var nextPage = 1
+    private var wasScreenRotated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,17 +60,28 @@ class ApiMoviesActivity : AppCompatActivity() {
         App.moviesComponent.inject(this)
 
         //setting up drawer layout and toggle button
-        val toggleMovies = ActionBarDrawerToggle(this, drawer_layout_movies,moviesToolbar,R.string.nav_drawer_open,R.string.nav_drawer_closed        )
+        val toggleMovies = ActionBarDrawerToggle(
+            this,
+            drawer_layout_movies,
+            moviesToolbar,
+            R.string.nav_drawer_open,
+            R.string.nav_drawer_closed
+        )
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
+        //movieCategory either from intent or from SavedStateHandle
         intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
+        moviesVM.getSavedCategory()?.let {
+            movieCategory = it
+            moviesVM.clearSavedCategory()
+        }
+        moviesVM.getMetaState()?.let { wasScreenRotated = it }
 
         setupAdapter()
         setupTags()
         setupObserver()
         setupOnScrollListener()
-
     }
 
     private fun setupAdapter() {
@@ -98,30 +112,39 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         progressBarMovies.isVisible = true
-            apiMoviesVM.getApiMovies(movieCategory, 1).observe(this,
-                Observer { pairMoviesInt ->
-                    //'0' working as a flag
-                    if (pairMoviesInt.second == 0){
-                        showToast("This is the last page in this category.")
-                        progressBarMovies.isVisible = false
-                    } else {
-                        movieAdapter.submitList(pairMoviesInt.first.toMutableList())
-                        nextPage = pairMoviesInt.second + 1
-                        progressBarMovies.isVisible = false
-                    }
+        moviesVM.getApiMovies(movieCategory, nextPage).observe(this,
+            Observer { pairMoviesInt ->
+                logD("observer otrzymuje live data")
+                //'0' working as a flag
+                if (pairMoviesInt.second == 0) {
+                    showToast("This is the last page in this category.")
+                    progressBarMovies.isVisible = false
+                } else {
+                    moviesList = pairMoviesInt.first
+                    movieAdapter.submitList(moviesList.toMutableList())
+                    nextPage = pairMoviesInt.second + 1
+                    progressBarMovies.isVisible = false
+                    //sprobowac tu usunac observerow albo transition live data
                 }
-            )
+            }
+        )
         moviesToolbar.title = "Movies: $movieCategory"
     }
 
     private fun setupOnScrollListener() {
-        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                if (!recyclerView.canScrollVertically(1) && newState ==RecyclerView.SCROLL_STATE_IDLE){
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     progressBarMovies.isVisible = true
-                    apiMoviesVM.getApiMovies(movieCategory, nextPage)
+                    //sprobowac to wrzucic w ViewModel przez Transision albo to drugie
+                    if(wasScreenRotated){
+                        wasScreenRotated = false
+                        moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
+                        setupObserver()
+                    }
+                    moviesVM.getApiMovies(movieCategory, nextPage)
                 }
             }
         })
@@ -133,23 +156,25 @@ class ApiMoviesActivity : AppCompatActivity() {
         startActivity(toWatchIntent)
         finish()
     }
-//this method resets list of movies and category
+
+    //this method resets list of movies and category
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         var clickedCategory = view.tag as String
-        if(movieCategory.equals(clickedCategory)){
+        //to sprawdzic czy moze byc ==
+        if (movieCategory.equals(clickedCategory)) {
             showToast("This is $clickedCategory.")
         } else {
             progressBarMovies.isVisible = true
             movieCategory = clickedCategory
             moviesRecyclerView.scrollToPosition(0)
-            apiMoviesVM.getApiMovies(movieCategory, 1)
+            moviesVM.getApiMovies(movieCategory, 1)
             moviesToolbar.title = "Movies: $movieCategory"
         }
     }
 
     override fun onDestroy() {
-        apiMoviesVM.clearDisposables()
+        moviesVM.clearDisposables()
         super.onDestroy()
     }
 
@@ -164,5 +189,14 @@ class ApiMoviesActivity : AppCompatActivity() {
         } else {
             this.moveTaskToBack(true);
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        moviesVM.saveCategory(SAVED_CATEGORY, movieCategory)
+        moviesVM.saveLD(SAVED_LD, Pair(moviesList, nextPage-1))
+        moviesVM.saveMetaState(SAVED_STATE, true)
+        logD("czy to dziala?")
     }
 }

@@ -29,6 +29,9 @@ class MoviesModule(private val application: Application) {
     fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
 
     @Provides
+    fun provideListOfMovies() : List<Movie> = ArrayList()
+
+    @Provides
     fun provideMutableLdOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()
 
     @Provides
