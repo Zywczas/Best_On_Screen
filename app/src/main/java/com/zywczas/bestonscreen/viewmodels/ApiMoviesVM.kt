@@ -21,8 +21,8 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
 //    fun getApiMovies(category: String) =
 //        repo.getMoviesFromApi(category) as LiveData<Event<List<Movie>>>
 
-    fun getApiMovies(category: String) =
-        repo.getMoviesFromApi(category) as LiveData<List<Movie>>
+    fun getApiMovies(category: String, page: Int) =
+        repo.getMoviesFromApi(category, page) as LiveData<Pair<List<Movie>, Int>>
 
 
 }

@@ -45,7 +45,8 @@ class ApiMoviesActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     var orientation by Delegates.notNull<Int>()
-    var categoryFromIntent: String? = null
+    var movieCategory = POPULAR
+    var nextPage = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +61,13 @@ class ApiMoviesActivity : AppCompatActivity() {
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
 
         setupAdapter()
         setupTags()
         setupObserver()
         setupOnScrollListener()
+
     }
 
     private fun setupAdapter() {
@@ -94,54 +96,21 @@ class ApiMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-
-
-//    private fun setupObserver() {
-//        progressBarMovies.isVisible = true
-//
-//        if (categoryFromIntent != null) {
-//            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<Event<List<Movie>>>{
-//                override fun onChanged(t: Event<List<Movie>>?) {
-//                    logD("onChanged rozpoczety")
-//                    if (t != null) {
-//                        logD("odbiera event")
-//                        val movies = t.getContentIfNotHandled()
-//                        if (movies != null) {
-//                            logD("adapter odbiera liste")
-//                            movieAdapter.submitList(movies.toMutableList())
-//                            progressBarMovies.isVisible = false
-////                            apiMoviesVM.getApiMovies(categoryFromIntent!!).removeObserver(this)
-////                            logD("observer usuniety")
-//                        }
-//                    }
-//                }
-//            })
-//
-//        } else {
-//            logD("pusty intent")
-//        }
-//
-//        moviesToolbar.title = "Movies: $categoryFromIntent"
-//    }
-
     private fun setupObserver() {
         progressBarMovies.isVisible = true
-        if (categoryFromIntent != null) {
-            apiMoviesVM.getApiMovies(categoryFromIntent!!).observe(this, object : Observer<List<Movie>>{
-                override fun onChanged(t: List<Movie>?) {
-                    if (t != null) {
-//                        logD("adapter otrzymuje liste w onCreate")
-                        movieAdapter.submitList(t.toMutableList())
+            apiMoviesVM.getApiMovies(movieCategory, 1).observe(this,
+                Observer { pairMoviesInt ->
+                    if (pairMoviesInt.second == 0){
+                        showToast("This is the last page in this category.")
                         progressBarMovies.isVisible = false
-//                        apiMoviesVM.getApiMovies(REMOVE_OBSERVER).removeObservers(this@ApiMoviesActivity)
-//                        logD("observery usuniete")
+                    } else {
+                        movieAdapter.submitList(pairMoviesInt.first.toMutableList())
+                        nextPage = pairMoviesInt.second + 1
+                        progressBarMovies.isVisible = false
                     }
                 }
-            })
-
-        }
-
-        moviesToolbar.title = "Movies: $categoryFromIntent"
+            )
+        moviesToolbar.title = "Movies: $movieCategory"
     }
 
     private fun setupOnScrollListener() {
@@ -150,7 +119,8 @@ class ApiMoviesActivity : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 if (!recyclerView.canScrollVertically(1) && newState ==RecyclerView.SCROLL_STATE_IDLE){
-                    logD("this is the end")
+                    progressBarMovies.isVisible = true
+                    apiMoviesVM.getApiMovies(movieCategory, nextPage)
                 }
             }
         })
@@ -162,24 +132,19 @@ class ApiMoviesActivity : AppCompatActivity() {
         startActivity(toWatchIntent)
         finish()
     }
-
+//this method resets list of movies and category
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        progressBarMovies.isVisible = true
-        val category = view.tag as String
-
-//        apiMoviesVM.getApiMovies(REMOVE_OBSERVER).removeObservers(this)
-
-        apiMoviesVM.getApiMovies(category)
-//            .observe(this, Observer { movies ->
-//                logD("category clicked list adapter dostaje liste")
-//                moviesRecyclerView.scrollToPosition(0)
-//                movieAdapter.submitList(movies.toMutableList())
-//                progressBarMovies.isVisible = false
-//
-//        })
-
-        moviesToolbar.title = "Movies: $category"
+        var clickedCategory = view.tag as String
+        if(movieCategory.equals(clickedCategory)){
+            showToast("This is $clickedCategory.")
+        } else {
+            progressBarMovies.isVisible = true
+            movieCategory = clickedCategory
+            moviesRecyclerView.scrollToPosition(0)
+            apiMoviesVM.getApiMovies(movieCategory, 1)
+            moviesToolbar.title = "Movies: $movieCategory"
+        }
     }
 
     override fun onDestroy() {

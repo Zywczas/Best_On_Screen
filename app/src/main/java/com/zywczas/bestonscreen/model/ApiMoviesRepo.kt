@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 
+import android.graphics.pdf.PdfDocument
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.*
@@ -18,20 +19,32 @@ class ApiMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val tmdbService: TMDBService,
-    private val movieListLE : LiveEvent<List<Movie>>
+    private val movieListLE : LiveEvent<Pair<List<Movie>, Int>>
 ) {
+    private var currentPage = 1
+    //just any number bigger than 1 at the beginning
+    private var lastPage = 9
 
     fun clearDisposables() = compositeDisposables.clear()
 
-    fun getMoviesFromApi (category: String) : LiveEvent<List<Movie>> {
-        movies.clear()
+    fun getMoviesFromApi (category: String, page: Int) : LiveEvent<Pair<List<Movie>, Int>> {
+        //if new category coming then reset the list
+        if (page == 1){
+            movies.clear()
+        }
+        if (page > lastPage) {
+            //sends 0 as a flag to Observer
+            movieListLE.postValue(Pair(movies, 0))
+            return  movieListLE
+        }
 
         val moviesObservableApi = when (category) {
-            POPULAR -> { tmdbService.getPopularMovies() }
-            TOP_RATED -> { tmdbService.getTopRatedMovies() }
-            UPCOMING -> { tmdbService.getUpcomingMovies() }
+            POPULAR -> { tmdbService.getPopularMovies(API_KEY, page) }
+            TOP_RATED -> { tmdbService.getTopRatedMovies(API_KEY, page) }
+            UPCOMING -> { tmdbService.getUpcomingMovies(API_KEY, page) }
             //this option sends empty LiveEvent just to remove observers
-            REMOVE_OBSERVER -> { movieListLE.postValue(movies)
+            REMOVE_OBSERVER -> { movies.clear()
+                movieListLE.postValue(Pair(movies, currentPage))
                 return  movieListLE }
             else -> { logD("incorrect movie category passed to 'getMoviesFromApi'")
                 exitProcess(0)}
@@ -40,7 +53,17 @@ class ApiMoviesRepo @Inject constructor(
         compositeDisposables.add(moviesObservableApi
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { movieApiResponse -> Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
+            .flatMap { movieApiResponse ->
+                movieApiResponse.page?.let { currentPage = it
+                logD("leci strona: $it")}
+
+                movieApiResponse.totalPages?.let { lastPage = it
+
+                    logD("total pages: $it") }
+
+
+
+                Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
             .flatMap { movieFromApi ->
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
                 movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
@@ -49,8 +72,8 @@ class ApiMoviesRepo @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
-                    movieListLE.postValue(movies)
-                    logD("wysyla liste z API")
+                    movieListLE.postValue(Pair(movies, currentPage))
+                    logD("wysyla liste z API, strona $currentPage")
                 }
 
                 override fun onNext(m: Movie?) {

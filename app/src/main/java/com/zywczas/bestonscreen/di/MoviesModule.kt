@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
@@ -46,7 +47,7 @@ class MoviesModule(private val application: Application) {
     fun provideMovieListEventLd() : MutableLiveData<Event<List<Movie>>> = MutableLiveData()
 
     @Provides
-    fun provideLiveEventListMovies() : LiveEvent<List<Movie>> = LiveEvent()
+    fun provideLiveEventListMovies() : LiveEvent<Pair<List<Movie>, Int>> = LiveEvent()
 
     @Provides
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
