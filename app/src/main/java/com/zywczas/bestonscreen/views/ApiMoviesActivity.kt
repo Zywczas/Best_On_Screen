@@ -100,6 +100,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         progressBarMovies.isVisible = true
             apiMoviesVM.getApiMovies(movieCategory, 1).observe(this,
                 Observer { pairMoviesInt ->
+                    //'0' working as a flag
                     if (pairMoviesInt.second == 0){
                         showToast("This is the last page in this category.")
                         progressBarMovies.isVisible = false
