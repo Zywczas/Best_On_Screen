@@ -75,6 +75,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         toggleMovies.syncState()
 
         //movieCategory either from intent or from SavedStateHandle
+        //tu dac if
         intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
         viewModel.getSavedCategory()?.let {
             movieCategory = it
@@ -125,12 +126,15 @@ class ApiMoviesActivity : AppCompatActivity() {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
                 } else {
-                    //tu dodac rosniecie listy
-                    adapter.submitList(pairMoviesInt.first.toMutableList())
+                    //prepare list for onSaveInstanceState and the observer
+                    moviesList.addAll(pairMoviesInt.first)
+                    adapter.submitList(moviesList.toMutableList())
+
                     progressBarMovies.isVisible = false
                     //prepare data for next call
                     nextPage = pairMoviesInt.second + 1
-                    moviesList = pairMoviesInt.first
+
+
                 }
             }
         )
@@ -181,6 +185,7 @@ class ApiMoviesActivity : AppCompatActivity() {
             showToast("This is $clickedCategory.")
         } else {
             progressBarMovies.isVisible = true
+            moviesList.clear()
 
             viewModel.getApiMovies(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
@@ -211,7 +216,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         viewModel.saveCategory(SAVED_CATEGORY, movieCategory)
-        //this method needs current list f movies and current page
+        //this method needs current list of movies and current page
         viewModel.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage - 1))
         viewModel.saveMetaState(SAVED_STATE, true)
     }

@@ -20,18 +20,17 @@ class ApiMoviesRepo @Inject constructor(
     private val movieListLE : LiveEvent<PairMoviesInt>
 ) {
     private var currentPage = 1
-    //just any number bigger than 1 at the beginning
-    private var lastPage = 9
+    //just any number bigger >= 1 at the beginning
+    private var lastPage = 1
 
     fun clearDisposables() = compositeDisposables.clear()
 
     fun getMoviesFromApi (category: String, page: Int) : LiveEvent<PairMoviesInt> {
-        //if new category coming then reset the list
-        if (page == 1){
-            movies.clear()
-        }
+        movies.clear()
+
         if (page > lastPage) {
             //sends 0 as a flag to Observer
+            logD("page sie nie zgadza w repo")
             movieListLE.postValue(PairMoviesInt(movies, 0))
             return  movieListLE
         }
@@ -41,7 +40,7 @@ class ApiMoviesRepo @Inject constructor(
             TOP_RATED -> { tmdbService.getTopRatedMovies(API_KEY, page) }
             UPCOMING -> { tmdbService.getUpcomingMovies(API_KEY, page) }
             //this option sends empty LiveEvent just to remove observers
-            EMPTY_CATEGORY -> { movies.clear()
+            EMPTY_CATEGORY -> {
                 movieListLE.postValue(PairMoviesInt(movies, currentPage))
                 return  movieListLE }
             else -> { logD("incorrect movie category passed to 'getMoviesFromApi'")
