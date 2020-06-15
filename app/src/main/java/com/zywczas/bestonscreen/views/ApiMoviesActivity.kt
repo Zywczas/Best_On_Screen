@@ -43,7 +43,7 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
     private lateinit var movieAdapter: MovieAdapter
     @Inject
-    lateinit var moviesList: List<Movie>
+    lateinit var moviesList: ArrayList<Movie>
     @Inject
     lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
@@ -121,8 +121,14 @@ class ApiMoviesActivity : AppCompatActivity() {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
                 } else {
-                    moviesList = pairMoviesInt.first
-                    movieAdapter.submitList(moviesList.toMutableList())
+                    //ta linijka jest zle zrobiona, nie moze prawidlowo cast to List<Movie>
+                    moviesList.clear()
+
+                        moviesList.addAll(pairMoviesInt.first)
+
+
+//                    moviesList = pairMoviesInt.first as List<Movie>
+                    movieAdapter.submitList(pairMoviesInt.first.toMutableList())
                     nextPage = pairMoviesInt.second + 1
                     progressBarMovies.isVisible = false
                 }

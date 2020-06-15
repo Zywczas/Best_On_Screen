@@ -2,6 +2,8 @@ package com.zywczas.bestonscreen.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+
 
 /**
  * General movie class to be used with UI. All movies from REST API and SQLite will be converted
