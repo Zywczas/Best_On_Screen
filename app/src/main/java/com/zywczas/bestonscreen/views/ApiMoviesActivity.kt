@@ -177,14 +177,17 @@ class ApiMoviesActivity : AppCompatActivity() {
             moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
             setupObserver(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
+
+            moviesToolbar.title = "Movies: $clickedCategory"
             movieCategory = clickedCategory
         } else {
-
             progressBarMovies.isVisible = true
-            movieCategory = clickedCategory
+
+            moviesVM.getApiMovies(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
-            moviesVM.getApiMovies(movieCategory, 1)
-            moviesToolbar.title = "Movies: $movieCategory"
+
+            moviesToolbar.title = "Movies: $clickedCategory"
+            movieCategory = clickedCategory
         }
     }
 
