@@ -121,6 +121,7 @@ class ApiMoviesActivity : AppCompatActivity() {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
                 } else {
+
                     movieAdapter.submitList(pairMoviesInt.first.toMutableList())
                     nextPage = pairMoviesInt.second + 1
                     progressBarMovies.isVisible = false
