@@ -42,8 +42,11 @@ class ApiMoviesActivity : AppCompatActivity() {
         )
     }
     private lateinit var movieAdapter: MovieAdapter
+
+    //backup list to pass to ViewModel if orientation changed
     @Inject
     lateinit var moviesList: ArrayList<Movie>
+
     @Inject
     lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
@@ -81,7 +84,7 @@ class ApiMoviesActivity : AppCompatActivity() {
 
         setupAdapter()
         setupTags()
-        setupObserver()
+        setupObserver(movieCategory, nextPage)
         setupOnScrollListener()
     }
 
@@ -111,9 +114,9 @@ class ApiMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun setupObserver() {
+    private fun setupObserver(category: String, page: Int) {
         progressBarMovies.isVisible = true
-        moviesVM.getApiMovies(movieCategory, nextPage).observe(this,
+        moviesVM.getApiMovies(category, page).observe(this,
             Observer { pairMoviesInt ->
                 logD("observer otrzymuje live data")
                 //'0' working as a flag
@@ -139,12 +142,15 @@ class ApiMoviesActivity : AppCompatActivity() {
 
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     progressBarMovies.isVisible = true
-                    if(wasScreenRotated){
+                    if (wasScreenRotated) {
                         wasScreenRotated = false
-                        moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
-                        setupObserver()
+                        moviesVM.getApiMovies(REMOVE_OBSERVER, 0)
+                            .removeObservers(this@ApiMoviesActivity)
+                        setupObserver(movieCategory, nextPage)
+                    } else {
+                        moviesVM.getApiMovies(movieCategory, nextPage)
                     }
-                    moviesVM.getApiMovies(movieCategory, nextPage)
+
                 }
             }
         })
@@ -164,7 +170,16 @@ class ApiMoviesActivity : AppCompatActivity() {
         //to sprawdzic czy moze byc ==
         if (movieCategory.equals(clickedCategory)) {
             showToast("This is $clickedCategory.")
+        } else if (wasScreenRotated) {
+            wasScreenRotated = false
+            progressBarMovies.isVisible = true
+
+            moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
+            setupObserver(clickedCategory, 1)
+            moviesRecyclerView.scrollToPosition(0)
+            movieCategory = clickedCategory
         } else {
+
             progressBarMovies.isVisible = true
             movieCategory = clickedCategory
             moviesRecyclerView.scrollToPosition(0)
@@ -196,7 +211,7 @@ class ApiMoviesActivity : AppCompatActivity() {
 
         moviesVM.saveCategory(SAVED_CATEGORY, movieCategory)
         //this method needs current list f movies and current page
-        moviesVM.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage-1))
+        moviesVM.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage - 1))
         moviesVM.saveMetaState(SAVED_STATE, true)
     }
 }

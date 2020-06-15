@@ -6,7 +6,9 @@ import com.zywczas.bestonscreen.model.ApiMoviesRepo
 import com.zywczas.bestonscreen.model.MovieDetailsRepo
 import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MovieDetailsVMFactory @Inject constructor(private val repo: MovieDetailsRepo) :
     ViewModelProvider.NewInstanceFactory(){
 
