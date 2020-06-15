@@ -29,8 +29,8 @@ class DBMoviesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBMoviesVMFactory
-    private val moviesVM: DBMoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
-    private lateinit var movieAdapter: MovieAdapter
+    private val viewModel: DBMoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
+    private lateinit var adapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
 
@@ -55,7 +55,7 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, picasso)
+        adapter = MovieAdapter(this, picasso)
         //custom onClick method for recycler view
         { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
@@ -63,7 +63,7 @@ class DBMoviesActivity : AppCompatActivity() {
             startActivity(movieDetailsActivity)
         }
 
-        moviesRecyclerView.adapter = movieAdapter
+        moviesRecyclerView.adapter = adapter
         var spanCount = 2
         if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
             spanCount = 4
@@ -82,9 +82,9 @@ class DBMoviesActivity : AppCompatActivity() {
 
 
     private fun setupObserver() {
-        moviesVM.getDbMovies().observe(this, Observer {movies ->
+        viewModel.getDbMovies().observe(this, Observer { movies ->
             logD("otrzymuje DB liste w onCreate")
-                movieAdapter.submitList(movies.toMutableList())
+                adapter.submitList(movies.toMutableList())
 
         })
     }
@@ -107,7 +107,7 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        moviesVM.clearDisposables()
+        viewModel.clearDisposables()
         super.onDestroy()
     }
 

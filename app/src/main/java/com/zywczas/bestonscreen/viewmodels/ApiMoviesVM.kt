@@ -14,12 +14,12 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
     private val mediatorLd = MediatorLiveData<PairMoviesInt>()
     private val handleLd = LiveEvent<PairMoviesInt>()
 
-    fun getLd() = mediatorLd as LiveData<PairMoviesInt>
-
     init {
         mediatorLd.addSource(repo.getMoviesFromApi(EMPTY_CATEGORY, 0)) {mediatorLd.value = it}
         mediatorLd.addSource(handleLd) {mediatorLd.value = it}
     }
+
+    fun getLd() = mediatorLd as LiveData<PairMoviesInt>
 
     fun getApiMovies(category: String, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
     fun getSavedStateLd() {

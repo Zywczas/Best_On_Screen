@@ -35,13 +35,13 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiMoviesVMFactory
-    private val moviesVM: ApiMoviesVM by viewModels {
+    private val viewModel: ApiMoviesVM by viewModels {
         GenericSavedStateViewModelFactory(
             factory,
             this
         )
     }
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var adapter: MovieAdapter
 
     //backup list to pass to ViewModel if orientation changed
     @Inject
@@ -76,27 +76,29 @@ class ApiMoviesActivity : AppCompatActivity() {
 
         //movieCategory either from intent or from SavedStateHandle
         intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
-        moviesVM.getSavedCategory()?.let {
+        viewModel.getSavedCategory()?.let {
             movieCategory = it
-            moviesVM.clearSavedCategory()
+            viewModel.clearSavedCategory()
         }
-        moviesVM.getMetaState()?.let { wasScreenRotated = it }
+        viewModel.getMetaState()?.let { wasScreenRotated = it }
 
         setupAdapter()
         setupTags()
-        setupObserver(movieCategory, nextPage)
+        setupObserver()
+        getFirstData()
         setupOnScrollListener()
+
     }
 
     private fun setupAdapter() {
-        movieAdapter = MovieAdapter(this, picasso)
+        adapter = MovieAdapter(this, picasso)
         //custom onClick method for recycler view
         { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
         }
-        moviesRecyclerView.adapter = movieAdapter
+        moviesRecyclerView.adapter = adapter
         var spanCount = 2
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 4
@@ -114,9 +116,8 @@ class ApiMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun setupObserver(category: String, page: Int) {
-        progressBarMovies.isVisible = true
-        moviesVM.getApiMovies(category, page).observe(this,
+    private fun setupObserver() {
+        viewModel.getLd().observe(this,
             Observer { pairMoviesInt ->
                 logD("observer otrzymuje live data")
                 //'0' working as a flag
@@ -124,15 +125,29 @@ class ApiMoviesActivity : AppCompatActivity() {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
                 } else {
-
-                    movieAdapter.submitList(pairMoviesInt.first.toMutableList())
-                    nextPage = pairMoviesInt.second + 1
+                    //tu dodac rosniecie listy
+                    adapter.submitList(pairMoviesInt.first.toMutableList())
                     progressBarMovies.isVisible = false
+                    //prepare data for next call
+                    nextPage = pairMoviesInt.second + 1
                     moviesList = pairMoviesInt.first
                 }
             }
         )
         moviesToolbar.title = "Movies: $movieCategory"
+    }
+
+    private fun getFirstData() {
+        progressBarMovies.isVisible = true
+        if (wasScreenRotated) {
+            logD("leci z saved state")
+            viewModel.getSavedStateLd()
+            wasScreenRotated = false
+            viewModel
+        } else {
+            logD("leci z api")
+            viewModel.getApiMovies(movieCategory, nextPage)
+        }
     }
 
     private fun setupOnScrollListener() {
@@ -142,15 +157,7 @@ class ApiMoviesActivity : AppCompatActivity() {
 
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     progressBarMovies.isVisible = true
-                    if (wasScreenRotated) {
-                        wasScreenRotated = false
-                        moviesVM.getApiMovies(EMPTY_CATEGORY, 0)
-                            .removeObservers(this@ApiMoviesActivity)
-                        setupObserver(movieCategory, nextPage)
-                    } else {
-                        moviesVM.getApiMovies(movieCategory, nextPage)
-                    }
-
+                    viewModel.getApiMovies(movieCategory, nextPage)
                 }
             }
         })
@@ -163,27 +170,19 @@ class ApiMoviesActivity : AppCompatActivity() {
         finish()
     }
 
-    //this method resets list of movies and category
+    /**
+     * This method resets list of movies and category.
+     */
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         var clickedCategory = view.tag as String
         //to sprawdzic czy moze byc ==
         if (movieCategory.equals(clickedCategory)) {
             showToast("This is $clickedCategory.")
-        } else if (wasScreenRotated) {
-            wasScreenRotated = false
-            progressBarMovies.isVisible = true
-
-            moviesVM.getApiMovies(EMPTY_CATEGORY, 0).removeObservers(this@ApiMoviesActivity)
-            setupObserver(clickedCategory, 1)
-            moviesRecyclerView.scrollToPosition(0)
-
-            moviesToolbar.title = "Movies: $clickedCategory"
-            movieCategory = clickedCategory
         } else {
             progressBarMovies.isVisible = true
 
-            moviesVM.getApiMovies(clickedCategory, 1)
+            viewModel.getApiMovies(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
 
             moviesToolbar.title = "Movies: $clickedCategory"
@@ -192,13 +191,12 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        moviesVM.clearDisposables()
+        viewModel.clearDisposables()
         super.onDestroy()
     }
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
-//        super.onBackPressed()
     }
 
     private fun closeDrawerOrMinimizeApp() {
@@ -212,9 +210,9 @@ class ApiMoviesActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        moviesVM.saveCategory(SAVED_CATEGORY, movieCategory)
+        viewModel.saveCategory(SAVED_CATEGORY, movieCategory)
         //this method needs current list f movies and current page
-        moviesVM.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage - 1))
-        moviesVM.saveMetaState(SAVED_STATE, true)
+        viewModel.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage - 1))
+        viewModel.saveMetaState(SAVED_STATE, true)
     }
 }

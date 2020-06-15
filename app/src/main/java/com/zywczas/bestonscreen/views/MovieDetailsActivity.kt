@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class MovieDetailsActivity : AppCompatActivity() {
 
-    lateinit var movieDetailsVM: MovieDetailsVM
+    lateinit var viewModel: MovieDetailsVM
     @Inject
     lateinit var factory: MovieDetailsVMFactory
     @Inject
@@ -31,7 +31,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_details)
 
         App.moviesComponent.inject(this)
-        movieDetailsVM = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
+        viewModel = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
 
         movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
 
@@ -53,12 +53,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         rateTextViewDetails.text = "Rate: ${movieFromParcel.voteAverage.toString()}"
         releaseDateTextViewDetails.text = "Release date: ${movieFromParcel.releaseDate}"
         overviewTextViewDetails.text = movieFromParcel.overview
-        genresTextViewDetails.text = movieDetailsVM.getGenresDescription(movieFromParcel)
+        genresTextViewDetails.text = viewModel.getGenresDescription(movieFromParcel)
     }
 
     fun addToListClicked(view: View) {
-
-        movieDetailsVM.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
+        viewModel.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })
@@ -66,7 +65,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun checkIfMovieIsInDb() {
-        movieDetailsVM.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
+        viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
             Observer {
                 it.getContentIfNotHandled()?.let { boolean ->
                     addToListBtn.isChecked = boolean
@@ -77,7 +76,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        movieDetailsVM.clearDisposables()
+        viewModel.clearDisposables()
         super.onDestroy()
     }
 }
