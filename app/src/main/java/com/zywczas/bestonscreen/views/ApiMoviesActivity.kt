@@ -144,7 +144,7 @@ class ApiMoviesActivity : AppCompatActivity() {
                     progressBarMovies.isVisible = true
                     if (wasScreenRotated) {
                         wasScreenRotated = false
-                        moviesVM.getApiMovies(REMOVE_OBSERVER, 0)
+                        moviesVM.getApiMovies(EMPTY_CATEGORY, 0)
                             .removeObservers(this@ApiMoviesActivity)
                         setupObserver(movieCategory, nextPage)
                     } else {
@@ -174,7 +174,7 @@ class ApiMoviesActivity : AppCompatActivity() {
             wasScreenRotated = false
             progressBarMovies.isVisible = true
 
-            moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
+            moviesVM.getApiMovies(EMPTY_CATEGORY, 0).removeObservers(this@ApiMoviesActivity)
             setupObserver(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
 

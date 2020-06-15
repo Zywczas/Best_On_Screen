@@ -80,6 +80,7 @@ class DBMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
+
     private fun setupObserver() {
         moviesVM.getDbMovies().observe(this, Observer {movies ->
             logD("otrzymuje DB liste w onCreate")

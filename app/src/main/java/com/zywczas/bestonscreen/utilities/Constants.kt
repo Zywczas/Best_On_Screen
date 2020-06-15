@@ -12,11 +12,10 @@ const val TO_WATCH = "To Watch List"
 const val POPULAR = "Popular"
 const val TOP_RATED = "Top Rated"
 const val UPCOMING = "Upcoming"
-const val REMOVE_OBSERVER = "remove observer"
+const val EMPTY_CATEGORY = "empty"
 
 //constants for SavedStateHandle
 const val SAVED_LD = "movies list"
-const val SAVED_PAGE = "page"
 const val SAVED_CATEGORY = "category"
 const val SAVED_STATE = "isStateSaved"
 
