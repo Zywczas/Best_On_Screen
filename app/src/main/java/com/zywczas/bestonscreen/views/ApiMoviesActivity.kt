@@ -121,16 +121,10 @@ class ApiMoviesActivity : AppCompatActivity() {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
                 } else {
-                    //ta linijka jest zle zrobiona, nie moze prawidlowo cast to List<Movie>
-                    moviesList.clear()
-
-                        moviesList.addAll(pairMoviesInt.first)
-
-
-//                    moviesList = pairMoviesInt.first as List<Movie>
                     movieAdapter.submitList(pairMoviesInt.first.toMutableList())
                     nextPage = pairMoviesInt.second + 1
                     progressBarMovies.isVisible = false
+                    moviesList = pairMoviesInt.first
                 }
             }
         )
@@ -201,7 +195,7 @@ class ApiMoviesActivity : AppCompatActivity() {
 
         moviesVM.saveCategory(SAVED_CATEGORY, movieCategory)
         //this method needs current list f movies and current page
-        moviesVM.saveLD(SAVED_LD, Pair(moviesList, nextPage-1))
+        moviesVM.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage-1))
         moviesVM.saveMetaState(SAVED_STATE, true)
     }
 }

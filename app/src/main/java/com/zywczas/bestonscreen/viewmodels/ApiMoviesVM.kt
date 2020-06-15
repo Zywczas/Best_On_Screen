@@ -15,16 +15,24 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
 
     fun clearDisposables() = repo.clearDisposables()
 
-    fun getApiMovies(category: String, nextPage: Int) : LiveData<Pair<List<Movie>, Int>> {
+    fun getApiMovies(category: String, nextPage: Int) : LiveData<PairMoviesInt> {
         //if orientation changed take LiveData from SavedStateHandle
         val isStateSaved = handle.get<Boolean>(SAVED_STATE)
         return if (isStateSaved != null && isStateSaved == true) {
+
+
             logD("saved state: $isStateSaved")
+
+
             //reset status so in the next step it can continue with API repository
             handle.remove<Boolean>(SAVED_STATE)
             handle.getLiveData(SAVED_LD)
         } else {
+
+
             logD("filmy z api w MV")
+
+
             repo.getMoviesFromApi(category, nextPage)
         }
     }
@@ -43,7 +51,7 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
     /**
      * This fun needs to save current list and page number.
      */
-    fun saveLD(key: String, moviesAndPage: Pair<List<Movie>, Int>) = handle.set(key, moviesAndPage)
+    fun saveLD(key: String, moviesAndPage: PairMoviesInt) = handle.set(key, moviesAndPage)
     fun saveMetaState(key: String, isStateSaved: Boolean) = handle.set(key, isStateSaved)
     fun saveCategory(key: String, category: String) = handle.set(key, category)
 

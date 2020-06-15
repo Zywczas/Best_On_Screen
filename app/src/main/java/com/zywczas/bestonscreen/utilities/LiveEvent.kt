@@ -5,8 +5,9 @@ import androidx.collection.ArraySet
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
+import javax.inject.Inject
 
-open class LiveEvent<T> : MediatorLiveData<T>() {
+open class LiveEvent<T> @Inject constructor(): MediatorLiveData<T>() {
 
     private val observers = ArraySet<ObserverWrapper<in T>>()
 
