@@ -32,7 +32,7 @@ class DBMoviesActivity : AppCompatActivity() {
     private val moviesVM: DBMoviesVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var movieAdapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
-    var orientation by Delegates.notNull<Int>()
+    private var orientation by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

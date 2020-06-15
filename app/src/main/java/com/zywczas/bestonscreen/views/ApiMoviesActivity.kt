@@ -55,6 +55,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
         progressBarMovies.isVisible = false
+        emptyListTextView.isVisible = false
         orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
@@ -124,7 +125,6 @@ class ApiMoviesActivity : AppCompatActivity() {
                     movieAdapter.submitList(moviesList.toMutableList())
                     nextPage = pairMoviesInt.second + 1
                     progressBarMovies.isVisible = false
-                    //sprobowac tu usunac observerow albo transition live data
                 }
             }
         )
@@ -138,7 +138,6 @@ class ApiMoviesActivity : AppCompatActivity() {
 
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     progressBarMovies.isVisible = true
-                    //sprobowac to wrzucic w ViewModel przez Transision albo to drugie
                     if(wasScreenRotated){
                         wasScreenRotated = false
                         moviesVM.getApiMovies(REMOVE_OBSERVER, 0).removeObservers(this@ApiMoviesActivity)
@@ -195,8 +194,8 @@ class ApiMoviesActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         moviesVM.saveCategory(SAVED_CATEGORY, movieCategory)
+        //this method needs current list f movies and current page
         moviesVM.saveLD(SAVED_LD, Pair(moviesList, nextPage-1))
         moviesVM.saveMetaState(SAVED_STATE, true)
-        logD("czy to dziala?")
     }
 }

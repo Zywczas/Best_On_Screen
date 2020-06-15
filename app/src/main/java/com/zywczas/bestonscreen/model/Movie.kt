@@ -8,6 +8,7 @@ import android.os.Parcelable
  * to this class. But this class will be converted to MovieFromDB (and then to database) if a user
  * adds it to "To Watch List".
  */
+
 class Movie () : Parcelable {
 
     var id: Int? = null

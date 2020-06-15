@@ -16,16 +16,15 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
     fun clearDisposables() = repo.clearDisposables()
 
     fun getApiMovies(category: String, nextPage: Int) : LiveData<Pair<List<Movie>, Int>> {
+        //if orientation changed take LiveData from SavedStateHandle
         val isStateSaved = handle.get<Boolean>(SAVED_STATE)
-
         return if (isStateSaved != null && isStateSaved == true) {
             logD("saved state: $isStateSaved")
             //reset status so in the next step it can continue with API repository
             handle.remove<Boolean>(SAVED_STATE)
-    //            saveMetaState(SAVED_STATE, false)
             handle.getLiveData(SAVED_LD)
         } else {
-            logD("filmy z api")
+            logD("filmy z api w MV")
             repo.getMoviesFromApi(category, nextPage)
         }
     }
