@@ -80,16 +80,11 @@ class DBMoviesActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     private fun setupObserver() {
-        moviesVM.getDbMovies().observe(this, Observer {
-            it.getContentIfNotHandled()?.let {movies -> logD("otrzymuje DB liste w onCreate")
+        moviesVM.getDbMovies().observe(this, Observer {movies ->
+            logD("otrzymuje DB liste w onCreate")
                 movieAdapter.submitList(movies.toMutableList())
-            }
+
         })
     }
 
@@ -102,7 +97,6 @@ class DBMoviesActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-//        dBMoviesVM.clearDisposables()
         val category = view.tag as String
 
         val moviesIntent = Intent(this, ApiMoviesActivity::class.java)
@@ -118,7 +112,6 @@ class DBMoviesActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
-//        super.onBackPressed()
     }
 
     private fun closeDrawerOrMinimizeApp() {
