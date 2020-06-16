@@ -37,7 +37,6 @@ class DBMoviesRepo @Inject constructor(
                 }
                 //Consumer onNext & onError
                 .subscribe({ listOfMovies ->  moviesLiveEvent.postValue(listOfMovies)
-                    logD("wysyla liste z DB")
                 }, { logD(it) }
                 )
         )

@@ -21,7 +21,7 @@ class ApiMoviesRepo @Inject constructor(
     private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, String>>
 ) {
     private var currentPage = 1
-    //just any number bigger >= 1 at the beginning
+    //just any number >= 1 at the beginning
     private var lastPage = 1
 
     fun clearDisposables() = compositeDisposables.clear()
@@ -34,7 +34,6 @@ class ApiMoviesRepo @Inject constructor(
 
         if (page > lastPage) {
             //sends 0 as a flag to Observer
-            logD("page sie nie zgadza w repo")
             moviesLd.postValue(Triple(movies, 0, category))
             return  moviesLd
         }
@@ -44,11 +43,13 @@ class ApiMoviesRepo @Inject constructor(
             TOP_RATED -> { tmdbService.getTopRatedMovies(API_KEY, page) }
             UPCOMING -> { tmdbService.getUpcomingMovies(API_KEY, page) }
             //this option sends empty LiveEvent just to remove observers
-            EMPTY_CATEGORY -> {
+            EMPTY_CATEGORY -> { movies.clear()
                 moviesLd.postValue(Triple(movies, currentPage, category))
                 return  moviesLd }
-            else -> { logD("incorrect movie category passed to 'getMoviesFromApi'")
-                exitProcess(0)}
+            else -> { movies.clear()
+                logD("incorrect movie category passed to 'getMoviesFromApi'")
+                moviesLd.postValue(Triple(movies, currentPage, category))
+                return  moviesLd}
         }
 
         compositeDisposables.add(moviesObservableApi
@@ -64,7 +65,7 @@ class ApiMoviesRepo @Inject constructor(
             .flatMap { movieFromApi ->
                 //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
                 movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
-                //converts MovieFromAPI to Observable <Movie>
+                //converts MovieFromAPI to Observable<Movie>
                 Observable.just( toMovie(movieFromApi) )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {

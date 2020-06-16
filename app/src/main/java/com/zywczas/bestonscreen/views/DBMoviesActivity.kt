@@ -83,9 +83,7 @@ class DBMoviesActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
-            logD("otrzymuje DB liste w onCreate")
                 adapter.submitList(movies.toMutableList())
-
         })
     }
 

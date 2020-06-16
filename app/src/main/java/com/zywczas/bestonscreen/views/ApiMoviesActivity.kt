@@ -72,10 +72,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        intent.getStringExtra(EXTRA_CATEGORY)?.let {
-            movieCategory = it
-            moviesToolbar.title = "Movies: $it"
-        }
+        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
 
         setupAdapter()
         setupTags()
@@ -113,21 +110,20 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         viewModel.getLd().observe(this,
-            Observer { trioMoviesPageCategory ->
-                logD("observer otrzymuje live data")
+            Observer { tripleMoviesPageCategory ->
                 //'0' working as a flag
-                if (trioMoviesPageCategory.second == 0) {
+                if (tripleMoviesPageCategory.second == 0) {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
 
                 } else {
-                    adapter.submitList(trioMoviesPageCategory.first.toMutableList())
+                    adapter.submitList(tripleMoviesPageCategory.first.toMutableList())
                     progressBarMovies.isVisible = false
-                    moviesToolbar.title = "Movies: ${trioMoviesPageCategory.third}"
+                    moviesToolbar.title = "Movies: ${tripleMoviesPageCategory.third}"
 
                     //prepare data for next call
-                    nextPage = trioMoviesPageCategory.second + 1
-                    movieCategory = trioMoviesPageCategory.third
+                    nextPage = tripleMoviesPageCategory.second + 1
+                    movieCategory = tripleMoviesPageCategory.third
                 }
             }
         )
@@ -168,9 +164,8 @@ class ApiMoviesActivity : AppCompatActivity() {
      */
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        var clickedCategory = view.tag as String
-        //to sprawdzic czy moze byc ==
-        if (movieCategory.equals(clickedCategory)) {
+        val clickedCategory = view.tag as String
+        if (movieCategory == clickedCategory) {
             showToast("This is $clickedCategory.")
         } else {
             progressBarMovies.isVisible = true
