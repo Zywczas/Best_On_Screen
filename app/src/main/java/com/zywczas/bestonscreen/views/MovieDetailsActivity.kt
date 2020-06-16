@@ -40,6 +40,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         checkIfMovieIsInDb()
     }
 
+    //TODO dodac guzik RAte
+
     @SuppressLint("SetTextI18n")
     private fun setupMovieUIDetails() {
         //downloading image of width 300 because tmdb Api doesn't support 250, resized in picasso to 250

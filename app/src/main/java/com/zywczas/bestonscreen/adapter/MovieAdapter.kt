@@ -22,7 +22,7 @@ class MovieAdapter(
     private val picasso: Picasso,
     private val itemClick: (Movie) -> Unit
 ) : ListAdapter<Movie, MovieAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
-    //checks if object is the same, 'id' is unique so if ids are the same then the same object
+
     override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
         return oldItem.id == newItem.id
     }
@@ -48,10 +48,6 @@ class MovieAdapter(
                 .into(posterImage)
 
             itemView.setOnClickListener { itemClick(movie) }
-//            itemView.setOnLongClickListener (View.OnLongClickListener {
-//                view -> logD("onlong click listener")
-//                true
-//            })
         }
     }
 
@@ -61,10 +57,7 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //sprawdzic czy to mozna usunac
-        if (position < itemCount && position != RecyclerView.NO_POSITION) {
             holder.bindMovie(getItem(position))
-        }
     }
 
 }
