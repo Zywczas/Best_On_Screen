@@ -92,6 +92,7 @@ class ApiMoviesActivity : AppCompatActivity() {
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
         }
+        moviesRecyclerView.setHasFixedSize(true)
         moviesRecyclerView.adapter = adapter
         var spanCount = 2
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {

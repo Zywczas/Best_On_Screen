@@ -23,8 +23,6 @@ class MovieDetailsVM (private val repo: MovieDetailsRepo) : ViewModel(){
                 exitProcess(0)}
         } as LiveData<Event<String>>
 
-
-    //TODO chyba trzeba poprawic
     fun getGenresDescription(movie: Movie) : String {
         return when (movie.genresAmount) {
             1 -> "Genre: ${movie.genre1}"
