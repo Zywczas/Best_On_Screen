@@ -2,8 +2,8 @@ package com.zywczas.bestonscreen.model
 
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
-import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.utilities.LiveEvent
 import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.toMovieFromDB
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -18,7 +18,7 @@ import javax.inject.Singleton
 class MovieDetailsRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movieDao: MovieDao,
-    private val booleanEventLd: MutableLiveData<Event<Boolean>>,
+    private val booleanLiveEvent: LiveEvent<Boolean>,
     val stringEventLd : MutableLiveData<Event<String>>
 ){
     fun clearDisposables() = compositeDisposables.clear()
@@ -43,8 +43,8 @@ class MovieDetailsRepo @Inject constructor(
         )
         return stringEventLd
     }
-//zamienic wszedzie Event na LiveEvent
-    fun checkIfMovieIsInDB (movieId: Int) : MutableLiveData<Event<Boolean>> {
+//TODO zamienic wszedzie Event na LiveEvent
+    fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
 
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
         compositeDisposables.add(
@@ -52,12 +52,12 @@ class MovieDetailsRepo @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({when(it){
-                    1 -> booleanEventLd.postValue(Event(true))
-                    0 -> booleanEventLd.postValue(Event(false))
+                    1 -> booleanLiveEvent.postValue(true)
+                    0 -> booleanLiveEvent.postValue(false)
                 }}, { logD(it) }
                 )
         )
-        return booleanEventLd
+        return booleanLiveEvent
     }
 
     fun deleteMovieFromDB(movie : Movie) :  MutableLiveData<Event<String>> {

@@ -11,6 +11,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.MovieDetailsVMFactory
@@ -66,12 +67,11 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun checkIfMovieIsInDb() {
         viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
-            Observer {
-                it.getContentIfNotHandled()?.let { boolean ->
+            Observer {boolean ->
                     addToListBtn.isChecked = boolean
                     //this tag is used in addToListClicked() so it knows whether to add or delete movie
                     addToListBtn.tag = boolean.toString()
-                }
+
             })
     }
 

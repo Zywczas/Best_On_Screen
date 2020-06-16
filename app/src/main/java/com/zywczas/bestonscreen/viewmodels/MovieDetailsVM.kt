@@ -19,7 +19,7 @@ class MovieDetailsVM (private val repo: MovieDetailsRepo
 //    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
 
 //    fun getMovie(movieId: Int, context: Context) = repo.getMovieFromDB(movieId, context) as LiveData<Movie>
-    fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Event<Boolean>>
+    fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 //    fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 
 //    fun deleteMovieFromDb(movie: Movie) = repo.deleteMovieFromDB(movie) as LiveData<Event<String>>
@@ -33,7 +33,7 @@ class MovieDetailsVM (private val repo: MovieDetailsRepo
         } as LiveData<Event<String>>
 
 
-    //to chyba trzeba poprawic
+    //TODO chyba trzeba poprawic
     fun getGenresDescription(movie: Movie) : String {
         return when (movie.genresAmount) {
             1 -> "Genre: ${movie.genre1}"
