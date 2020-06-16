@@ -7,6 +7,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import javax.inject.Inject
 
+/**
+ * LiveEvent is a substitution for LiveData. It helps it helps in managing Observes, especially
+ * in removing them.
+ */
 open class LiveEvent<T> @Inject constructor(): MediatorLiveData<T>() {
 
     private val observers = ArraySet<ObserverWrapper<in T>>()

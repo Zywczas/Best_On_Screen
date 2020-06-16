@@ -6,7 +6,7 @@ package com.zywczas.bestonscreen.utilities
 open class Event<out T> constructor(private val content: T) {
 
     var hasBeenHandled = false
-    private set // allow external read but not write
+    private set // allows external read but not write
 
     /**
      * Returns the content and prevents its use again.

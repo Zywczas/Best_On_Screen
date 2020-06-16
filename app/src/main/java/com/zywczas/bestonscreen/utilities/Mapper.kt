@@ -59,7 +59,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
 )
 
 /**
- * Function to convert Movie to MovieFromDB SQL entity class.
+ * Function to convert Movie to MovieFromDB - SQL entity class.
  * @param movie Movie which is converted to Movie
  * @return Movie
  */
