@@ -14,8 +14,3 @@ const val TOP_RATED = "Top Rated"
 const val UPCOMING = "Upcoming"
 const val EMPTY_CATEGORY = "empty"
 
-//constants for SavedStateHandle
-const val SAVED_LD = "movies list"
-const val SAVED_CATEGORY = "category"
-const val SAVED_STATE = "isStateSaved"
-

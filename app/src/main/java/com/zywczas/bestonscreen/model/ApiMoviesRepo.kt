@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 
+import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -17,7 +18,7 @@ class ApiMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val tmdbService: TMDBService,
-    private val movieListLE : LiveEvent<PairMoviesInt>
+    private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, String>>
 ) {
     private var currentPage = 1
     //just any number bigger >= 1 at the beginning
@@ -25,14 +26,17 @@ class ApiMoviesRepo @Inject constructor(
 
     fun clearDisposables() = compositeDisposables.clear()
 
-    fun getMoviesFromApi (category: String, page: Int) : LiveEvent<PairMoviesInt> {
-        movies.clear()
+    fun getMoviesFromApi (category: String, page: Int) : MutableLiveData<Triple<List<Movie>, Int, String>> {
+        //if new category, then reset the list
+        if (page == 1 ) {
+            movies.clear()
+        }
 
         if (page > lastPage) {
             //sends 0 as a flag to Observer
             logD("page sie nie zgadza w repo")
-            movieListLE.postValue(PairMoviesInt(movies, 0))
-            return  movieListLE
+            moviesLd.postValue(Triple(movies, 0, category))
+            return  moviesLd
         }
 
         val moviesObservableApi = when (category) {
@@ -41,8 +45,8 @@ class ApiMoviesRepo @Inject constructor(
             UPCOMING -> { tmdbService.getUpcomingMovies(API_KEY, page) }
             //this option sends empty LiveEvent just to remove observers
             EMPTY_CATEGORY -> {
-                movieListLE.postValue(PairMoviesInt(movies, currentPage))
-                return  movieListLE }
+                moviesLd.postValue(Triple(movies, currentPage, category))
+                return  moviesLd }
             else -> { logD("incorrect movie category passed to 'getMoviesFromApi'")
                 exitProcess(0)}
         }
@@ -66,7 +70,7 @@ class ApiMoviesRepo @Inject constructor(
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
                     logD("wysyla liste z API")
-                    movieListLE.postValue(PairMoviesInt(movies, currentPage))
+                    moviesLd.postValue(Triple(movies, currentPage, category))
                 }
 
                 override fun onNext(m: Movie?) {
@@ -80,7 +84,7 @@ class ApiMoviesRepo @Inject constructor(
                 }
             })
         )
-        return movieListLE
+        return moviesLd
     }
 
 }

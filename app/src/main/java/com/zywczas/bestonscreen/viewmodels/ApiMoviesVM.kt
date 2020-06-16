@@ -7,38 +7,21 @@ import com.zywczas.bestonscreen.utilities.*
 
 
 class ApiMoviesVM (private val repo: ApiMoviesRepo,
+                   //SavedStateHandle not used yet, just implemented for future expansion
                    private val handle: SavedStateHandle
 ) : ViewModel() {
 
+    private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
+    private var wasScreenRotated = false
 
-    //TODO pozniej to wrzucic w daggera
-    private val mediatorLd = MediatorLiveData<PairMoviesInt>()
-    private val handleLd = LiveEvent<PairMoviesInt>()
+    fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
 
-    init {
-        mediatorLd.addSource(repo.getMoviesFromApi(EMPTY_CATEGORY, 0)) {mediatorLd.value = it}
-        mediatorLd.addSource(handleLd) {mediatorLd.value = it}
-    }
-
-    fun getLd() = mediatorLd as LiveData<PairMoviesInt>
+    fun wasScreenRotated() = wasScreenRotated
+    fun setScreenNotRotated() { wasScreenRotated = false }
+    fun setScreenRotated() { wasScreenRotated = true }
 
     fun getApiMovies(category: String, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
-    fun getSavedStateLd() {
-        val tempValue = handle.getLiveData<PairMoviesInt>(SAVED_LD).value
-        handleLd.value = tempValue
-        handle.remove<PairMoviesInt>(SAVED_LD)
-    }
 
-    /**
-     * This fun needs to save current list and page number.
-     */
-    fun saveLD(key: String, moviesAndPage: PairMoviesInt) = handle.set(key, moviesAndPage)
-    fun saveMetaState(key: String, isStateSaved: Boolean) = handle.set(key, isStateSaved)
-    fun saveCategory(key: String, category: String) = handle.set(key, category)
-
-    fun getSavedCategory() = handle.get<String>(SAVED_CATEGORY)
-    fun clearSavedCategory() = handle.remove<String>(SAVED_CATEGORY)
-    fun getMetaState() = handle.get<Boolean>(SAVED_STATE)
 
     fun clearDisposables() = repo.clearDisposables()
 }

@@ -1,7 +1,6 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
@@ -54,6 +53,9 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
+
+    @Provides
+    fun provideMutableLdTripleMoviesIntString() : MutableLiveData<Triple<List<Movie>, Int, String>> = MutableLiveData()
 
     @Provides @Singleton
     fun provideTMDBService() : TMDBService = Retrofit.Builder()

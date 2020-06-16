@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -43,22 +44,19 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
     private lateinit var adapter: MovieAdapter
 
-    //backup list to pass to ViewModel if orientation changed
-    @Inject
-    lateinit var moviesList: ArrayList<Movie>
-
     @Inject
     lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
     private var movieCategory = POPULAR
     private var nextPage = 1
-    private var wasScreenRotated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
-        progressBarMovies.isVisible = false
+        //it's not needed in this Activity
         emptyListTextView.isVisible = false
+
+        progressBarMovies.isVisible = false
         orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
@@ -74,21 +72,16 @@ class ApiMoviesActivity : AppCompatActivity() {
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        //movieCategory either from intent or from SavedStateHandle
-        //tu dac if
-        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
-        viewModel.getSavedCategory()?.let {
+        intent.getStringExtra(EXTRA_CATEGORY)?.let {
             movieCategory = it
-            viewModel.clearSavedCategory()
+            moviesToolbar.title = "Movies: $it"
         }
-        viewModel.getMetaState()?.let { wasScreenRotated = it }
 
         setupAdapter()
         setupTags()
         setupObserver()
         getFirstData()
         setupOnScrollListener()
-
     }
 
     private fun setupAdapter() {
@@ -119,38 +112,33 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         viewModel.getLd().observe(this,
-            Observer { pairMoviesInt ->
+            Observer { trioMoviesPageCategory ->
                 logD("observer otrzymuje live data")
                 //'0' working as a flag
-                if (pairMoviesInt.second == 0) {
+                if (trioMoviesPageCategory.second == 0) {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
+
                 } else {
-                    //prepare list for onSaveInstanceState and the observer
-                    moviesList.addAll(pairMoviesInt.first)
-                    adapter.submitList(moviesList.toMutableList())
-
+                    adapter.submitList(trioMoviesPageCategory.first.toMutableList())
                     progressBarMovies.isVisible = false
+                    moviesToolbar.title = "Movies: ${trioMoviesPageCategory.third}"
+
                     //prepare data for next call
-                    nextPage = pairMoviesInt.second + 1
-
-
+                    nextPage = trioMoviesPageCategory.second + 1
+                    movieCategory = trioMoviesPageCategory.third
                 }
             }
         )
-        moviesToolbar.title = "Movies: $movieCategory"
     }
 
     private fun getFirstData() {
-        progressBarMovies.isVisible = true
-        if (wasScreenRotated) {
-            logD("leci z saved state")
-            viewModel.getSavedStateLd()
-            wasScreenRotated = false
-            viewModel
-        } else {
-            logD("leci z api")
+        if (!viewModel.wasScreenRotated()) {
+            progressBarMovies.isVisible = true
             viewModel.getApiMovies(movieCategory, nextPage)
+        } else {
+            //reset after every rotation
+            viewModel.setScreenNotRotated()
         }
     }
 
@@ -185,11 +173,8 @@ class ApiMoviesActivity : AppCompatActivity() {
             showToast("This is $clickedCategory.")
         } else {
             progressBarMovies.isVisible = true
-            moviesList.clear()
-
             viewModel.getApiMovies(clickedCategory, 1)
             moviesRecyclerView.scrollToPosition(0)
-
             moviesToolbar.title = "Movies: $clickedCategory"
             movieCategory = clickedCategory
         }
@@ -212,12 +197,9 @@ class ApiMoviesActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
 
-        viewModel.saveCategory(SAVED_CATEGORY, movieCategory)
-        //this method needs current list of movies and current page
-        viewModel.saveLD(SAVED_LD, PairMoviesInt(moviesList, nextPage - 1))
-        viewModel.saveMetaState(SAVED_STATE, true)
+        viewModel.setScreenRotated()
     }
 }
