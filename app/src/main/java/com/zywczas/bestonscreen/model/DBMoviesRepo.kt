@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.model
 
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
+import com.zywczas.bestonscreen.utilities.LiveEvent
 import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.toMovie
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -13,12 +14,12 @@ import javax.inject.Inject
 class DBMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
-    private val moviesLd: MutableLiveData<List<Movie>>,
+    private val moviesLiveEvent: LiveEvent<List<Movie>>,
     private val movieDao: MovieDao
 ) {
     fun clearDisposables() = compositeDisposables.clear()
 
-    fun getMoviesFromDB () : MutableLiveData<List<Movie>> {
+    fun getMoviesFromDB () : LiveEvent<List<Movie>> {
         val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
         compositeDisposables.add(
@@ -35,11 +36,11 @@ class DBMoviesRepo @Inject constructor(
                     movies
                 }
                 //Consumer onNext & onError
-                .subscribe({ listOfMovies ->  moviesLd.postValue(listOfMovies)
+                .subscribe({ listOfMovies ->  moviesLiveEvent.postValue(listOfMovies)
                     logD("wysyla liste z DB")
                 }, { logD(it) }
                 )
         )
-        return moviesLd
+        return moviesLiveEvent
     }
 }
