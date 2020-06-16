@@ -4,4 +4,15 @@
     <string name="nav_drawer_closed">Close navigation drawer</string>
     <string name="genres">Genres: </string>
     <string name="movie_rate">Rate: </string>
+    <string name="movie_image">movie image</string>
+    <string name="add_to_your_list">Add to your list</string>
+    <string name="remove_from_your_list">Remove from your list</string>
+    <string name="rate_movie">Rate movie</string>
+    <string name="choose_category">Your list is empty. Choose category from top left corner to find interesting movies.</string>
+    <string name="star">Star</string>
+    <string name="to_watch_list">Your To Watch List</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="choose_category_header">Choose category</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="popular">Popular</string>
 </resources>

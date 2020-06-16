@@ -40,7 +40,8 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/poster_example" />
+                app:srcCompat="@drawable/poster_example"
+                android:contentDescription="@string/movie_image" />
 
             <TextView
                 android:id="@+id/rateTextViewDetails"
@@ -128,8 +129,8 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:textColor="@android:color/white"
-                android:textOff="Add to your list"
-                android:textOn="Remove from your list"
+                android:textOff="@string/add_to_your_list"
+                android:textOn="@string/remove_from_your_list"
                 app:layout_constraintBottom_toBottomOf="@+id/rateMovieBtn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/rateMovieBtn" />
@@ -142,9 +143,10 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/add_to_list_unchecked"
                 android:lineSpacingExtra="0dp"
-                android:text="Rate movie"
+                android:text="@string/rate_movie"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rateTextViewDetails" />
 
