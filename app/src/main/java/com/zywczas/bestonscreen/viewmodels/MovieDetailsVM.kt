@@ -9,20 +9,11 @@ import com.zywczas.bestonscreen.model.MovieDetailsRepo
 import com.zywczas.bestonscreen.utilities.logD
 import kotlin.system.exitProcess
 
-class MovieDetailsVM (private val repo: MovieDetailsRepo
-//                      , private val errorEventStringLd: MutableLiveData<Event<String>>
-//                      ,  private val stringLiveData: LiveData<String>
-                      ) : ViewModel(){
+class MovieDetailsVM (private val repo: MovieDetailsRepo) : ViewModel(){
 
     fun clearDisposables() = repo.clearDisposables()
 
-//    fun addMovieToDb (movie: Movie) = repo.addMovieToDB(movie) as LiveData<Event<String>>
-
-//    fun getMovie(movieId: Int, context: Context) = repo.getMovieFromDB(movieId, context) as LiveData<Movie>
     fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
-//    fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
-
-//    fun deleteMovieFromDb(movie: Movie) = repo.deleteMovieFromDB(movie) as LiveData<Event<String>>
 
     fun addDeleteMovie(movie: Movie, buttonIsChecked: String) =
         when(buttonIsChecked){

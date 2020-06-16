@@ -43,9 +43,8 @@ class MovieDetailsRepo @Inject constructor(
         )
         return stringEventLd
     }
-//TODO zamienic wszedzie Event na LiveEvent
-    fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
 
+    fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
         compositeDisposables.add(
             movieFromDBObservable

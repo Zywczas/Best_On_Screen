@@ -62,7 +62,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })
-
     }
 
     private fun checkIfMovieIsInDb() {
@@ -71,7 +70,6 @@ class MovieDetailsActivity : AppCompatActivity() {
                     addToListBtn.isChecked = boolean
                     //this tag is used in addToListClicked() so it knows whether to add or delete movie
                     addToListBtn.tag = boolean.toString()
-
             })
     }
 
