@@ -9,7 +9,6 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.TMDBService
-import com.zywczas.bestonscreen.utilities.LiveEvent
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -26,27 +25,6 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
-
-    @Provides
-    fun provideListOfMovies() : List<Movie> = ArrayList()
-
-    @Provides
-    fun provideMutableLdOfListOfMovies() : MutableLiveData<List<Movie>> = MutableLiveData()
-
-    @Provides
-    fun provideMutableLdOfMovie() : MutableLiveData<Movie> = MutableLiveData()
-
-    @Provides
-    fun provideMutableLdOfBoolean() : MutableLiveData<Boolean> = MutableLiveData()
-
-    @Provides
-    fun provideBooleanEventLd() : MutableLiveData<Event<Boolean>> = MutableLiveData()
-
-    @Provides
-    fun provideIntEventLd() : MutableLiveData<Event<Int>> = MutableLiveData()
-
-    @Provides
-    fun provideMovieListEventLd() : MutableLiveData<Event<List<Movie>>> = MutableLiveData()
 
     @Provides
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()

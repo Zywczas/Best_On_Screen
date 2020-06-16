@@ -11,7 +11,6 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.MovieDetailsVMFactory
@@ -39,8 +38,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         setupMovieUIDetails()
         checkIfMovieIsInDb()
     }
-
-    //TODO dodac guzik RAte
 
     @SuppressLint("SetTextI18n")
     private fun setupMovieUIDetails() {
