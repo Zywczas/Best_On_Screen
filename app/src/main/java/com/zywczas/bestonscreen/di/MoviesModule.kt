@@ -43,16 +43,10 @@ class MoviesModule(private val application: Application) {
     fun provideBooleanEventLd() : MutableLiveData<Event<Boolean>> = MutableLiveData()
 
     @Provides
-    fun provideBooleanLiveEvent() : LiveEvent<Boolean> = LiveEvent()
-
-    @Provides
     fun provideIntEventLd() : MutableLiveData<Event<Int>> = MutableLiveData()
 
     @Provides
     fun provideMovieListEventLd() : MutableLiveData<Event<List<Movie>>> = MutableLiveData()
-
-    @Provides
-    fun provideLiveEventListMovies() : LiveEvent<Pair<List<Movie>, Int>> = LiveEvent()
 
     @Provides
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
