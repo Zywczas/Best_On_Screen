@@ -84,6 +84,9 @@ class DBMoviesActivity : AppCompatActivity() {
     private fun setupObserver() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
                 adapter.submitList(movies.toMutableList())
+            if (movies.isEmpty()) {
+                emptyListTextView.isVisible = true
+            }
         })
     }
 
@@ -117,7 +120,7 @@ class DBMoviesActivity : AppCompatActivity() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
         } else {
-            this.moveTaskToBack(true);
+            this.moveTaskToBack(true)
         }
     }
 

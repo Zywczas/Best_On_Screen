@@ -53,8 +53,6 @@ class ApiMoviesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
-        //it's not needed in this Activity
-        emptyListTextView.isVisible = false
 
         progressBarMovies.isVisible = false
         orientation = resources.configuration.orientation
@@ -189,7 +187,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
         } else {
-            this.moveTaskToBack(true);
+            this.moveTaskToBack(true)
         }
     }
 
