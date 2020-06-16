@@ -1,14 +1,14 @@
 package com.zywczas.bestonscreen.views
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
-import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.App
+import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast

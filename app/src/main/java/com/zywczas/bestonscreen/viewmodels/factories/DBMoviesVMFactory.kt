@@ -1,7 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels.factories
 
 import androidx.lifecycle.SavedStateHandle
-import com.zywczas.bestonscreen.model.ApiMoviesRepo
 import com.zywczas.bestonscreen.model.DBMoviesRepo
 import com.zywczas.bestonscreen.viewmodels.DBMoviesVM
 import javax.inject.Inject

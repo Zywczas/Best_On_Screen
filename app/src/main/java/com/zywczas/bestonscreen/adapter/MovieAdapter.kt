@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
-import com.zywczas.bestonscreen.utilities.logD
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MovieAdapter(
     private val context: Context,

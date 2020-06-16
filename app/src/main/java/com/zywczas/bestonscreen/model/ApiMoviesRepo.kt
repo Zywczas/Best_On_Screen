@@ -5,13 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.TMDBService
 import com.zywczas.bestonscreen.utilities.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.system.exitProcess
 
 @Singleton
 class ApiMoviesRepo @Inject constructor(

@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.model
 
-import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.utilities.LiveEvent
 import com.zywczas.bestonscreen.utilities.logD

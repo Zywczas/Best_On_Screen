@@ -1,9 +1,11 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import androidx.lifecycle.*
-import com.zywczas.bestonscreen.model.Movie
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiMoviesRepo
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.utilities.EMPTY_CATEGORY
 
 
 class ApiMoviesVM (private val repo: ApiMoviesRepo,

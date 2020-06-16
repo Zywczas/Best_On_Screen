@@ -2,10 +2,9 @@ package com.zywczas.bestonscreen.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.ApiMoviesRepo
 import com.zywczas.bestonscreen.model.MovieDetailsRepo
+import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.logD
 import kotlin.system.exitProcess
 

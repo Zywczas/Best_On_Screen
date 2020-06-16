@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.model.webservice
 
-import com.zywczas.bestonscreen.utilities.API_KEY
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
