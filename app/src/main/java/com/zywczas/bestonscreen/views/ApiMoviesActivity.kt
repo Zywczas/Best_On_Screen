@@ -126,12 +126,12 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
 
     private fun getFirstData() {
-        if (!viewModel.wasScreenRotated()) {
+        if (!viewModel.wasScreenRotated) {
             progressBarMovies.isVisible = true
             viewModel.getApiMovies(movieCategory, nextPage)
         } else {
             //reset after every rotation
-            viewModel.setScreenNotRotated()
+            viewModel.wasScreenRotated = false
         }
     }
 
@@ -192,6 +192,6 @@ class ApiMoviesActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        viewModel.setScreenRotated()
+        viewModel.wasScreenRotated = true
     }
 }

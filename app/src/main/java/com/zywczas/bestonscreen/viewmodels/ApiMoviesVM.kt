@@ -14,13 +14,11 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
 ) : ViewModel() {
 
     private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
-    private var wasScreenRotated = false
+
+    var wasScreenRotated = false
 
     fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
 
-    fun wasScreenRotated() = wasScreenRotated
-    fun setScreenNotRotated() { wasScreenRotated = false }
-    fun setScreenRotated() { wasScreenRotated = true }
 
     fun getApiMovies(category: String, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
 
