@@ -15,13 +15,11 @@ class ApiMoviesVM (private val repo: ApiMoviesRepo,
 
     private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
 
-    var wasScreenRotated = false
+    var activityFirstStart = true
 
     fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
 
-
     fun getApiMovies(category: String, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
-
 
     fun clearDisposables() = repo.clearDisposables()
 }

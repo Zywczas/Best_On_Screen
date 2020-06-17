@@ -45,7 +45,7 @@ class ApiMoviesActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
-    private var movieCategory = POPULAR
+    private var movieCategory = EMPTY_CATEGORY
     private var nextPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +68,10 @@ class ApiMoviesActivity : AppCompatActivity() {
         drawer_layout_movies.addDrawerListener(toggleMovies)
         toggleMovies.syncState()
 
-        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
-
         setupAdapter()
         setupTags()
         setupObserver()
-        getFirstData()
+        checkIfFirstStart()
         setupOnScrollListener()
     }
 
@@ -125,13 +123,13 @@ class ApiMoviesActivity : AppCompatActivity() {
         )
     }
 
-    private fun getFirstData() {
-        if (!viewModel.wasScreenRotated) {
+    private fun checkIfFirstStart(){
+        //check if first start to prevent reloading data on orientation changed
+        if (viewModel.activityFirstStart) {
             progressBarMovies.isVisible = true
+            intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
             viewModel.getApiMovies(movieCategory, nextPage)
-        } else {
-            //reset after every rotation
-            viewModel.wasScreenRotated = false
+            viewModel.activityFirstStart = false
         }
     }
 
@@ -187,11 +185,5 @@ class ApiMoviesActivity : AppCompatActivity() {
         } else {
             this.moveTaskToBack(true)
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        viewModel.wasScreenRotated = true
     }
 }
