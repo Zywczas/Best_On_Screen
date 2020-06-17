@@ -56,8 +56,7 @@ class ApiMoviesRepo @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
 
             .flatMap { movieApiResponse ->
-                movieApiResponse.page?.let { currentPage = it
-                logD("leci strona: $it")}
+                movieApiResponse.page?.let { currentPage = it }
                 movieApiResponse.totalPages?.let { lastPage = it }
                 Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
 
@@ -69,7 +68,6 @@ class ApiMoviesRepo @Inject constructor(
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {
-                    logD("wysyla liste z API")
                     moviesLd.postValue(Triple(movies, currentPage, category))
                 }
 
