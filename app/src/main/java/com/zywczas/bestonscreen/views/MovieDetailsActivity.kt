@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.databinding.ActivityMovieDetailsBinding
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast
@@ -28,32 +30,27 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_details)
 
         App.moviesComponent.inject(this)
         viewModel = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
-
         movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
+        val binding : ActivityMovieDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
+        binding.viewModel = viewModel
+        binding.movie = movieFromParcel
 
-        setupMovieUIDetails()
+        setupPosterImage()
         checkIfMovieIsInDb()
     }
+    //todo zmienic nazwe na guziku z Add to your list na add to my list i categorie tez
 
     @SuppressLint("SetTextI18n")
-    private fun setupMovieUIDetails() {
-        //downloading image of width 300 because tmdb Api doesn't support 250, resized in picasso to 250
+    private fun setupPosterImage() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movieFromParcel.posterPath
 
         picasso.load(posterPath)
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-
-        titleTextViewDetails.text = movieFromParcel.title
-        rateTextViewDetails.text = "Rate: ${movieFromParcel.voteAverage.toString()}"
-        releaseDateTextViewDetails.text = "Release date: ${movieFromParcel.releaseDate}"
-        overviewTextViewDetails.text = movieFromParcel.overview
-        genresTextViewDetails.text = viewModel.getGenresDescription(movieFromParcel)
     }
 
     fun addToListClicked(view: View) {

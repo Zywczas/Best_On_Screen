@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Movie
@@ -10,10 +11,13 @@ import kotlin.system.exitProcess
 
 class MovieDetailsVM (private val repo: MovieDetailsRepo) : ViewModel(){
 
+    //TODO movie przeniesc do konstruktora
+
     fun clearDisposables() = repo.clearDisposables()
 
     fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 
+    //TODO poprawic exitprocess na exception
     fun addDeleteMovie(movie: Movie, buttonIsChecked: String) =
         when(buttonIsChecked){
             "false" -> repo.addMovieToDB(movie)
