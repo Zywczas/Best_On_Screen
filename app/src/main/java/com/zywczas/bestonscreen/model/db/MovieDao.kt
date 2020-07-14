@@ -20,10 +20,7 @@ interface MovieDao {
     @Query ("SELECT * FROM movies WHERE id == :movieId")
     fun getMovie (movieId: Int) : Observable<MovieFromDB>
 
-    /**
-     * Listen to changes in data base, if row with the movie is created return Int '1', if the row is removed return Int '0'
-     */
     @Query("SELECT COUNT(id) FROM movies WHERE id ==  :movieId")
-    fun checkIfExists(movieId : Int) : Observable<Int>
+    fun checkIfIsInDB(movieId : Int) : Observable<Int>
 
 }

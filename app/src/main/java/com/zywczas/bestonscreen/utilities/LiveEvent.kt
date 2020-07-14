@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import javax.inject.Inject
 
 /**
- * LiveEvent is a substitution for LiveData. It helps it helps in managing Observes, especially
+ * LiveEvent is a substitution for LiveData. It helps in managing Observes, especially
  * in removing them.
  */
 open class LiveEvent<T> @Inject constructor(): MediatorLiveData<T>() {

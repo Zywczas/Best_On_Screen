@@ -6,12 +6,7 @@ import com.zywczas.bestonscreen.viewmodels.DBMoviesVM
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * This class needs to implement ViewModelAssistedFactory so variables in constructor can
- * be injected by Dagger and everything can be used in GenericSavedStateViewModelFactory to
- * implement AbstractSavedStateViewModelFactory so we can use SavedStateHandle in this
- * particular ViewModel.
- */
+
 @Singleton
 class DBMoviesVMFactory @Inject constructor (private val repo: DBMoviesRepo)
     : ViewModelAssistedFactory<DBMoviesVM> {

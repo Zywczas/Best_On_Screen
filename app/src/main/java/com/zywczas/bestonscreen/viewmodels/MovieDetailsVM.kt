@@ -11,8 +11,6 @@ import kotlin.system.exitProcess
 
 class MovieDetailsVM (private val repo: MovieDetailsRepo) : ViewModel(){
 
-    //TODO movie przeniesc do konstruktora
-
     fun clearDisposables() = repo.clearDisposables()
 
     fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>

@@ -45,7 +45,7 @@ class MovieDetailsRepo @Inject constructor(
     }
 
     fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
-        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfExists(movieId))
+        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfIsInDB(movieId))
         compositeDisposables.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())

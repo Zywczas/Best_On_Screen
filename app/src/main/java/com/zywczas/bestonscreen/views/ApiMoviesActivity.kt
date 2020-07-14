@@ -26,10 +26,6 @@ import kotlinx.android.synthetic.main.nav_movies.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-/**
- * Second activity for displaying movies. This activity focuses only on movies downloaded from API.
- * It is separated from DBMoviesActivity to make Live data easier to manage.
- */
 class ApiMoviesActivity : AppCompatActivity() {
 
     @Inject
@@ -58,15 +54,15 @@ class ApiMoviesActivity : AppCompatActivity() {
         App.moviesComponent.inject(this)
 
         //setting up drawer layout and toggle button
-        val toggleMovies = ActionBarDrawerToggle(
+        val toggle = ActionBarDrawerToggle(
             this,
             drawer_layout_movies,
             moviesToolbar,
             R.string.nav_drawer_open,
             R.string.nav_drawer_closed
         )
-        drawer_layout_movies.addDrawerListener(toggleMovies)
-        toggleMovies.syncState()
+        drawer_layout_movies.addDrawerListener(toggle)
+        toggle.syncState()
 
         setupAdapter()
         setupTags()
@@ -76,9 +72,7 @@ class ApiMoviesActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        adapter = MovieAdapter(this, picasso)
-        //custom onClick method for recycler view
-        { movie ->
+        adapter = MovieAdapter(this, picasso) { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
@@ -94,14 +88,13 @@ class ApiMoviesActivity : AppCompatActivity() {
 
     }
 
-    //tags used to choose category of movie and to be passed to ApiMoviesRepo
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
         toWatchListTextView.tag = TO_WATCH
     }
-
+//todo poprawic
     private fun setupObserver() {
         viewModel.getLd().observe(this,
             Observer { tripleMoviesPageCategory ->
@@ -145,7 +138,7 @@ class ApiMoviesActivity : AppCompatActivity() {
             }
         })
     }
-
+//todo sprawdzic nazwe
     fun toWatchClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val toWatchIntent = Intent(this, DBMoviesActivity::class.java)
@@ -153,9 +146,7 @@ class ApiMoviesActivity : AppCompatActivity() {
         finish()
     }
 
-    /**
-     * This method resets list of movies and category.
-     */
+    //todo poprawic
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as String

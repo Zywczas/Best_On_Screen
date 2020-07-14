@@ -7,7 +7,7 @@ import retrofit2.http.Query
 /**Interface for contacting with https://www.themoviedb.org/
  *
  */
-interface TMDBService {
+interface ApiService {
 
     @GET("movie/popular")
     fun getPopularMovies(
@@ -27,7 +27,4 @@ interface TMDBService {
         @Query("page") page: Int
     ) : Observable<MovieApiResponse>
 
-    //this method is unnecessary for now
-//    @GET("movie/{movie_id}?api_key=$API_KEY")
-//    fun getMovieDetails(@Path ("movie_id") movieId : Int) : Observable<MovieFromApi>
 }

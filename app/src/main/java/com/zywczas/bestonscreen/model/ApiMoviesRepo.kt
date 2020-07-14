@@ -2,7 +2,7 @@ package com.zywczas.bestonscreen.model
 
 
 import androidx.lifecycle.MutableLiveData
-import com.zywczas.bestonscreen.model.webservice.TMDBService
+import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.utilities.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -16,15 +16,17 @@ import javax.inject.Singleton
 class ApiMoviesRepo @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
-    private val tmdbService: TMDBService,
+    private val apiService: ApiService,
     private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, String>>
 ) {
+    //todo poprawic te funkcje i usunac komentarze
     private var currentPage = 1
     //just any number >= 1 at the beginning
     private var lastPage = 1
 
     fun clearDisposables() = compositeDisposables.clear()
 
+    //todo poprawic te funkcje i usunac komentarze
     fun getMoviesFromApi (category: String, page: Int) : MutableLiveData<Triple<List<Movie>, Int, String>> {
         //if new category, then reset the list
         if (page == 1 ) {
@@ -38,9 +40,9 @@ class ApiMoviesRepo @Inject constructor(
         }
 
         val moviesObservableApi = when (category) {
-            POPULAR -> { tmdbService.getPopularMovies(API_KEY, page) }
-            TOP_RATED -> { tmdbService.getTopRatedMovies(API_KEY, page) }
-            UPCOMING -> { tmdbService.getUpcomingMovies(API_KEY, page) }
+            POPULAR -> { apiService.getPopularMovies(API_KEY, page) }
+            TOP_RATED -> { apiService.getTopRatedMovies(API_KEY, page) }
+            UPCOMING -> { apiService.getUpcomingMovies(API_KEY, page) }
             //this option sends empty LiveEvent just to remove observers
             EMPTY_CATEGORY -> { movies.clear()
                 moviesLd.postValue(Triple(movies, currentPage, category))
@@ -61,9 +63,7 @@ class ApiMoviesRepo @Inject constructor(
                 Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
 
             .flatMap { movieFromApi ->
-                //converts genres 'IDs' to names (e.g. 123 -> "Family movie")
-                movieFromApi.genreIds?.let { movieFromApi.convertGenres(it) }
-                //converts MovieFromAPI to Observable<Movie>
+                movieFromApi.genreIds?.let { movieFromApi.transferGenresListToVariables(it) }
                 Observable.just( toMovie(movieFromApi) )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {

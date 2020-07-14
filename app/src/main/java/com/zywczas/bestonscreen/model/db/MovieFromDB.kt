@@ -4,9 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/**
- * Model class for local data base
- */
 @Entity (tableName = "movies")
 class MovieFromDB(
 

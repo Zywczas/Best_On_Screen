@@ -4,11 +4,6 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
-/**
- * Function to convert MovieFromApi to general Movie class.
- * @param movieFromApi MovieFromApi which is converted to Movie
- * @return Movie
- */
 fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.id,
     movieFromApi.popularity,
@@ -31,11 +26,6 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.genresAmount
 )
 
-/**
- * Function to convert movie from data base (MovieFromDB) to general Movie class.
- * @param movieFromDB MovieFromDB which is converted to Movie
- * @return Movie
- */
     fun toMovie(movieFromDB: MovieFromDB) = Movie(
     movieFromDB.id,
     movieFromDB.popularity,
@@ -58,11 +48,6 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromDB.genresAmount
 )
 
-/**
- * Function to convert Movie to MovieFromDB - SQL entity class.
- * @param movie Movie which is converted to Movie
- * @return Movie
- */
     fun toMovieFromDB(movie: Movie) = MovieFromDB(
         movie.id,
         movie.popularity,

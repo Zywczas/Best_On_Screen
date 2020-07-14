@@ -4,10 +4,6 @@ import android.util.Log
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-/**
- * Model class for Api response
- */
-
 class MovieFromApi {
 
     @SerializedName("id")
@@ -78,15 +74,7 @@ class MovieFromApi {
 
     var genresAmount: Int = 0
 
-    /**
-    This converter is required as API gives List<Int> of genres instead of names (String).
-    I could download names of genres using TMDBService fun getMovieDetails() but it is unnecessary
-    for now as I don't need any more data from getMovieDetails(). This function is used in
-    ApiMoviesRepo class.
-     *@param genreIds - a list of Int from API, which needs to be converted to Strings and assigned
-     * to variables genre1 - genre5
-     */
-    fun convertGenres(genreIds: List<Int>){
+    fun transferGenresListToVariables(genreIds: List<Int>){
         lateinit var genreTemp: String
         loop@ for (id in genreIds) {
             genreTemp = when (id) {
@@ -113,6 +101,7 @@ class MovieFromApi {
                     continue@loop
                 }
             }
+            //todo poprawic te petle na bardziej przerzysta i dac exception
             when (genresAmount) {
                 0 -> {genre1 = genreTemp
                     genresAmount = 1}

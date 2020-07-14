@@ -3,13 +3,6 @@ package com.zywczas.bestonscreen.model
 import android.os.Parcel
 import android.os.Parcelable
 
-
-/**
- * General movie class to be used with UI. All movies from REST API and SQLite will be converted
- * to this class. But this class will be converted to MovieFromDB (and then to database) if a user
- * adds it to "To Watch List".
- */
-
 class Movie () : Parcelable {
 
     var id: Int? = null

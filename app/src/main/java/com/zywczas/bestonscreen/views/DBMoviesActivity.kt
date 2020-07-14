@@ -43,10 +43,10 @@ class DBMoviesActivity : AppCompatActivity() {
 
         App.moviesComponent.inject(this)
 
-        //setting up drawer layout and toggle button
-        val toggleMovies = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,R.string.nav_drawer_open,R.string.nav_drawer_closed)
-        drawer_layout_movies.addDrawerListener(toggleMovies)
-        toggleMovies.syncState()
+        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,
+            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+        drawer_layout_movies.addDrawerListener(toggle)
+        toggle.syncState()
 
         setupAdapter()
         setupTags()
@@ -55,9 +55,7 @@ class DBMoviesActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        adapter = MovieAdapter(this, picasso)
-        //custom onClick method for recycler view
-        { movie ->
+        adapter = MovieAdapter(this, picasso) { movie ->
             val movieDetailsActivity = Intent(this, MovieDetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
@@ -72,14 +70,12 @@ class DBMoviesActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
     }
 
-    //tags used to choose category of movie and to be passed to ApiMoviesRepo
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
         toWatchListTextView.tag = TO_WATCH
     }
-
 
     private fun setupObserver() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
@@ -115,7 +111,7 @@ class DBMoviesActivity : AppCompatActivity() {
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
     }
-
+//todo powturzona funkcja, sprawdzic czy nie mozna 1 takiej dac gdzies
     private fun closeDrawerOrMinimizeApp() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)

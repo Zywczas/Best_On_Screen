@@ -50,7 +50,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
     }
-
+//todo poprawic
     private fun checkIfMovieIsInDb() {
         viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
             Observer {boolean ->
