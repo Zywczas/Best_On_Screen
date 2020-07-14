@@ -37,7 +37,6 @@ class MovieAdapter(
         fun bindMovie(movie: Movie) {
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
-            //downloading image of width 200
             val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
 
             picasso.load(posterPath)

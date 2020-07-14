@@ -41,9 +41,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         setupPosterImage()
         checkIfMovieIsInDb()
     }
-    //todo zmienic nazwe na guziku z Add to your list na add to my list i categorie tez
 
-    @SuppressLint("SetTextI18n")
     private fun setupPosterImage() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movieFromParcel.posterPath
 
@@ -53,19 +51,19 @@ class MovieDetailsActivity : AppCompatActivity() {
             .into(posterImageViewDetails)
     }
 
+    private fun checkIfMovieIsInDb() {
+        viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
+            Observer {boolean ->
+                addToListBtn.isChecked = boolean
+                //this tag is used in addToListClicked() so it knows whether to add or delete movie
+                addToListBtn.tag = boolean.toString()
+            })
+    }
+
     fun addToListClicked(view: View) {
         viewModel.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }
-            })
-    }
-
-    private fun checkIfMovieIsInDb() {
-        viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
-            Observer {boolean ->
-                    addToListBtn.isChecked = boolean
-                    //this tag is used in addToListClicked() so it knows whether to add or delete movie
-                    addToListBtn.tag = boolean.toString()
             })
     }
 

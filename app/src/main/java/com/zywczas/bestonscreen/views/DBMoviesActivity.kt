@@ -38,7 +38,7 @@ class DBMoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
         progressBarMovies.isVisible = false
-        moviesToolbar.title = "Movies: To Watch List"
+        moviesToolbar.title = "Movies: My List"
         orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
