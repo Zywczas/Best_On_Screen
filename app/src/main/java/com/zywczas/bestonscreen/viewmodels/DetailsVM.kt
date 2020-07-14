@@ -14,7 +14,7 @@ class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
 
     fun checkIfMovieIsInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 
-    //TODO poprawic exitprocess na exception i buttonChecked dac na boolean
+    //TODO poprawic exitprocess na exception i buttonChecked dac na boolean, funkcja ta robi 2 rzeczy add i detele -> podzielic na 2 funkcje
     fun addDeleteMovie(movie: Movie, buttonIsChecked: String) =
         when(buttonIsChecked){
             "false" -> repo.addMovieToDB(movie)

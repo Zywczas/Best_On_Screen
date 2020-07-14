@@ -40,6 +40,7 @@ class ApiRepository @Inject constructor(
         }
 
         val moviesObservableApi = when (category) {
+            //todo tu sa powtorzenia z API_Key i page oraz switch powinien byc zastapiony polimorfizmem
             POPULAR -> { apiService.getPopularMovies(API_KEY, page) }
             TOP_RATED -> { apiService.getTopRatedMovies(API_KEY, page) }
             UPCOMING -> { apiService.getUpcomingMovies(API_KEY, page) }

@@ -60,6 +60,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     fun addToListClicked(view: View) {
+        //todo tutaj podajemy true lub false, tzn ze funkcja wykonuje 2 rzeczy a powinna tylko 1 - moze zamienic na chooseAddOrDelete
         viewModel.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }

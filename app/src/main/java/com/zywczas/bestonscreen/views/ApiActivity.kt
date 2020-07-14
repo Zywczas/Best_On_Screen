@@ -30,12 +30,7 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
-    private val viewModel: ApiVM by viewModels {
-        GenericSavedStateViewModelFactory(
-            factory,
-            this
-        )
-    }
+    private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
 
     @Inject
