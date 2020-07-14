@@ -73,7 +73,7 @@ class MovieFromApi {
     var genre5: String? = null
 
     var genresAmount: Int = 0
-
+//todo sprawdzic czy tu nie dac exception
     fun transferGenresListToVariables(genreIds: List<Int>){
         lateinit var genreTemp: String
         loop@ for (id in genreIds) {

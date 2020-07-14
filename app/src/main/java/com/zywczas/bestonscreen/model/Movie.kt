@@ -25,6 +25,48 @@ class Movie () : Parcelable {
     var genre5: String? = null
     var genresAmount: Int? = null
 
+    constructor(
+        id: Int?,
+        popularity: Double?,
+        voteCount: Int?,
+        video: Boolean?,
+        posterPath: String?,
+        adult: Boolean?,
+        backdropPath: String?,
+        originalLanguage: String?,
+        originalTitle: String?,
+        title: String?,
+        voteAverage: Double?,
+        overview: String?,
+        releaseDate: String?,
+        genre1: String?,
+        genre2: String?,
+        genre3: String?,
+        genre4: String?,
+        genre5: String?,
+        genresAmount: Int?
+    ) : this() {
+        this.id = id
+        this.popularity = popularity
+        this.voteCount = voteCount
+        this.video = video
+        this.posterPath = posterPath
+        this.adult = adult
+        this.backdropPath = backdropPath
+        this.originalLanguage = originalLanguage
+        this.originalTitle = originalTitle
+        this.title = title
+        this.voteAverage = voteAverage
+        this.overview = overview
+        this.releaseDate = releaseDate
+        this.genre1 = genre1
+        this.genre2 = genre2
+        this.genre3 = genre3
+        this.genre4 = genre4
+        this.genre5 = genre5
+        this.genresAmount = genresAmount
+    }
+
     constructor(parcel: Parcel) : this() {
         id = parcel.readValue(Int::class.java.classLoader) as? Int
         popularity = parcel.readValue(Double::class.java.classLoader) as? Double
@@ -47,46 +89,14 @@ class Movie () : Parcelable {
         genresAmount = parcel.readValue(Int::class.java.classLoader) as? Int
     }
 
-    constructor(
-         id: Int?,
-         popularity: Double?,
-         voteCount: Int?,
-         video: Boolean?,
-         posterPath: String?,
-         adult: Boolean?,
-         backdropPath: String?,
-         originalLanguage: String?,
-         originalTitle: String?,
-         title: String?,
-         voteAverage: Double?,
-         overview: String?,
-         releaseDate: String?,
-         genre1: String?,
-         genre2: String?,
-         genre3: String?,
-         genre4: String?,
-         genre5: String?,
-         genresAmount: Int?
-    ) : this() {
-        this.id = id
-        this.popularity = popularity
-        this.voteCount = voteCount
-        this.video = video
-        this.posterPath = posterPath
-        this.adult = adult
-        this.backdropPath = backdropPath
-        this.originalLanguage = originalLanguage
-        this.originalTitle = originalTitle
-        this.title = title
-        this.voteAverage = voteAverage
-        this.overview = overview
-        this.releaseDate = releaseDate
-        this.genre1 = genre1
-        this.genre2 = genre2
-        this.genre3 = genre3
-        this.genre4 = genre4
-        this.genre5 = genre5
-        this.genresAmount = genresAmount
+    companion object CREATOR : Parcelable.Creator<Movie> {
+        override fun createFromParcel(parcel: Parcel): Movie {
+            return Movie(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Movie?> {
+            return arrayOfNulls(size)
+        }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -114,16 +124,5 @@ class Movie () : Parcelable {
     override fun describeContents(): Int {
         return 0
     }
-
-    companion object CREATOR : Parcelable.Creator<Movie> {
-        override fun createFromParcel(parcel: Parcel): Movie {
-            return Movie(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Movie?> {
-            return arrayOfNulls(size)
-        }
-    }
-
 
 }

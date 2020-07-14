@@ -9,13 +9,14 @@ import com.zywczas.bestonscreen.utilities.EMPTY_CATEGORY
 
 
 class ApiVM (private val repo: ApiRepository,
+    //todo dodac jakies zastosowanie dla handle
                    //SavedStateHandle not used yet, just implemented for future expansion
              private val handle: SavedStateHandle
 ) : ViewModel() {
 
-    private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
-
     var activityFirstStart = true
+
+    private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
 
     fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
 

@@ -86,8 +86,6 @@ class DBActivity : AppCompatActivity() {
         })
     }
 
-
-
     fun toWatchClicked (view: View) {
         closeDrawerOrMinimizeApp()
         showToast("This is your list.")
