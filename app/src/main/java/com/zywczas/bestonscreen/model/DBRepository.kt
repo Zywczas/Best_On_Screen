@@ -3,14 +3,13 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.utilities.LiveEvent
 import com.zywczas.bestonscreen.utilities.logD
-import com.zywczas.bestonscreen.utilities.toMovie
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class DBMoviesRepo @Inject constructor(
+class DBRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val moviesLiveEvent: LiveEvent<List<Movie>>,

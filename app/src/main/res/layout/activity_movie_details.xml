@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.zywczas.bestonscreen.viewmodels.MovieDetailsVM" />
+            type="com.zywczas.bestonscreen.viewmodels.DetailsVM" />
         <variable
             name="movie"
             type="com.zywczas.bestonscreen.model.Movie" />
@@ -18,7 +18,7 @@
     android:id="@+id/movieDetailsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.MovieDetailsActivity">
+    tools:context=".views.DetailsActivity">
 
     <ScrollView
         android:layout_width="0dp"
@@ -99,7 +99,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addToListBtn"
                 tools:text="Genres: "
-                android:text='@{"Genres: " + viewModel.getGenresDescription(movie)}'/>
+                android:text='@{viewModel.getGenresDescription(movie)}'/>
 
             <TextView
                 android:id="@+id/overviewTextViewDetails"

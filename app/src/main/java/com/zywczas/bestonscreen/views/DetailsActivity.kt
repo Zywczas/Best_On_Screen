@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.views
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,16 +13,16 @@ import com.zywczas.bestonscreen.databinding.ActivityMovieDetailsBinding
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast
-import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
-import com.zywczas.bestonscreen.viewmodels.factories.MovieDetailsVMFactory
+import com.zywczas.bestonscreen.viewmodels.DetailsVM
+import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import javax.inject.Inject
 
-class MovieDetailsActivity : AppCompatActivity() {
+class DetailsActivity : AppCompatActivity() {
 
-    lateinit var viewModel: MovieDetailsVM
+    lateinit var viewModel: DetailsVM
     @Inject
-    lateinit var factory: MovieDetailsVMFactory
+    lateinit var factory: DetailsVMFactory
     @Inject
     lateinit var picasso: Picasso
     lateinit var movieFromParcel: Movie
@@ -32,7 +31,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         App.moviesComponent.inject(this)
-        viewModel = ViewModelProvider(this, factory).get(MovieDetailsVM::class.java)
+        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
         movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
         val binding : ActivityMovieDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
         binding.viewModel = viewModel

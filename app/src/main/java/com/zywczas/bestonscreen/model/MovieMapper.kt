@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen.utilities
+package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieFromDB

@@ -1,19 +1,18 @@
 package com.zywczas.bestonscreen.viewmodels.factories
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.zywczas.bestonscreen.model.MovieDetailsRepo
-import com.zywczas.bestonscreen.viewmodels.MovieDetailsVM
+import com.zywczas.bestonscreen.model.DetailsRepository
+import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieDetailsVMFactory @Inject constructor(private val repo: MovieDetailsRepo) :
+class DetailsVMFactory @Inject constructor(private val repo: DetailsRepository) :
     ViewModelProvider.NewInstanceFactory(){
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MovieDetailsVM(repo) as T
+        return DetailsVM(repo) as T
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-class MovieApiResponse {
+class ApiResponse {
     @SerializedName("page")
     @Expose
     var page: Int? = null

@@ -1,15 +1,14 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.MovieDetailsRepo
+import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.logD
 import kotlin.system.exitProcess
 
-class MovieDetailsVM (private val repo: MovieDetailsRepo) : ViewModel(){
+class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
 
     fun clearDisposables() = repo.clearDisposables()
 

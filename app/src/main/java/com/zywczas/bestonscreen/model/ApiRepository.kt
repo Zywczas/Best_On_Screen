@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApiMoviesRepo @Inject constructor(
+class ApiRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val apiService: ApiService,
@@ -64,7 +64,11 @@ class ApiMoviesRepo @Inject constructor(
 
             .flatMap { movieFromApi ->
                 movieFromApi.genreIds?.let { movieFromApi.transferGenresListToVariables(it) }
-                Observable.just( toMovie(movieFromApi) )
+                Observable.just(
+                    toMovie(
+                        movieFromApi
+                    )
+                )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
                 override fun onComplete() {

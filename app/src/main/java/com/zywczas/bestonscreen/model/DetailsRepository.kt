@@ -5,7 +5,6 @@ import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.LiveEvent
 import com.zywczas.bestonscreen.utilities.logD
-import com.zywczas.bestonscreen.utilities.toMovieFromDB
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -15,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieDetailsRepo @Inject constructor(
+class DetailsRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movieDao: MovieDao,
     private val booleanLiveEvent: LiveEvent<Boolean>,
@@ -61,7 +60,11 @@ class MovieDetailsRepo @Inject constructor(
 
     fun deleteMovieFromDB(movie : Movie) :  MutableLiveData<Event<String>> {
         val completableRx3 = RxJavaBridge.toV3Completable(
-            movieDao.deleteMovie(toMovieFromDB(movie))
+            movieDao.deleteMovie(
+                toMovieFromDB(
+                    movie
+                )
+            )
         )
 
         compositeDisposables.add(

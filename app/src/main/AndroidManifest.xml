@@ -12,9 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.MovieDetailsActivity" />
-        <activity android:name=".views.ApiMoviesActivity" />
-        <activity android:name=".views.DBMoviesActivity">
+        <activity android:name=".views.DetailsActivity" />
+        <activity android:name=".views.ApiActivity" />
+        <activity android:name=".views.DBActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

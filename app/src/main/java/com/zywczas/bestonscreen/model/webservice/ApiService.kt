@@ -13,18 +13,18 @@ interface ApiService {
     fun getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
-    ) : Observable<MovieApiResponse>
+    ) : Observable<ApiResponse>
 
     @GET("movie/upcoming")
     fun getUpcomingMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
-    ) : Observable<MovieApiResponse>
+    ) : Observable<ApiResponse>
 
     @GET("movie/top_rated")
     fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
-    ) : Observable<MovieApiResponse>
+    ) : Observable<ApiResponse>
 
 }
