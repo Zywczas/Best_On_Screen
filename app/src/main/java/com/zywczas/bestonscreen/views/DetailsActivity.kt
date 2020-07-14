@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.databinding.ActivityMovieDetailsBinding
+import com.zywczas.bestonscreen.databinding.ActivityDetailsBinding
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
-import kotlinx.android.synthetic.main.activity_movie_details.*
+import kotlinx.android.synthetic.main.activity_details.*
 import javax.inject.Inject
 
 class DetailsActivity : AppCompatActivity() {
@@ -33,7 +33,7 @@ class DetailsActivity : AppCompatActivity() {
         App.moviesComponent.inject(this)
         viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
         movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
-        val binding : ActivityMovieDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
+        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
         binding.viewModel = viewModel
         binding.movie = movieFromParcel
 

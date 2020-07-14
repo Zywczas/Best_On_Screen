@@ -18,7 +18,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/nav_movies" />
+        <include layout="@layout/navigation" />
 
     </com.google.android.material.navigation.NavigationView>
 

@@ -22,7 +22,7 @@ import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
 import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
-import kotlinx.android.synthetic.main.nav_movies.*
+import kotlinx.android.synthetic.main.navigation.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
