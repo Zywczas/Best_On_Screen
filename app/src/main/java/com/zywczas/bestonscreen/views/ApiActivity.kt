@@ -36,6 +36,7 @@ class ApiActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     private var orientation by Delegates.notNull<Int>()
+    //todo sprawdzicz czy to empty category to dobry pomysl
     private var movieCategory = EMPTY_CATEGORY
     private var nextPage = 1
 
@@ -110,7 +111,7 @@ class ApiActivity : AppCompatActivity() {
             }
         )
     }
-
+//todo zmienic nawe na poprawniejsza
     private fun checkIfFirstStart(){
         //check if first start to prevent reloading data on orientation changed
         if (viewModel.activityFirstStart) {
@@ -125,7 +126,7 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-
+//todo moze poprawic wykrzyknik - warunek ten zamienic na nowa funkcje typu 'shouldGetMoreMovies', moze dodac tez sprawdzenie czy nie est to ostatnia strona
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     progressBarMovies.isVisible = true
                     viewModel.getApiMovies(movieCategory, nextPage)

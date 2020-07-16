@@ -4,8 +4,8 @@ import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-/**Interface for contacting with https://www.themoviedb.org/
- *
+/**
+ * Interface for contacting with https://www.themoviedb.org/
  */
 interface ApiService {
 

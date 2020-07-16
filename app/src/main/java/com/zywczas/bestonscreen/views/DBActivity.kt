@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
@@ -23,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 class DBActivity : AppCompatActivity() {
 
@@ -32,26 +32,27 @@ class DBActivity : AppCompatActivity() {
     private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
     @Inject lateinit var picasso: Picasso
-    private var orientation by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
+
         progressBarMovies.isVisible = false
         moviesToolbar.title = "Movies: My List"
-        orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
 
+        setupDrawer()
+        setupAdapter()
+        setupTags()
+        displayMessageOrMovies()
+    }
+
+    private fun setupDrawer(){
         val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggle)
         toggle.syncState()
-
-        setupAdapter()
-        setupTags()
-        setupObserver()
-
     }
 
     private fun setupAdapter() {
@@ -60,16 +61,17 @@ class DBActivity : AppCompatActivity() {
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
         }
-        moviesRecyclerView.setHasFixedSize(true)
         moviesRecyclerView.adapter = adapter
         var spanCount = 2
+        val orientation = resources.configuration.orientation
         if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(this, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
+        moviesRecyclerView.setHasFixedSize(true)
     }
-
+//todo sprawdzic czy sie nie da zmienic na enum
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
@@ -77,13 +79,22 @@ class DBActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun setupObserver() {
+    private fun displayMessageOrMovies() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
-                adapter.submitList(movies.toMutableList())
-            if (movies.isEmpty()) {
-                emptyListTextView.isVisible = true
+            if (movies.isEmpty()){
+                showMessageAboutEmptyDB()
+            } else {
+                showMovies(movies)
             }
         })
+    }
+
+    private fun showMessageAboutEmptyDB(){
+        emptyListTextView.isVisible = true
+    }
+
+    private fun showMovies(movies: List<Movie>){
+        adapter.submitList(movies.toMutableList())
     }
 
     fun toWatchClicked (view: View) {
@@ -94,8 +105,8 @@ class DBActivity : AppCompatActivity() {
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val category = view.tag as String
-
         val moviesIntent = Intent(this, ApiActivity::class.java)
+
         moviesIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(moviesIntent)
         finish()

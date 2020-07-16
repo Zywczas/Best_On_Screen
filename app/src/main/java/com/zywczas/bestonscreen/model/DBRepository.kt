@@ -19,10 +19,10 @@ class DBRepository @Inject constructor(
 
     //todo poprawic i komentarze
     fun getMoviesFromDB () : LiveEvent<List<Movie>> {
-        val moviesObservableDB = RxJavaBridge.toV3Flowable(movieDao.getMovies())
+        val moviesFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
         compositeDisposables.add(
-            moviesObservableDB
+            moviesFlowable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onBackpressureBuffer()

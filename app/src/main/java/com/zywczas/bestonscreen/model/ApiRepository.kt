@@ -19,6 +19,8 @@ class ApiRepository @Inject constructor(
     private val apiService: ApiService,
     private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, String>>
 ) {
+
+    private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
     //todo poprawic te funkcje i usunac komentarze
     private var currentPage = 1
     //just any number >= 1 at the beginning
@@ -41,9 +43,9 @@ class ApiRepository @Inject constructor(
 
         val moviesObservableApi = when (category) {
             //todo tu sa powtorzenia z API_Key i page oraz switch powinien byc zastapiony polimorfizmem
-            POPULAR -> { apiService.getPopularMovies(API_KEY, page) }
-            TOP_RATED -> { apiService.getTopRatedMovies(API_KEY, page) }
-            UPCOMING -> { apiService.getUpcomingMovies(API_KEY, page) }
+            POPULAR -> { apiService.getPopularMovies(apiKey, page) }
+            TOP_RATED -> { apiService.getTopRatedMovies(apiKey, page) }
+            UPCOMING -> { apiService.getUpcomingMovies(apiKey, page) }
             //this option sends empty LiveEvent just to remove observers
             EMPTY_CATEGORY -> { movies.clear()
                 moviesLd.postValue(Triple(movies, currentPage, category))

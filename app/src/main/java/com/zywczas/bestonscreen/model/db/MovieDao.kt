@@ -17,9 +17,7 @@ interface MovieDao {
     @Query ("SELECT * FROM movies ORDER BY title ASC")
     fun getMovies() : Flowable<List<MovieFromDB>>
 
-    @Query ("SELECT * FROM movies WHERE id == :movieId")
-    fun getMovie (movieId: Int) : Observable<MovieFromDB>
-
+//todo dodac sprawdzenie czy nie ma wiecej niz jednego wyniku, chociaz id jest unikatowe
     @Query("SELECT COUNT(id) FROM movies WHERE id ==  :movieId")
     fun checkIfIsInDB(movieId : Int) : Observable<Int>
 
