@@ -43,7 +43,7 @@ class ApiActivity : AppCompatActivity() {
 
         initializeDagger()
         setupDrawer()
-        setupAdapter()
+        setupRecyclerView()
         setupTags()
         setupObserver()
         getMoviesIfFirstStartOfActivity()
@@ -61,7 +61,7 @@ class ApiActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
-    private fun setupAdapter() {
+    private fun setupRecyclerView() {
         adapter = MovieAdapter(this, picasso) { movie ->
             val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
@@ -82,8 +82,8 @@ class ApiActivity : AppCompatActivity() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
-        MyToWatchListTextView.tag = TO_WATCH
     }
+
 //todo poprawic
     private fun setupObserver() {
         viewModel.getLd().observe(this,

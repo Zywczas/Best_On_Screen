@@ -9,7 +9,7 @@
         android:id="@+id/MyToWatchListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="50dp"
         android:onClick="myToWatchListClicked"
         android:text="@string/to_watch_list"
         android:textColor="@android:color/holo_red_dark"
@@ -29,8 +29,10 @@
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="21sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popularTextView"
-        tools:layout_editor_absoluteX="161dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
 
     <TextView
         android:id="@+id/textView4"
@@ -83,9 +85,9 @@
         android:background="@android:color/darker_gray"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/MyToWatchListTextView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/MyToWatchListTextView"
         app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
+import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
@@ -39,7 +40,7 @@ class DBActivity : AppCompatActivity() {
 
         initializeDagger()
         setupDrawer()
-        setupAdapter()
+        setupRecyclerView()
         setupTags()
         displayMoviesOrMessage()
     }
@@ -55,7 +56,7 @@ class DBActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
-    private fun setupAdapter() {
+    private fun setupRecyclerView() {
         adapter = MovieAdapter(this, picasso) { movie ->
             val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
@@ -72,11 +73,10 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-//todo sprawdzic czy sie nie da zmienic na enum
     private fun setupTags() {
-        upcomingTextView.tag = UPCOMING
-        topRatedTextView.tag = TOP_RATED
-        popularTextView.tag = POPULAR
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
     private fun displayMoviesOrMessage() {
@@ -111,14 +111,14 @@ class DBActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        val category = view.tag as String
+        val category = view.tag as Category
         switchToApiActivity(category)
     }
 
-    private fun switchToApiActivity(category: String){
-        val moviesIntent = Intent(this, ApiActivity::class.java)
-        moviesIntent.putExtra(EXTRA_CATEGORY, category)
-        startActivity(moviesIntent)
+    private fun switchToApiActivity(category: Category){
+        val apiIntent = Intent(this, ApiActivity::class.java)
+        apiIntent.putExtra(EXTRA_CATEGORY, category.toString())
+        startActivity(apiIntent)
         finish()
     }
 

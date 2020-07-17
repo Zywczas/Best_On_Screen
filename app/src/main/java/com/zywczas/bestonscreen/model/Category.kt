@@ -1,8 +1,33 @@
 package com.zywczas.bestonscreen.model
 
-sealed class Category {
-}
+enum class Category {
+    POPULAR {
+        override fun toString(): String {
+            return "Popular"
+        }
+    },
 
-object ApiCategory : Category() {
+    TOP_RATED {
+        override fun toString(): String {
+            return "Top Rated"
+        }
+
+    },
+
+    UPCOMING {
+        override fun toString(): String {
+            return "Upcoming"
+        }
+
+    },
+
+    EMPTY {
+        override fun toString(): String {
+            return "empty"
+        }
+
+    };
+
+    abstract override fun toString() : String
 
 }
