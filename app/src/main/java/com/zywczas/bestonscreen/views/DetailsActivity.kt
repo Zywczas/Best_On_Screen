@@ -26,7 +26,7 @@ class DetailsActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     lateinit var movieFromParcel: Movie
-
+//dac wiecej databinding, np na guziki i podzielic na mniejsze funkcje
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

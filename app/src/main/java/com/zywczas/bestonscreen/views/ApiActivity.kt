@@ -46,7 +46,7 @@ class ApiActivity : AppCompatActivity() {
         setupAdapter()
         setupTags()
         setupObserver()
-        checkIfFirstStart()
+        getMoviesIfFirstStartOfActivity()
         setupOnScrollListener()
     }
 
@@ -106,14 +106,18 @@ class ApiActivity : AppCompatActivity() {
         )
     }
 //todo zmienic nawe na poprawniejsza i zmienic uzycie boolean
-    private fun checkIfFirstStart(){
-        //check if first start to prevent reloading data on orientation changed
-        if (viewModel.activityFirstStart) {
-            progressBarMovies.isVisible = true
-            intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
-            viewModel.getApiMovies(movieCategory, nextPage)
-            viewModel.activityFirstStart = false
+    private fun getMoviesIfFirstStartOfActivity(){
+        if (viewModel.isActivityInitialization()) {
+            getMoviesOnInit()
+            viewModel.finishActivityInitialization()
         }
+    }
+
+    private fun getMoviesOnInit(){
+        progressBarMovies.isVisible = true
+        //todo sprobowc te nulle wszystkie pousuwac
+        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
+        viewModel.getApiMovies(movieCategory, nextPage)
     }
 
     private fun setupOnScrollListener() {

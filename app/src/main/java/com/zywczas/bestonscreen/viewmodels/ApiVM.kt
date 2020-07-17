@@ -14,9 +14,14 @@ class ApiVM (private val repo: ApiRepository,
              private val handle: SavedStateHandle
 ) : ViewModel() {
 
-    var activityFirstStart = true
-
+    private var isActivityInit = true
     private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
+
+    fun isActivityInitialization() = isActivityInit
+
+    fun finishActivityInitialization(){
+        isActivityInit = false
+    }
 
     fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
 
