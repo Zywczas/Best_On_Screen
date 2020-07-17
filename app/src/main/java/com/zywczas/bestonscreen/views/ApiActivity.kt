@@ -105,7 +105,7 @@ class ApiActivity : AppCompatActivity() {
             }
         )
     }
-//todo zmienic nawe na poprawniejsza i zmienic uzycie boolean
+
     private fun getMoviesIfFirstStartOfActivity(){
         if (viewModel.isActivityInitialization()) {
             getMoviesOnInit()
@@ -124,13 +124,16 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-//todo moze poprawic wykrzyknik - warunek ten zamienic na nowa funkcje typu 'shouldGetMoreMovies', moze dodac tez sprawdzenie czy nie est to ostatnia strona
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    progressBarMovies.isVisible = true
-                    viewModel.getApiMovies(movieCategory, nextPage)
+                    getMoreMovies()
                 }
             }
         })
+    }
+
+    private fun getMoreMovies(){
+        progressBarMovies.isVisible = true
+        viewModel.getApiMovies(movieCategory, nextPage)
     }
 
     fun myToWatchListClicked(view: View) {
