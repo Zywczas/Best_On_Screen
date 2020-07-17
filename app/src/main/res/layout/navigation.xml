@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/toWatchListTextView"
+        android:id="@+id/MyToWatchListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="toWatchClicked"
+        android:onClick="myToWatchListClicked"
         android:text="@string/to_watch_list"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="21sp"
@@ -43,9 +43,9 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/toWatchListTextView"
-        app:layout_constraintEnd_toEndOf="@+id/toWatchListTextView"
-        app:layout_constraintStart_toStartOf="@+id/toWatchListTextView"
+        app:layout_constraintBottom_toTopOf="@+id/MyToWatchListTextView"
+        app:layout_constraintEnd_toEndOf="@+id/MyToWatchListTextView"
+        app:layout_constraintStart_toStartOf="@+id/MyToWatchListTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -62,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@+id/popularTextView"
         app:layout_constraintEnd_toEndOf="@+id/popularTextView"
         app:layout_constraintStart_toStartOf="@+id/popularTextView"
-        app:layout_constraintTop_toBottomOf="@+id/toWatchListTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
 
     <TextView
         android:id="@+id/popularTextView"

@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_movies.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 class ApiActivity : AppCompatActivity() {
 
@@ -32,10 +31,8 @@ class ApiActivity : AppCompatActivity() {
     lateinit var factory: ApiVMFactory
     private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
-
     @Inject
     lateinit var picasso: Picasso
-    private var orientation by Delegates.notNull<Int>()
     //todo sprawdzicz czy to empty category to dobry pomysl
     private var movieCategory = EMPTY_CATEGORY
     private var nextPage = 1
@@ -44,26 +41,24 @@ class ApiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
-        orientation = resources.configuration.orientation
-
-        App.moviesComponent.inject(this)
-
-        //setting up drawer layout and toggle button
-        val toggle = ActionBarDrawerToggle(
-            this,
-            drawer_layout_movies,
-            moviesToolbar,
-            R.string.nav_drawer_open,
-            R.string.nav_drawer_closed
-        )
-        drawer_layout_movies.addDrawerListener(toggle)
-        toggle.syncState()
-
+        initializeDagger()
+        setupDrawer()
         setupAdapter()
         setupTags()
         setupObserver()
         checkIfFirstStart()
         setupOnScrollListener()
+    }
+
+    private fun initializeDagger() {
+        App.moviesComponent.inject(this)
+    }
+
+    private fun setupDrawer(){
+        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,
+            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+        drawer_layout_movies.addDrawerListener(toggle)
+        toggle.syncState()
     }
 
     private fun setupAdapter() {
@@ -72,22 +67,22 @@ class ApiActivity : AppCompatActivity() {
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
         }
-        moviesRecyclerView.setHasFixedSize(true)
         moviesRecyclerView.adapter = adapter
         var spanCount = 2
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        val orientation = resources.configuration.orientation
+        if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(this, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
-
+        moviesRecyclerView.setHasFixedSize(true)
     }
 
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
-        toWatchListTextView.tag = TO_WATCH
+        MyToWatchListTextView.tag = TO_WATCH
     }
 //todo poprawic
     private fun setupObserver() {
@@ -110,7 +105,7 @@ class ApiActivity : AppCompatActivity() {
             }
         )
     }
-//todo zmienic nawe na poprawniejsza
+//todo zmienic nawe na poprawniejsza i zmienic uzycie boolean
     private fun checkIfFirstStart(){
         //check if first start to prevent reloading data on orientation changed
         if (viewModel.activityFirstStart) {
@@ -133,9 +128,13 @@ class ApiActivity : AppCompatActivity() {
             }
         })
     }
-//todo sprawdzic nazwe
-    fun toWatchClicked(view: View) {
+
+    fun myToWatchListClicked(view: View) {
         closeDrawerOrMinimizeApp()
+        switchToDBActivity()
+    }
+
+    private fun switchToDBActivity(){
         val toWatchIntent = Intent(this, DBActivity::class.java)
         startActivity(toWatchIntent)
         finish()
@@ -156,11 +155,6 @@ class ApiActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        viewModel.clearDisposables()
-        super.onDestroy()
-    }
-
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
     }
@@ -171,5 +165,10 @@ class ApiActivity : AppCompatActivity() {
         } else {
             this.moveTaskToBack(true)
         }
+    }
+
+    override fun onDestroy() {
+        viewModel.clearDisposables()
+        super.onDestroy()
     }
 }

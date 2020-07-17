@@ -76,7 +76,7 @@ class DBActivity : AppCompatActivity() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
-        toWatchListTextView.tag = TO_WATCH
+        MyToWatchListTextView.tag = TO_WATCH
     }
 
     private fun displayMoviesOrMessage() {
@@ -96,7 +96,7 @@ class DBActivity : AppCompatActivity() {
         emptyListTextView.isVisible = true
     }
 
-    fun toWatchClicked (view: View) {
+    fun myToWatchListClicked (view: View) {
         closeDrawerOrMinimizeApp()
         showToast("This is your list.")
     }
@@ -114,21 +114,21 @@ class DBActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onDestroy() {
-        viewModel.clearDisposables()
-        super.onDestroy()
-    }
-
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
     }
-//todo powturzona funkcja, sprawdzic czy nie mozna 1 takiej dac gdzies
+
     private fun closeDrawerOrMinimizeApp() {
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
         } else {
             this.moveTaskToBack(true)
         }
+    }
+
+    override fun onDestroy() {
+        viewModel.clearDisposables()
+        super.onDestroy()
     }
 
 }
