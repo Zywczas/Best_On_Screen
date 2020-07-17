@@ -37,15 +37,15 @@ class DBActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
-        progressBarMovies.isVisible = false
-        moviesToolbar.title = "Movies: My List"
-
-        App.moviesComponent.inject(this)
-
+        initializeDagger()
         setupDrawer()
         setupAdapter()
         setupTags()
-        updateDisplayedMoviesOrMessageAboutEmptyDB()
+        displayMoviesOrMessage()
+    }
+
+    private fun initializeDagger() {
+        App.moviesComponent.inject(this)
     }
 
     private fun setupDrawer(){
@@ -79,7 +79,7 @@ class DBActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun updateDisplayedMoviesOrMessageAboutEmptyDB() {
+    private fun displayMoviesOrMessage() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
             updateDisplayedMovies(movies)
             if (movies.isEmpty()){
@@ -104,8 +104,11 @@ class DBActivity : AppCompatActivity() {
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val category = view.tag as String
-        val moviesIntent = Intent(this, ApiActivity::class.java)
+        switchToApiActivity(category)
+    }
 
+    private fun switchToApiActivity(category: String){
+        val moviesIntent = Intent(this, ApiActivity::class.java)
         moviesIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(moviesIntent)
         finish()

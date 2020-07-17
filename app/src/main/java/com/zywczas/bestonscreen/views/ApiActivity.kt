@@ -44,7 +44,6 @@ class ApiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
-        progressBarMovies.isVisible = false
         orientation = resources.configuration.orientation
 
         App.moviesComponent.inject(this)
