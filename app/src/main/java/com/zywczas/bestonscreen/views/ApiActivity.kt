@@ -89,6 +89,7 @@ class ApiActivity : AppCompatActivity() {
     private fun setupObserver() {
         viewModel.getLd().observe(this,
             Observer { tripleMoviesPageCategory ->
+                //todo ta flage usunac na cos bardziej wyraznego zeby komentarz by zbedny
                 //'0' working as a flag
                 if (tripleMoviesPageCategory.second == 0) {
                     showToast("This is the last page in this category.")

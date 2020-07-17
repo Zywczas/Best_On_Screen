@@ -1,27 +1,27 @@
 package com.zywczas.bestonscreen.model
 
-enum class Category(category: String) {
-    POPULAR ("Popular") {
+enum class Category {
+    POPULAR {
         override fun toString(): String {
-            return "Popular"
+            return "POPULAR"
         }
     },
 
-    TOP_RATED ("Top Rated") {
+    TOP_RATED {
         override fun toString(): String {
-            return "Top Rated"
+            return "TOP_RATED"
         }
     },
 
-    UPCOMING ("Upcoming") {
+    UPCOMING {
         override fun toString(): String {
-            return "Upcoming"
+            return "UPCOMING"
         }
     },
 
-    EMPTY_LIVEDATA ("empty"){
+    EMPTY_LIVEDATA {
         override fun toString(): String {
-            return "empty"
+            return "EMPTY_LIVEDATA"
         }
     };
 
