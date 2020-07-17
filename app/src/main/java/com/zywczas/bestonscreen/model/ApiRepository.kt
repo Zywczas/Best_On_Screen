@@ -47,7 +47,7 @@ class ApiRepository @Inject constructor(
             Category.TOP_RATED -> { apiService.getTopRatedMovies(apiKey, page) }
             Category.UPCOMING -> { apiService.getUpcomingMovies(apiKey, page) }
             //this option sends empty LiveEvent just to remove observers
-            Category.EMPTY_LIVEDATA -> { movies.clear()
+            Category.EMPTY -> { movies.clear()
                 moviesLd.postValue(Triple(movies, currentPage, category))
                 return  moviesLd }
         }

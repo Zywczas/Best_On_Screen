@@ -16,7 +16,7 @@ class ApiVM (private val repo: ApiRepository,
 
     private var isViewModelInit = true
     //todo sprobowac zamienic to empty na mutator live data
-    private val moviesLd = repo.getMoviesFromApi(Category.EMPTY_LIVEDATA, 1)
+    private val moviesLd = repo.getMoviesFromApi(Category.EMPTY, 1)
 
     fun isViewModelInitialization() = isViewModelInit
 

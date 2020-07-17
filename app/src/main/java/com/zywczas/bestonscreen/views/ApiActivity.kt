@@ -35,7 +35,7 @@ class ApiActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     //todo sprawdzicz czy to empty category to dobry pomysl
-    private var movieCategory = Category.EMPTY_LIVEDATA
+    private var movieCategory = Category.EMPTY
     private var nextPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +98,7 @@ class ApiActivity : AppCompatActivity() {
                 } else {
                     adapter.submitList(tripleMoviesPageCategory.first.toMutableList())
                     progressBarMovies.isVisible = false
+                    //todo dac funkcje ustawiajaca tytul z dobra czcionka
                     moviesToolbar.title = "Movies: ${tripleMoviesPageCategory.third}"
 
                     //prepare data for next call
