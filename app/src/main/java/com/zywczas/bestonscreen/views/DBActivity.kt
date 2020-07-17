@@ -71,12 +71,12 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
         moviesRecyclerView.setHasFixedSize(true)
     }
+
 //todo sprawdzic czy sie nie da zmienic na enum
     private fun setupTags() {
         upcomingTextView.tag = UPCOMING
         topRatedTextView.tag = TOP_RATED
         popularTextView.tag = POPULAR
-        MyToWatchListTextView.tag = TO_WATCH
     }
 
     private fun displayMoviesOrMessage() {
@@ -101,6 +101,14 @@ class DBActivity : AppCompatActivity() {
         showToast("This is your list.")
     }
 
+    private fun closeDrawerOrMinimizeApp() {
+        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout_movies.closeDrawer(GravityCompat.START)
+        } else {
+            this.moveTaskToBack(true)
+        }
+    }
+
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val category = view.tag as String
@@ -116,14 +124,6 @@ class DBActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
-    }
-
-    private fun closeDrawerOrMinimizeApp() {
-        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout_movies.closeDrawer(GravityCompat.START)
-        } else {
-            this.moveTaskToBack(true)
-        }
     }
 
     override fun onDestroy() {

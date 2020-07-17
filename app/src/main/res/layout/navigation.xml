@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,31 +9,28 @@
         android:id="@+id/MyToWatchListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="40dp"
         android:onClick="myToWatchListClicked"
         android:text="@string/to_watch_list"
         android:textColor="@android:color/holo_red_dark"
-        android:textSize="21sp"
-        app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
-        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
-        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/topRatedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:onClick="categoryClicked"
         android:text="@string/top_rated"
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="21sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/popularTextView"
+        tools:layout_editor_absoluteX="161dp" />
 
     <TextView
         android:id="@+id/textView4"
@@ -41,20 +39,18 @@
         android:layout_marginBottom="32dp"
         android:text="@string/choose_category_header"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/MyToWatchListTextView"
-        app:layout_constraintEnd_toEndOf="@+id/MyToWatchListTextView"
-        app:layout_constraintStart_toStartOf="@+id/MyToWatchListTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
+        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
+        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
+        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
 
     <TextView
         android:id="@+id/upcomingTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:onClick="categoryClicked"
         android:text="@string/upcoming"
         android:textColor="@android:color/holo_purple"
@@ -62,14 +58,13 @@
         app:layout_constraintBottom_toTopOf="@+id/popularTextView"
         app:layout_constraintEnd_toEndOf="@+id/popularTextView"
         app:layout_constraintStart_toStartOf="@+id/popularTextView"
-        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/popularTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:onClick="categoryClicked"
         android:text="@string/popular"
         android:textColor="@android:color/holo_blue_light"
@@ -78,5 +73,19 @@
         app:layout_constraintEnd_toEndOf="@+id/topRatedTextView"
         app:layout_constraintStart_toStartOf="@+id/topRatedTextView"
         app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="250dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="21dp"
+        android:background="@android:color/darker_gray"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
