@@ -45,7 +45,7 @@ class DBActivity : AppCompatActivity() {
         setupDrawer()
         setupAdapter()
         setupTags()
-        displayMessageOrMovies()
+        updateDisplayedMoviesOrMessageAboutEmptyDB()
     }
 
     private fun setupDrawer(){
@@ -79,22 +79,21 @@ class DBActivity : AppCompatActivity() {
         toWatchListTextView.tag = TO_WATCH
     }
 
-    private fun displayMessageOrMovies() {
+    private fun updateDisplayedMoviesOrMessageAboutEmptyDB() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
+            updateDisplayedMovies(movies)
             if (movies.isEmpty()){
                 showMessageAboutEmptyDB()
-            } else {
-                showMovies(movies)
             }
         })
     }
 
-    private fun showMessageAboutEmptyDB(){
-        emptyListTextView.isVisible = true
+    private fun updateDisplayedMovies(movies: List<Movie>){
+        adapter.submitList(movies.toMutableList())
     }
 
-    private fun showMovies(movies: List<Movie>){
-        adapter.submitList(movies.toMutableList())
+    private fun showMessageAboutEmptyDB(){
+        emptyListTextView.isVisible = true
     }
 
     fun toWatchClicked (view: View) {
