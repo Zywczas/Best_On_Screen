@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.utilities.*
@@ -28,6 +29,8 @@ class ApiRepository @Inject constructor(
 
     fun clearDisposables() = compositeDisposables.clear()
 
+    fun getLiveData() = moviesLd as LiveData<Triple<List<Movie>, Int, Category>>
+
     //todo poprawic te funkcje i usunac komentarze
     fun getMoviesFromApi (category: Category, page: Int) : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         //if new category, then reset the list
@@ -46,10 +49,6 @@ class ApiRepository @Inject constructor(
             Category.POPULAR -> { apiService.getPopularMovies(apiKey, page) }
             Category.TOP_RATED -> { apiService.getTopRatedMovies(apiKey, page) }
             Category.UPCOMING -> { apiService.getUpcomingMovies(apiKey, page) }
-            //this option sends empty LiveEvent just to remove observers
-            Category.EMPTY -> { movies.clear()
-                moviesLd.postValue(Triple(movies, currentPage, category))
-                return  moviesLd }
         }
 
         compositeDisposables.add(moviesObservableApi

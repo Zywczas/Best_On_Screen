@@ -35,13 +35,13 @@ class ApiActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     //todo sprawdzicz czy to empty category to dobry pomysl
-    private var movieCategory = Category.EMPTY
+    private var movieCategory = Category.POPULAR
     private var nextPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
-
+//todo chyba trzeba zrobic z tego lancuszek zdazen zeby nikt nie zamienil kolejnosci
         initializeDagger()
         setupDrawer()
         setupRecyclerView()
@@ -87,7 +87,7 @@ class ApiActivity : AppCompatActivity() {
 
 //todo poprawic
     private fun setupObserver() {
-        viewModel.getLd().observe(this,
+        viewModel.getLD().observe(this,
             Observer { tripleMoviesPageCategory ->
                 //todo ta flage usunac na cos bardziej wyraznego zeby komentarz by zbedny
                 //'0' working as a flag

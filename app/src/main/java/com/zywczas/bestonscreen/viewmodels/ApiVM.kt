@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiRepository
@@ -15,8 +16,6 @@ class ApiVM (private val repo: ApiRepository,
 ) : ViewModel() {
 
     private var isViewModelInit = true
-    //todo sprobowac zamienic to empty na mutator live data
-    private val moviesLd = repo.getMoviesFromApi(Category.EMPTY, 1)
 
     fun isViewModelInitialization() = isViewModelInit
 
@@ -24,7 +23,7 @@ class ApiVM (private val repo: ApiRepository,
         isViewModelInit = false
     }
 
-    fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, Category>>
+    fun getLD() = repo.getLiveData()
 
     fun getApiMovies(category: Category, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
 
