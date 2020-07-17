@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiRepository
+import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.EMPTY_CATEGORY
 
 
 class ApiVM (private val repo: ApiRepository,
@@ -14,18 +14,19 @@ class ApiVM (private val repo: ApiRepository,
              private val handle: SavedStateHandle
 ) : ViewModel() {
 
-    private var isActivityInit = true
-    private val moviesLd = repo.getMoviesFromApi(EMPTY_CATEGORY, 1)
+    private var isViewModelInit = true
+    //todo sprobowac zamienic to empty na mutator live data
+    private val moviesLd = repo.getMoviesFromApi(Category.EMPTY_LIVEDATA, 1)
 
-    fun isActivityInitialization() = isActivityInit
+    fun isViewModelInitialization() = isViewModelInit
 
-    fun finishActivityInitialization(){
-        isActivityInit = false
+    fun finishViewModelInitialization(){
+        isViewModelInit = false
     }
 
-    fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, String>>
+    fun getLd() = moviesLd as LiveData<Triple<List<Movie>, Int, Category>>
 
-    fun getApiMovies(category: String, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
+    fun getApiMovies(category: Category, nextPage: Int) = repo.getMoviesFromApi(category, nextPage)
 
     fun clearDisposables() = repo.clearDisposables()
 }

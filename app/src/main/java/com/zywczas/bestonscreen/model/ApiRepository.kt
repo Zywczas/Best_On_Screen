@@ -17,7 +17,7 @@ class ApiRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val apiService: ApiService,
-    private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, String>>
+    private val moviesLd : MutableLiveData<Triple<List<Movie>, Int, Category>>
 ) {
 
     private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
@@ -29,7 +29,7 @@ class ApiRepository @Inject constructor(
     fun clearDisposables() = compositeDisposables.clear()
 
     //todo poprawic te funkcje i usunac komentarze
-    fun getMoviesFromApi (category: String, page: Int) : MutableLiveData<Triple<List<Movie>, Int, String>> {
+    fun getMoviesFromApi (category: Category, page: Int) : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         //if new category, then reset the list
         if (page == 1 ) {
             movies.clear()
@@ -43,17 +43,13 @@ class ApiRepository @Inject constructor(
 
         val moviesObservableApi = when (category) {
             //todo tu sa powtorzenia z API_Key i page oraz switch powinien byc zastapiony polimorfizmem
-            POPULAR -> { apiService.getPopularMovies(apiKey, page) }
-            TOP_RATED -> { apiService.getTopRatedMovies(apiKey, page) }
-            UPCOMING -> { apiService.getUpcomingMovies(apiKey, page) }
+            Category.POPULAR -> { apiService.getPopularMovies(apiKey, page) }
+            Category.TOP_RATED -> { apiService.getTopRatedMovies(apiKey, page) }
+            Category.UPCOMING -> { apiService.getUpcomingMovies(apiKey, page) }
             //this option sends empty LiveEvent just to remove observers
-            EMPTY_CATEGORY -> { movies.clear()
+            Category.EMPTY_LIVEDATA -> { movies.clear()
                 moviesLd.postValue(Triple(movies, currentPage, category))
                 return  moviesLd }
-            else -> { movies.clear()
-                logD("incorrect movie category passed to 'getMoviesFromApi'")
-                moviesLd.postValue(Triple(movies, currentPage, category))
-                return  moviesLd}
         }
 
         compositeDisposables.add(moviesObservableApi

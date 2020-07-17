@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
+import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
@@ -34,7 +35,7 @@ class ApiActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     //todo sprawdzicz czy to empty category to dobry pomysl
-    private var movieCategory = EMPTY_CATEGORY
+    private var movieCategory = Category.EMPTY_LIVEDATA
     private var nextPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,7 @@ class ApiActivity : AppCompatActivity() {
         setupRecyclerView()
         setupTags()
         setupObserver()
-        getMoviesIfFirstStartOfActivity()
+        getMoviesOnViewModelInit()
         setupOnScrollListener()
     }
 
@@ -79,9 +80,9 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupTags() {
-        upcomingTextView.tag = UPCOMING
-        topRatedTextView.tag = TOP_RATED
-        popularTextView.tag = POPULAR
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
 //todo poprawic
@@ -106,17 +107,17 @@ class ApiActivity : AppCompatActivity() {
         )
     }
 
-    private fun getMoviesIfFirstStartOfActivity(){
-        if (viewModel.isActivityInitialization()) {
+    private fun getMoviesOnViewModelInit(){
+        if (viewModel.isViewModelInitialization()) {
             getMoviesOnInit()
-            viewModel.finishActivityInitialization()
+            viewModel.finishViewModelInitialization()
         }
     }
 
     private fun getMoviesOnInit(){
         progressBarMovies.isVisible = true
         //todo sprobowc te nulle wszystkie pousuwac
-        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = it }
+        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = Category.valueOf(it) }
         viewModel.getApiMovies(movieCategory, nextPage)
     }
 
@@ -158,7 +159,7 @@ class ApiActivity : AppCompatActivity() {
     //todo poprawic
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        val clickedCategory = view.tag as String
+        val clickedCategory = view.tag as Category
         if (movieCategory == clickedCategory) {
             showToast("This is $clickedCategory.")
         } else {

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
+import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
@@ -30,7 +31,7 @@ class MoviesModule(private val application: Application) {
     fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
 
     @Provides
-    fun provideMutableLdTripleMoviesIntString() : MutableLiveData<Triple<List<Movie>, Int, String>> = MutableLiveData()
+    fun provideMutableLdTripleMoviesIntCategory() : MutableLiveData<Triple<List<Movie>, Int, Category>> = MutableLiveData()
 
     @Provides @Singleton
     fun provideTMDBService() : ApiService = Retrofit.Builder()
