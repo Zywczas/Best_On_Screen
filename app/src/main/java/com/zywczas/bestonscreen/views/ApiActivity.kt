@@ -34,7 +34,6 @@ class ApiActivity : AppCompatActivity() {
     private lateinit var adapter: MovieAdapter
     @Inject
     lateinit var picasso: Picasso
-    //todo sprawdzicz czy to empty category to dobry pomysl
     private var movieCategory = Category.POPULAR
     private var nextPage = 1
 
@@ -127,7 +126,9 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
+                        newState == RecyclerView.SCROLL_STATE_IDLE
+                if (isRecyclerViewBottom) {
                     downloadNextPage()
                 }
             }
@@ -158,19 +159,22 @@ class ApiActivity : AppCompatActivity() {
         finish()
     }
 
-    //todo poprawic
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
-        if (movieCategory == clickedCategory) {
+        if (clickedCategory == movieCategory) {
             showToast("This is $clickedCategory.")
         } else {
-            progressBarMovies.isVisible = true
-            viewModel.getApiMovies(clickedCategory, 1)
-            moviesRecyclerView.scrollToPosition(0)
-            moviesToolbar.title = "Movies: $clickedCategory"
-            movieCategory = clickedCategory
+            switchToNewMoviesCategory(clickedCategory)
         }
+    }
+
+    private fun switchToNewMoviesCategory(clickedCategory: Category){
+        progressBarMovies.isVisible = true
+        viewModel.getApiMovies(clickedCategory, 1)
+        moviesRecyclerView.scrollToPosition(0)
+        moviesToolbar.title = "Movies: $clickedCategory"
+        movieCategory = clickedCategory
     }
 
     override fun onBackPressed() {
