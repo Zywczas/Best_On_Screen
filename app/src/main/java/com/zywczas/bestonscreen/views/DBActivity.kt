@@ -50,7 +50,7 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,
+        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggle)
         toggle.syncState()

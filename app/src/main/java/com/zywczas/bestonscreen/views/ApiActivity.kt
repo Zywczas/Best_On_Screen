@@ -55,7 +55,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,moviesToolbar,
+        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
         drawer_layout_movies.addDrawerListener(toggle)
         toggle.syncState()
@@ -84,27 +84,42 @@ class ApiActivity : AppCompatActivity() {
         popularTextView.tag = Category.POPULAR
     }
 
-//todo poprawic
     private fun setupObserver() {
         viewModel.getLD().observe(this,
             Observer { tripleMoviesPageCategory ->
-                //todo ta flage usunac na cos bardziej wyraznego zeby komentarz by zbedny
-                //'0' working as a flag
-                if (tripleMoviesPageCategory.second == 0) {
-                    showToast("This is the last page in this category.")
-                    progressBarMovies.isVisible = false
-                } else {
-                    adapter.submitList(tripleMoviesPageCategory.first.toMutableList())
-                    progressBarMovies.isVisible = false
-                    //todo dac funkcje ustawiajaca tytul z dobra czcionka
-                    moviesToolbar.title = "Movies: ${tripleMoviesPageCategory.third}"
-
-                    //prepare data for next call
-                    nextPage = tripleMoviesPageCategory.second + 1
-                    movieCategory = tripleMoviesPageCategory.third
+                hideProgressBar()
+                val incomingPage = tripleMoviesPageCategory.second
+                when (incomingPage) {
+                    ERROR_FLAG -> { showToast("Problem with downloading movies.") }
+                    NO_MORE_PAGES_FLAG -> { showToast("This is the last page in this category.") }
+                    else -> {
+                        val incomingMovies = tripleMoviesPageCategory.first
+                        val incomingCategory = tripleMoviesPageCategory.third
+                        adapter.submitList(incomingMovies.toMutableList())
+                        setupToolbarTitle(incomingCategory)
+                        prepareDataForNextCall(incomingPage, incomingCategory)
+                    }
                 }
             }
         )
+    }
+
+    private fun hideProgressBar() {
+        progressBar.isVisible = false
+    }
+
+    private fun setupToolbarTitle(category: Category){
+        val titleCategory = when (category) {
+            Category.POPULAR -> "Popular"
+            Category.UPCOMING -> "Upcoming"
+            Category.TOP_RATED -> "Top Rated"
+        }
+        toolbar.title = "Movies: $titleCategory"
+    }
+
+    private fun prepareDataForNextCall(incomingPage: Int, incomingCategory: Category) {
+        nextPage = incomingPage + 1
+        movieCategory = incomingCategory
     }
 
     private fun getMoviesOnViewModelInit(){
@@ -115,10 +130,14 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun getMoviesOnInit(){
-        progressBarMovies.isVisible = true
+        showProgressBar()
         //todo sprobowc te nulle wszystkie pousuwac
         intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = Category.valueOf(it) }
         viewModel.getApiMovies(movieCategory, nextPage)
+    }
+
+    private fun showProgressBar(){
+        progressBar.isVisible = true
     }
 
     private fun setupOnScrollListener() {
@@ -135,7 +154,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun downloadNextPage(){
-        progressBarMovies.isVisible = true
+        showProgressBar()
         viewModel.getApiMovies(movieCategory, nextPage)
     }
 
@@ -143,7 +162,7 @@ class ApiActivity : AppCompatActivity() {
         closeDrawer()
         switchToDBActivity()
     }
-
+//todo to sprawdzic jeszcze raz
     private fun closeDrawer(){
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
@@ -167,11 +186,10 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun switchToNewMoviesCategory(clickedCategory: Category){
-        progressBarMovies.isVisible = true
-        viewModel.getApiMovies(clickedCategory, 1)
+        showProgressBar()
+        val firstPageOfNewCategory = 1
+        viewModel.getApiMovies(clickedCategory, firstPageOfNewCategory)
         moviesRecyclerView.scrollToPosition(0)
-        moviesToolbar.title = "Movies: $clickedCategory"
-        movieCategory = clickedCategory
     }
 
     override fun onBackPressed() {
