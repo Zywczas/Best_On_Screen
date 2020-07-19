@@ -50,9 +50,9 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,toolbar,
+        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
-        drawer_layout_movies.addDrawerListener(toggle)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
 
@@ -102,8 +102,8 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun closeDrawerOrMinimizeApp() {
-        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout_movies.closeDrawer(GravityCompat.START)
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             this.moveTaskToBack(true)
         }

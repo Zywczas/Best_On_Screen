@@ -55,9 +55,9 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout_movies,toolbar,
+        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
-        drawer_layout_movies.addDrawerListener(toggle)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
 
@@ -159,13 +159,15 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun myToWatchListClicked(view: View) {
-        closeDrawer()
+        closeDrawerIfOpenOrMinimizeApp()
         switchToDBActivity()
     }
-//todo to sprawdzic jeszcze raz
-    private fun closeDrawer(){
-        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout_movies.closeDrawer(GravityCompat.START)
+
+    private fun closeDrawerIfOpenOrMinimizeApp() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        } else {
+            this.moveTaskToBack(true)
         }
     }
 
@@ -176,7 +178,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun categoryClicked(view: View) {
-        closeDrawer()
+        closeDrawerIfOpenOrMinimizeApp()
         val clickedCategory = view.tag as Category
         if (clickedCategory == movieCategory) {
             showToast("This is $clickedCategory.")
@@ -193,15 +195,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        closeDrawerOrMinimizeApp()
-    }
-
-    private fun closeDrawerOrMinimizeApp() {
-        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout_movies.closeDrawer(GravityCompat.START)
-        } else {
-            this.moveTaskToBack(true)
-        }
+        closeDrawerIfOpenOrMinimizeApp()
     }
 
     override fun onDestroy() {
