@@ -41,7 +41,7 @@ class ApiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 //todo chyba trzeba zrobic z tego lancuszek zdazen zeby nikt nie zamienil kolejnosci
-        initializeDagger()
+        injectDependencies()
         setupDrawer()
         setupRecyclerView()
         setupTags()
@@ -50,7 +50,7 @@ class ApiActivity : AppCompatActivity() {
         setupOnScrollListener()
     }
 
-    private fun initializeDagger() {
+    private fun injectDependencies() {
         App.moviesComponent.inject(this)
     }
 

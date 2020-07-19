@@ -38,14 +38,14 @@ class DBActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
-        initializeDagger()
+        injectDependencies()
         setupDrawer()
         setupRecyclerView()
         setupTags()
         displayMoviesOrMessage()
     }
 
-    private fun initializeDagger() {
+    private fun injectDependencies() {
         App.moviesComponent.inject(this)
     }
 

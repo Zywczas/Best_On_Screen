@@ -30,7 +30,7 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        App.moviesComponent.inject(this)
+        injectDependencies()
         viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
         movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
         val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
@@ -39,6 +39,10 @@ class DetailsActivity : AppCompatActivity() {
 
         setupPosterImage()
         checkIfMovieIsInDb()
+    }
+
+    private fun injectDependencies(){
+        App.moviesComponent.inject(this)
     }
 
     private fun setupPosterImage() {
