@@ -36,68 +36,77 @@ class ApiRepository @Inject constructor(
     fun getMoviesFromApi (nextCategory: Category, nextPage: Int) : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         this.category = nextCategory
         this.nextPage = nextPage
+
         return if (nextPage > lastPageOfCategory) {
-            sendFlaggedLiveData()
+            sendLastPageFlag()
         } else {
-            downloadAndSendMoviesLiveData()
+            downloadAndSendMovies()
         }
     }
 
-    private fun sendFlaggedLiveData() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
+    private fun sendLastPageFlag() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         val anyCategory = Category.POPULAR
-        moviesLiveData.postValue(Triple(movies, NO_MORE_PAGES, anyCategory))
+        moviesLiveData.postValue(Triple(movies, NO_MORE_PAGES_FLAG, anyCategory))
+        return moviesLiveData
+    }
+//todo sprawdzic jakie nazwy dawac dla funkcji return i void
+    private fun downloadAndSendMovies() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
+        if (nextPage == firstPageOfNewCategory ) {
+            resetDownloadedMovies()
+        }
+        downloadMoviesToLiveData()
         return moviesLiveData
     }
 
-    private fun downloadAndSendMoviesLiveData () : MutableLiveData<Triple<List<Movie>, Int, Category>> {
-        if (nextPage == firstPageOfNewCategory ) {
-            resetAllMovies()
-        }
+    private fun resetDownloadedMovies() = movies.clear()
 
-        val apiResponseObservable = when (category) {
-            //todo tu sa powtorzenia z API_Key i page oraz switch powinien byc zastapiony polimorfizmem
-            Category.POPULAR -> { apiService.getPopularMovies(apiKey, nextPage) }
-            Category.TOP_RATED -> { apiService.getTopRatedMovies(apiKey, nextPage) }
-            Category.UPCOMING -> { apiService.getUpcomingMovies(apiKey, nextPage) }
-        }
+    private fun downloadMoviesToLiveData(){
+        val apiObservable = setupApiObservable()
 
-        compositeDisposables.add(apiResponseObservable
+        compositeDisposables.add(apiObservable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
-            .flatMap { movieApiResponse ->
-                movieApiResponse.page?.let { currentPage = it }
-                movieApiResponse.totalPages?.let { lastPageOfCategory = it }
-                Observable.fromArray(*movieApiResponse.movies!!.toTypedArray()) }
-
+            .flatMap { apiResponse ->
+                apiResponse.page?.let { currentPage = it }
+                apiResponse.totalPages?.let { lastPageOfCategory = it }
+                apiResponse.movies?.let { Observable.fromArray(*it.toTypedArray()) }
+            }
             .flatMap { movieFromApi ->
                 movieFromApi.genreIds?.let { movieFromApi.transferGenresListToVariables(it) }
-                Observable.just(
-                    toMovie(
-                        movieFromApi
-                    )
-                )
+                Observable.just( toMovie(movieFromApi) )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {
-                override fun onComplete() {
-                    moviesLiveData.postValue(Triple(movies, currentPage,
-                        category
-                    ))
-                }
-
                 override fun onNext(m: Movie?) {
                     if (m != null) {
-                        movies.add(m)
+                        getDownloadedMovie(m)
                     }
                 }
 
+                override fun onComplete() {
+                    updateLiveData()
+                }
+
                 override fun onError(e: Throwable?) {
+                    updateLiveDataWithError()
                     logD(e)
                 }
             })
         )
-        return moviesLiveData
     }
 
-    private fun resetAllMovies() = movies.clear()
+    private fun setupApiObservable() = when (category) {
+        Category.POPULAR -> { apiService.getPopularMovies(apiKey, nextPage) }
+        Category.TOP_RATED -> { apiService.getTopRatedMovies(apiKey, nextPage) }
+        Category.UPCOMING -> { apiService.getUpcomingMovies(apiKey, nextPage) }
+    }
+
+    private fun getDownloadedMovie(m: Movie) = movies.add(m)
+
+    private fun updateLiveData() = moviesLiveData.postValue(Triple(movies, currentPage, category))
+
+    private fun updateLiveDataWithError() {
+        val anyCategory = Category.POPULAR
+        moviesLiveData.postValue(Triple(movies, ERROR_FLAG, anyCategory))
+    }
+
 }
