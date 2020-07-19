@@ -18,7 +18,7 @@ class DetailsRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movieDao: MovieDao,
     private val booleanLiveEvent: LiveEvent<Boolean>,
-    val stringEventLd : MutableLiveData<Event<String>>
+    val stringEventLiveData : MutableLiveData<Event<String>>
 ){
     fun clearDisposables() = compositeDisposables.clear()
 
@@ -32,15 +32,15 @@ class DetailsRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-                        stringEventLd.postValue(Event("Movie added to your list"))
+                        stringEventLiveData.postValue(Event("Movie added to your list"))
                     }
                     override fun onError(e: Throwable?) {
                         logD(e)
-                        stringEventLd.postValue(Event("Problem with adding the movie"))
+                        stringEventLiveData.postValue(Event("Problem with adding the movie"))
                     }
                 })
         )
-        return stringEventLd
+        return stringEventLiveData
     }
 
     fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
@@ -73,17 +73,17 @@ class DetailsRepository @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-                        stringEventLd.postValue(Event("Movie deleted from your list"))
+                        stringEventLiveData.postValue(Event("Movie deleted from your list"))
                     }
 
                     override fun onError(e: Throwable?) {
-                        stringEventLd.postValue(Event("Problem with deleting the movie"))
+                        stringEventLiveData.postValue(Event("Problem with deleting the movie"))
                         logD(e)
                     }
 
                 })
         )
-        return stringEventLd
+        return stringEventLiveData
     }
 
 }

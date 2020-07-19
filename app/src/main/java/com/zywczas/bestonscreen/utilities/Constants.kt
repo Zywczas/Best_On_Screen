@@ -4,8 +4,5 @@ package com.zywczas.bestonscreen.utilities
 const val EXTRA_MOVIE = "movie"
 const val EXTRA_CATEGORY = "category"
 
-const val POPULAR = "Popular"
-const val TOP_RATED = "Top Rated"
-const val UPCOMING = "Upcoming"
-const val EMPTY_CATEGORY = "empty"
+const val NO_MORE_PAGES = 0
 

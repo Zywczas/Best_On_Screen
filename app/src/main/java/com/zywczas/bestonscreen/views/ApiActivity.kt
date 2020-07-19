@@ -93,7 +93,6 @@ class ApiActivity : AppCompatActivity() {
                 if (tripleMoviesPageCategory.second == 0) {
                     showToast("This is the last page in this category.")
                     progressBarMovies.isVisible = false
-
                 } else {
                     adapter.submitList(tripleMoviesPageCategory.first.toMutableList())
                     progressBarMovies.isVisible = false
