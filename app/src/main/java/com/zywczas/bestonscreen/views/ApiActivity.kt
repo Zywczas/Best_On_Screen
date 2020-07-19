@@ -140,15 +140,13 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun myToWatchListClicked(view: View) {
-        closeDrawerOrMinimizeApp()
+        closeDrawer()
         switchToDBActivity()
     }
 
-    private fun closeDrawerOrMinimizeApp() {
+    private fun closeDrawer(){
         if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_movies.closeDrawer(GravityCompat.START)
-        } else {
-            this.moveTaskToBack(true)
         }
     }
 
@@ -159,7 +157,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun categoryClicked(view: View) {
-        closeDrawerOrMinimizeApp()
+        closeDrawer()
         val clickedCategory = view.tag as Category
         if (clickedCategory == movieCategory) {
             showToast("This is $clickedCategory.")
@@ -178,6 +176,14 @@ class ApiActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
+    }
+
+    private fun closeDrawerOrMinimizeApp() {
+        if (drawer_layout_movies.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout_movies.closeDrawer(GravityCompat.START)
+        } else {
+            this.moveTaskToBack(true)
+        }
     }
 
     override fun onDestroy() {

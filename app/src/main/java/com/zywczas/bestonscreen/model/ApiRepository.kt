@@ -4,7 +4,9 @@ package com.zywczas.bestonscreen.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.ApiService
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.ERROR_FLAG
+import com.zywczas.bestonscreen.utilities.NO_MORE_PAGES_FLAG
+import com.zywczas.bestonscreen.utilities.logD
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,7 +14,6 @@ import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.properties.Delegates
 
 @Singleton
 class ApiRepository @Inject constructor(
@@ -26,8 +27,8 @@ class ApiRepository @Inject constructor(
     private val firstPageOfNewCategory = 1
     private var currentPage = firstPageOfNewCategory
     private var lastPageOfCategory = firstPageOfNewCategory
+    private var nextPage = 1
     lateinit var category: Category
-    var nextPage by Delegates.notNull<Int>()
 
     fun clearDisposables() = compositeDisposables.clear()
 
@@ -49,7 +50,7 @@ class ApiRepository @Inject constructor(
         moviesLiveData.postValue(Triple(movies, NO_MORE_PAGES_FLAG, anyCategory))
         return moviesLiveData
     }
-//todo sprawdzic jakie nazwy dawac dla funkcji return i void
+
     private fun downloadAndSendMovies() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         if (nextPage == firstPageOfNewCategory ) {
             resetDownloadedMovies()
@@ -87,8 +88,8 @@ class ApiRepository @Inject constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    updateLiveDataWithError()
                     logD(e)
+                    updateLiveDataWithError()
                 }
             })
         )
