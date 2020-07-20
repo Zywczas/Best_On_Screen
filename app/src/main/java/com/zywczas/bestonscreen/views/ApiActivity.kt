@@ -42,28 +42,18 @@ class ApiActivity : AppCompatActivity() {
         setContentView(R.layout.activity_api_and_db)
 
         val areDependenciesInjected = injectDependencies()
+
         if (areDependenciesInjected) {
-            setupRestOfActivity()
+            setupChain()
         }
+        setupDrawer()
+        setupTags()
+        setupOnScrollListener()
     }
 
     private fun injectDependencies() : Boolean {
         App.moviesComponent.inject(this)
         return true
-    }
-
-    private fun setupRestOfActivity(){
-        setupDrawer()
-        setupChain()
-        setupTags()
-        setupOnScrollListener()
-    }
-
-    private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
-            R.string.nav_drawer_open,R.string.nav_drawer_closed)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
     }
 
     private fun setupChain() {
@@ -82,9 +72,9 @@ class ApiActivity : AppCompatActivity() {
 
     private fun setupAdapter(){
         adapter = MovieAdapter(this, picassoForAdapter) { movie ->
-            val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
-            movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
-            startActivity(movieDetailsActivity)
+            val detailsActivity = Intent(this, DetailsActivity::class.java)
+            detailsActivity.putExtra(EXTRA_MOVIE, movie)
+            startActivity(detailsActivity)
         }
         moviesRecyclerView.adapter = adapter
     }
@@ -162,6 +152,13 @@ class ApiActivity : AppCompatActivity() {
         progressBar.isVisible = true
     }
 
+    private fun setupDrawer(){
+        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
+            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
     private fun setupTags() {
         upcomingTextView.tag = Category.UPCOMING
         topRatedTextView.tag = Category.TOP_RATED
@@ -187,11 +184,11 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun myToWatchListClicked(view: View) {
-        closeDrawerIfOpenOrMinimizeApp()
+        closeDrawerOrMinimizeApp()
         switchToDBActivity()
     }
 
-    private fun closeDrawerIfOpenOrMinimizeApp() {
+    private fun closeDrawerOrMinimizeApp() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -206,7 +203,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun categoryClicked(view: View) {
-        closeDrawerIfOpenOrMinimizeApp()
+        closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
         if (clickedCategory == movieCategory) {
             showToast("This is $clickedCategory.")
@@ -223,7 +220,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        closeDrawerIfOpenOrMinimizeApp()
+        closeDrawerOrMinimizeApp()
     }
 
     override fun onDestroy() {

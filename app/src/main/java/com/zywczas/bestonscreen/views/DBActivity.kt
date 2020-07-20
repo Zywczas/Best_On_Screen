@@ -32,37 +32,50 @@ class DBActivity : AppCompatActivity() {
     lateinit var factory: DBVMFactory
     private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
-    @Inject lateinit var picasso: Picasso
+    @Inject lateinit var picassoForAdapter: Picasso
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
 
-        injectDependencies()
+        val areDependenciesInjected = injectDependencies()
+
+        if (areDependenciesInjected) {
+            setupChain()
+        }
         setupDrawer()
-        setupRecyclerView()
         setupTags()
-        displayMoviesOrMessage()
     }
 
-    private fun injectDependencies() {
+    private fun injectDependencies() : Boolean {
         App.moviesComponent.inject(this)
+        return true
     }
 
-    private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
-            R.string.nav_drawer_open,R.string.nav_drawer_closed)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+    private fun setupChain() {
+        val isRecyclerViewSetup = setupAdapterAndLayoutManager()
+
+        if(isRecyclerViewSetup) {
+            displayMoviesOrMessage()
+        }
     }
 
-    private fun setupRecyclerView() {
-        adapter = MovieAdapter(this, picasso) { movie ->
-            val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
-            movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
-            startActivity(movieDetailsActivity)
+    private fun setupAdapterAndLayoutManager() : Boolean {
+        setupAdapter()
+        setupLayoutManager()
+        return true
+    }
+
+    private fun setupAdapter(){
+        adapter = MovieAdapter(this, picassoForAdapter) { movie ->
+            val detailsActivity = Intent(this, DetailsActivity::class.java)
+            detailsActivity.putExtra(EXTRA_MOVIE, movie)
+            startActivity(detailsActivity)
         }
         moviesRecyclerView.adapter = adapter
+    }
+
+    private fun setupLayoutManager(){
         var spanCount = 2
         val orientation = resources.configuration.orientation
         if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
@@ -71,12 +84,6 @@ class DBActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
         moviesRecyclerView.setHasFixedSize(true)
-    }
-
-    private fun setupTags() {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
     }
 
     private fun displayMoviesOrMessage() {
@@ -94,6 +101,19 @@ class DBActivity : AppCompatActivity() {
 
     private fun showMessageAboutEmptyDB(){
         emptyListTextView.isVisible = true
+    }
+
+    private fun setupDrawer(){
+        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
+            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    private fun setupTags() {
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
     fun myToWatchListClicked (view: View) {
