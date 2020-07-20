@@ -40,18 +40,23 @@ class ApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-//todo chyba trzeba zrobic z tego lancuszek zdazen zeby nikt nie zamienil kolejnosci
-        injectDependencies()
-        setupDrawer()
-        setupRecyclerView()
-        setupTags()
-        setupObserver()
-        getMoviesOnViewModelInit()
-        setupOnScrollListener()
+
+        val areDependenciesInjected = injectDependencies()
+        if (areDependenciesInjected) {
+            setupRestOfActivity()
+        }
     }
 
-    private fun injectDependencies() {
+    private fun injectDependencies() : Boolean {
         App.moviesComponent.inject(this)
+        return true
+    }
+
+    private fun setupRestOfActivity(){
+        setupDrawer()
+        setupChain()
+        setupTags()
+        setupOnScrollListener()
     }
 
     private fun setupDrawer(){
@@ -61,13 +66,30 @@ class ApiActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupChain() {
+        val isRecyclerViewSetup = setupAdapterAndLayoutManager()
+
+        if(isRecyclerViewSetup) {
+            setupObserverAndGetMoviesOnViewModelInit()
+        }
+    }
+
+    private fun setupAdapterAndLayoutManager() : Boolean {
+        setupAdapter()
+        setupLayoutManager()
+        return true
+    }
+
+    private fun setupAdapter(){
         adapter = MovieAdapter(this, picassoForAdapter) { movie ->
             val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)
         }
         moviesRecyclerView.adapter = adapter
+    }
+
+    private fun setupLayoutManager(){
         var spanCount = 2
         val orientation = resources.configuration.orientation
         if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
@@ -78,13 +100,15 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupTags() {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
+    private fun setupObserverAndGetMoviesOnViewModelInit(){
+        val isObserverSetup = setupObserver()
+
+        if(isObserverSetup) {
+            getMoviesOnViewModelInit()
+        }
     }
 
-    private fun setupObserver() {
+    private fun setupObserver() : Boolean {
         viewModel.getLD().observe(this,
             Observer { tripleMoviesPageCategory ->
                 hideProgressBar()
@@ -95,6 +119,7 @@ class ApiActivity : AppCompatActivity() {
                     else -> {
                         val incomingMovies = tripleMoviesPageCategory.first
                         val incomingCategory = tripleMoviesPageCategory.third
+
                         adapter.submitList(incomingMovies.toMutableList())
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingPage, incomingCategory)
@@ -102,6 +127,7 @@ class ApiActivity : AppCompatActivity() {
                 }
             }
         )
+        return true
     }
 
     private fun hideProgressBar() {
@@ -124,20 +150,22 @@ class ApiActivity : AppCompatActivity() {
 
     private fun getMoviesOnViewModelInit(){
         if (viewModel.isViewModelInitialization()) {
-            getMoviesOnInit()
+            showProgressBar()
+            //todo sprobowc te nulle wszystkie pousuwac
+            intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = Category.valueOf(it) }
+            viewModel.getApiMovies(movieCategory, nextPage)
             viewModel.finishViewModelInitialization()
         }
     }
 
-    private fun getMoviesOnInit(){
-        showProgressBar()
-        //todo sprobowc te nulle wszystkie pousuwac
-        intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = Category.valueOf(it) }
-        viewModel.getApiMovies(movieCategory, nextPage)
-    }
-
     private fun showProgressBar(){
         progressBar.isVisible = true
+    }
+
+    private fun setupTags() {
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
     private fun setupOnScrollListener() {

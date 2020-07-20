@@ -17,7 +17,6 @@ class DBRepository @Inject constructor(
 ) {
     fun clearDisposables() = compositeDisposables.clear()
 
-    //todo poprawic i komentarze
     fun getMoviesFromDB () : LiveEvent<List<Movie>> {
         val moviesFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())
 
