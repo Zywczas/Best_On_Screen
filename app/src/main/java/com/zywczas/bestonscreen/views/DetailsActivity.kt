@@ -32,13 +32,13 @@ class DetailsActivity : AppCompatActivity() {
 
         injectDependencies()
         viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-        movieFromParcel = intent.getParcelableExtra(EXTRA_MOVIE)!!
+        intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
         val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
         binding.viewModel = viewModel
         binding.movie = movieFromParcel
 
         setupPosterImage()
-        checkIfMovieIsInDb()
+        setupAddToListBtnState()
     }
 
     private fun injectDependencies(){
@@ -54,13 +54,16 @@ class DetailsActivity : AppCompatActivity() {
             .into(posterImageViewDetails)
     }
 //todo poprawic
-    private fun checkIfMovieIsInDb() {
-        viewModel.checkIfMovieIsInDb(movieFromParcel.id!!).observe(this,
-            Observer {boolean ->
-                addToListBtn.isChecked = boolean
-                //this tag is used in addToListClicked() so it knows whether to add or delete movie
-                addToListBtn.tag = boolean.toString()
-            })
+    private fun setupAddToListBtnState() {
+        movieFromParcel.id?.let {
+            viewModel.isMovieInDb(it).observe(this,
+                Observer {boolean ->
+                    addToListBtn.isChecked = boolean
+                    //this tag is used in addToListClicked() so it knows whether to add or delete movie
+                    addToListBtn.tag = boolean.toString()
+                })
+        }
+
     }
 
     fun addToListClicked(view: View) {

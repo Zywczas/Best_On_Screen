@@ -50,6 +50,7 @@ class DetailsRepository @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({when(it){
+                    //todo zamienic na true i false
                     1 -> booleanLiveEvent.postValue(true)
                     0 -> booleanLiveEvent.postValue(false)
                 }}, { logD(it) }
