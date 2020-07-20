@@ -6,14 +6,7 @@ import android.os.Parcelable
 class Movie () : Parcelable {
 
     var id: Int? = null
-    var popularity: Double? = null
-    var voteCount: Int? = null
-    var video: Boolean? = null
     var posterPath: String? = null
-    var adult: Boolean? = null
-    var backdropPath: String? = null
-    var originalLanguage: String? = null
-    var originalTitle: String? = null
     var title: String? = null
     var voteAverage: Double? = null
     var overview: String? = null
@@ -27,14 +20,7 @@ class Movie () : Parcelable {
 
     constructor(
         id: Int?,
-        popularity: Double?,
-        voteCount: Int?,
-        video: Boolean?,
         posterPath: String?,
-        adult: Boolean?,
-        backdropPath: String?,
-        originalLanguage: String?,
-        originalTitle: String?,
         title: String?,
         voteAverage: Double?,
         overview: String?,
@@ -47,14 +33,7 @@ class Movie () : Parcelable {
         genresAmount: Int?
     ) : this() {
         this.id = id
-        this.popularity = popularity
-        this.voteCount = voteCount
-        this.video = video
         this.posterPath = posterPath
-        this.adult = adult
-        this.backdropPath = backdropPath
-        this.originalLanguage = originalLanguage
-        this.originalTitle = originalTitle
         this.title = title
         this.voteAverage = voteAverage
         this.overview = overview
@@ -69,14 +48,7 @@ class Movie () : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readValue(Int::class.java.classLoader) as? Int
-        popularity = parcel.readValue(Double::class.java.classLoader) as? Double
-        voteCount = parcel.readValue(Int::class.java.classLoader) as? Int
-        video = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
         posterPath = parcel.readString()
-        adult = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
-        backdropPath = parcel.readString()
-        originalLanguage = parcel.readString()
-        originalTitle = parcel.readString()
         title = parcel.readString()
         voteAverage = parcel.readValue(Double::class.java.classLoader) as? Double
         overview = parcel.readString()
@@ -101,14 +73,7 @@ class Movie () : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(id)
-        parcel.writeValue(popularity)
-        parcel.writeValue(voteCount)
-        parcel.writeValue(video)
         parcel.writeString(posterPath)
-        parcel.writeValue(adult)
-        parcel.writeString(backdropPath)
-        parcel.writeString(originalLanguage)
-        parcel.writeString(originalTitle)
         parcel.writeString(title)
         parcel.writeValue(voteAverage)
         parcel.writeString(overview)

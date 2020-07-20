@@ -10,37 +10,9 @@ class MovieFromApi {
     @Expose
     var id: Int? = null
 
-    @SerializedName("popularity")
-    @Expose
-    var popularity: Double? = null
-
-    @SerializedName("vote_count")
-    @Expose
-    var voteCount: Int? = null
-
-    @SerializedName("video")
-    @Expose
-    var video: Boolean? = null
-
     @SerializedName("poster_path")
     @Expose
     var posterPath: String? = null
-
-    @SerializedName("adult")
-    @Expose
-    var adult: Boolean? = null
-
-    @SerializedName("backdrop_path")
-    @Expose
-    var backdropPath: String? = null
-
-    @SerializedName("original_language")
-    @Expose
-    var originalLanguage: String? = null
-
-    @SerializedName("original_title")
-    @Expose
-    var originalTitle: String? = null
 
     @SerializedName("genre_ids")
     @Expose

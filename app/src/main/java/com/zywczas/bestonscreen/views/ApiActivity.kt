@@ -21,7 +21,7 @@ import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
-import kotlinx.android.synthetic.main.activity_movies.*
+import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
 import javax.inject.Inject
@@ -33,13 +33,13 @@ class ApiActivity : AppCompatActivity() {
     private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
     @Inject
-    lateinit var picasso: Picasso
+    lateinit var picassoForAdapter: Picasso
     private var movieCategory = Category.POPULAR
     private var nextPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movies)
+        setContentView(R.layout.activity_api_and_db)
 //todo chyba trzeba zrobic z tego lancuszek zdazen zeby nikt nie zamienil kolejnosci
         injectDependencies()
         setupDrawer()
@@ -62,7 +62,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = MovieAdapter(this, picasso) { movie ->
+        adapter = MovieAdapter(this, picassoForAdapter) { movie ->
             val movieDetailsActivity = Intent(this, DetailsActivity::class.java)
             movieDetailsActivity.putExtra(EXTRA_MOVIE, movie)
             startActivity(movieDetailsActivity)

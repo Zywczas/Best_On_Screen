@@ -21,7 +21,7 @@ import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
-import kotlinx.android.synthetic.main.activity_movies.*
+import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class DBActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movies)
+        setContentView(R.layout.activity_api_and_db)
 
         injectDependencies()
         setupDrawer()

@@ -6,14 +6,7 @@ import javax.inject.Inject
 
 fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.id,
-    movieFromApi.popularity,
-    movieFromApi.voteCount,
-    movieFromApi.video,
     movieFromApi.posterPath,
-    movieFromApi.adult,
-    movieFromApi.backdropPath,
-    movieFromApi.originalLanguage,
-    movieFromApi.originalTitle,
     movieFromApi.title,
     movieFromApi.voteAverage,
     movieFromApi.overview,
@@ -28,14 +21,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
 
 fun toMovie(movieFromDB: MovieFromDB) = Movie(
     movieFromDB.id,
-    movieFromDB.popularity,
-    movieFromDB.voteCount,
-    movieFromDB.video,
     movieFromDB.posterPath,
-    movieFromDB.adult,
-    movieFromDB.backdropPath,
-    movieFromDB.originalLanguage,
-    movieFromDB.originalTitle,
     movieFromDB.title,
     movieFromDB.voteAverage,
     movieFromDB.overview,
@@ -50,14 +36,7 @@ fun toMovie(movieFromDB: MovieFromDB) = Movie(
 
 fun toMovieFromDB(movie: Movie) = MovieFromDB(
     movie.id,
-    movie.popularity,
-    movie.voteCount,
-    movie.video,
     movie.posterPath,
-    movie.adult,
-    movie.backdropPath,
-    movie.originalLanguage,
-    movie.originalTitle,
     movie.title,
     movie.voteAverage,
     movie.overview,
