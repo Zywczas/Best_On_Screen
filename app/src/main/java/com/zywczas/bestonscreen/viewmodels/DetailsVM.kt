@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.utilities.Event
-import com.zywczas.bestonscreen.utilities.logD
-import kotlin.system.exitProcess
 
 class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
 
@@ -14,13 +12,10 @@ class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
 
     fun isMovieInDb(movieId: Int) = repo.checkIfMovieIsInDB(movieId) as LiveData<Boolean>
 
-    //TODO poprawic exitprocess na exception i buttonChecked dac na boolean, funkcja ta robi 2 rzeczy add i detele -> podzielic na 2 funkcje
-    fun addDeleteMovie(movie: Movie, buttonIsChecked: String) =
-        when(buttonIsChecked){
-            "false" -> repo.addMovieToDB(movie)
-            "true" -> repo.deleteMovieFromDB(movie)
-            else -> {logD("incorrect tag on the button")
-                exitProcess(0)}
+    fun addOrDeleteMovie(movie: Movie, isButtonChecked: Boolean) =
+        when(isButtonChecked){
+            false -> repo.addMovieToDB(movie)
+            true -> repo.deleteMovieFromDB(movie)
         } as LiveData<Event<String>>
 
     fun getGenresDescription(movie: Movie) : String {

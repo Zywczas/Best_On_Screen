@@ -26,7 +26,7 @@ class DetailsActivity : AppCompatActivity() {
     @Inject
     lateinit var picasso: Picasso
     lateinit var movieFromParcel: Movie
-//dac wiecej databinding, np na guziki i podzielic na mniejsze funkcje
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,22 +53,21 @@ class DetailsActivity : AppCompatActivity() {
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
     }
-//todo poprawic
+
     private fun setupAddToListBtnState() {
         movieFromParcel.id?.let {
             viewModel.isMovieInDb(it).observe(this,
-                Observer {boolean ->
-                    addToListBtn.isChecked = boolean
-                    //this tag is used in addToListClicked() so it knows whether to add or delete movie
-                    addToListBtn.tag = boolean.toString()
+                Observer {isInDb ->
+                    addToListBtn.isChecked = isInDb
+                    addToListBtn.tag = isInDb
                 })
         }
-
     }
 
     fun addToListClicked(view: View) {
-        //todo tutaj podajemy true lub false, tzn ze funkcja wykonuje 2 rzeczy a powinna tylko 1 - moze zamienic na chooseAddOrDelete
-        viewModel.addDeleteMovie(movieFromParcel, addToListBtn.tag.toString())
+        val isButtonChecked = addToListBtn.tag as Boolean
+
+        viewModel.addOrDeleteMovie(movieFromParcel, isButtonChecked)
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })
