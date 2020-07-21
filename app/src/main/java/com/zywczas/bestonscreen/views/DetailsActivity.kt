@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
@@ -30,19 +31,41 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        injectDependencies()
-        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-        intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
-        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
-        binding.viewModel = viewModel
-        binding.movie = movieFromParcel
-
+        startSetupChain()
         setupPosterImage()
-        setupAddToListBtnState()
     }
 
-    private fun injectDependencies(){
+    private fun startSetupChain(){
+        val areDependenciesInjected = injectDependencies()
+
+        if (areDependenciesInjected) {
+            viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
+            intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
+
+            setupDataBinding(viewModel, movieFromParcel)
+            setupAddToListBtnState(viewModel, movieFromParcel)
+        }
+    }
+
+    private fun injectDependencies() : Boolean {
         App.moviesComponent.inject(this)
+        return true
+    }
+
+    private fun setupDataBinding(viewModel: DetailsVM, movie: Movie) {
+        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
+        binding.viewModel = viewModel
+        binding.movie = movie
+    }
+
+    private fun setupAddToListBtnState(viewModel: DetailsVM, movie: Movie) {
+        movie.id?.let {
+            viewModel.isMovieInDb(it).observe(this,
+                Observer {isInDb ->
+                    addToListBtn.isChecked = isInDb
+                    addToListBtn.tag = isInDb
+                })
+        }
     }
 
     private fun setupPosterImage() {
@@ -52,16 +75,6 @@ class DetailsActivity : AppCompatActivity() {
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-    }
-
-    private fun setupAddToListBtnState() {
-        movieFromParcel.id?.let {
-            viewModel.isMovieInDb(it).observe(this,
-                Observer {isInDb ->
-                    addToListBtn.isChecked = isInDb
-                    addToListBtn.tag = isInDb
-                })
-        }
     }
 
     fun addToListClicked(view: View) {
