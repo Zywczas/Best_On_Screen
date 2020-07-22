@@ -30,11 +30,11 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupDetailsActivityChain()
+        startDetailsActivitySetupChain()
         setupPosterImage()
     }
 
-    private fun setupDetailsActivityChain(){
+    private fun startDetailsActivitySetupChain(){
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {

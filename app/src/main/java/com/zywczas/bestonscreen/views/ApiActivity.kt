@@ -41,13 +41,13 @@ class ApiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
 
-        setupApiActivityChain()
+        startApiActivitySetupChain()
         setupDrawer()
         setupTags()
         setupOnScrollListener()
     }
 
-    private fun setupApiActivityChain() {
+    private fun startApiActivitySetupChain() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {

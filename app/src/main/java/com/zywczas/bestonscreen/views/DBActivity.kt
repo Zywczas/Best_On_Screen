@@ -38,29 +38,33 @@ class DBActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
 
-        val areDependenciesInjected = injectDependencies()
-
-        if (areDependenciesInjected) {
-            setupChain()
-        }
+        startDBActivitySetupChain()
         setupDrawer()
         setupTags()
     }
 
-    private fun injectDependencies() : Boolean {
+    private fun startDBActivitySetupChain() {
+        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
+
+        if (areDependenciesInjected) {
+            setupChain2()
+        }
+    }
+
+    private fun injectDependenciesAndConfirmFinish() : Boolean {
         App.moviesComponent.inject(this)
         return true
     }
 
-    private fun setupChain() {
-        val isRecyclerViewSetup = setupAdapterAndLayoutManager()
+    private fun setupChain2() {
+        val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
 
         if(isRecyclerViewSetup) {
             displayMoviesOrMessage()
         }
     }
 
-    private fun setupAdapterAndLayoutManager() : Boolean {
+    private fun setupAdapterAndLayoutManagerAndConfirmFinish() : Boolean {
         setupAdapter()
         setupLayoutManager()
         return true
