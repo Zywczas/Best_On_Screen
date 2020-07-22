@@ -40,31 +40,35 @@ class ApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-//todo pomyslec nad daniem nazwy na koniec AndConfirmFinish
-        val areDependenciesInjected = injectDependencies()
 
-        if (areDependenciesInjected) {
-            setupChain()
-        }
+        setupApiActivityChain()
         setupDrawer()
         setupTags()
         setupOnScrollListener()
     }
 
-    private fun injectDependencies() : Boolean {
+    private fun setupApiActivityChain() {
+        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
+
+        if (areDependenciesInjected) {
+            setupChain()
+        }
+    }
+
+    private fun injectDependenciesAndConfirmFinish() : Boolean {
         App.moviesComponent.inject(this)
         return true
     }
 
     private fun setupChain() {
-        val isRecyclerViewSetup = setupAdapterAndLayoutManager()
+        val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
 
         if(isRecyclerViewSetup) {
-            setupObserverAndGetMoviesOnViewModelInit()
+            setupChain2()
         }
     }
 
-    private fun setupAdapterAndLayoutManager() : Boolean {
+    private fun setupAdapterAndLayoutManagerAndConfirmFinish() : Boolean {
         setupAdapter()
         setupLayoutManager()
         return true
@@ -90,15 +94,15 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupObserverAndGetMoviesOnViewModelInit(){
-        val isObserverSetup = setupObserver()
+    private fun setupChain2(){
+        val isObserverSetup = setupObserverAndConfirmFinish()
 
         if(isObserverSetup) {
             getMoviesOnViewModelInit()
         }
     }
 
-    private fun setupObserver() : Boolean {
+    private fun setupObserverAndConfirmFinish() : Boolean {
         viewModel.getLD().observe(this,
             Observer { tripleMoviesPageCategory ->
                 hideProgressBar()

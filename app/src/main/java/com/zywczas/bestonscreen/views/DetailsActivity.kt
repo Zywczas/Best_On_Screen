@@ -30,15 +30,15 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startSetupChain()
+        setupDetailsActivityChain()
         setupPosterImage()
     }
 
-    private fun startSetupChain(){
+    private fun setupDetailsActivityChain(){
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {
-            startSetupChain2()
+            setupChain()
         }
     }
 
@@ -47,7 +47,7 @@ class DetailsActivity : AppCompatActivity() {
         return true
     }
 
-    private fun startSetupChain2() {
+    private fun setupChain() {
         val areViewModelAndIntentSetup = getViewModelAndIntentAndConfirmFinish()
 
         if(areViewModelAndIntentSetup) {
