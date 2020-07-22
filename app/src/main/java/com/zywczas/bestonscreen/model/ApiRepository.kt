@@ -73,7 +73,7 @@ class ApiRepository @Inject constructor(
                 apiResponse.movies?.let { Observable.fromArray(*it.toTypedArray()) }
             }
             .flatMap { movieFromApi ->
-                movieFromApi.genreIds?.let { movieFromApi.transferGenresListToVariables(it) }
+                movieFromApi.genreIds?.let { movieFromApi.assignGenresListToVariables(it) }
                 Observable.just( toMovie(movieFromApi) )
             }
             .subscribeWith(object : DisposableObserver<Movie>() {

@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
-import javax.inject.Inject
 
 fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.id,
@@ -16,7 +15,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.genre3,
     movieFromApi.genre4,
     movieFromApi.genre5,
-    movieFromApi.genresAmount
+    movieFromApi.assignedGenres
 )
 
 fun toMovie(movieFromDB: MovieFromDB) = Movie(
