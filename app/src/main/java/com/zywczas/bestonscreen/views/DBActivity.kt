@@ -48,6 +48,7 @@ class DBActivity : AppCompatActivity() {
 
         if (areDependenciesInjected) {
             setupChain()
+            setupLiveDataErrorListener()
         }
     }
 
@@ -105,6 +106,12 @@ class DBActivity : AppCompatActivity() {
 
     private fun showMessageAboutEmptyDB(){
         emptyListTextView.isVisible = true
+    }
+
+    private fun setupLiveDataErrorListener(){
+        viewModel.listenToErrors().observe(this, Observer {
+            showToast(it)
+        })
     }
 
     private fun setupDrawer(){
