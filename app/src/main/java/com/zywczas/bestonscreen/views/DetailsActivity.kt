@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
@@ -36,30 +35,42 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun startSetupChain(){
-        val areDependenciesInjected = injectDependencies()
+        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {
-            viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-            intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
-
-            setupDataBinding(viewModel, movieFromParcel)
-            setupAddToListBtnState(viewModel, movieFromParcel)
+            startSetupChain2()
         }
     }
 
-    private fun injectDependencies() : Boolean {
+    private fun injectDependenciesAndConfirmFinish() : Boolean {
         App.moviesComponent.inject(this)
         return true
     }
 
-    private fun setupDataBinding(viewModel: DetailsVM, movie: Movie) {
-        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
-        binding.viewModel = viewModel
-        binding.movie = movie
+    private fun startSetupChain2() {
+        val areViewModelAndIntentSetup = getViewModelAndIntentAndConfirmFinish()
+
+        if(areViewModelAndIntentSetup) {
+            setupDataBinding()
+            setupAddToListBtnState()
+        }
     }
 
-    private fun setupAddToListBtnState(viewModel: DetailsVM, movie: Movie) {
-        movie.id?.let {
+    private fun getViewModelAndIntentAndConfirmFinish() : Boolean {
+        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
+        intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
+        return true
+    }
+
+    private fun setupDataBinding() {
+        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
+        binding.viewModel = viewModel
+        binding.movie = movieFromParcel
+    }
+
+//todo pomyslec nad zmiana tych nulli
+    private fun setupAddToListBtnState() {
+        movieFromParcel.id?.let {
             viewModel.isMovieInDb(it).observe(this,
                 Observer {isInDb ->
                     addToListBtn.isChecked = isInDb

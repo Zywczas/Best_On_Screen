@@ -40,7 +40,7 @@ class ApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-
+//todo pomyslec nad daniem nazwy na koniec AndConfirmFinish
         val areDependenciesInjected = injectDependencies()
 
         if (areDependenciesInjected) {
