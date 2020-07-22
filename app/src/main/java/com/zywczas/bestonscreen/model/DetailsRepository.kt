@@ -29,19 +29,19 @@ class DetailsRepository @Inject constructor(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({when(it){
-                    //todo zamienic na true i false
-                    1 -> updateBooleanLiveEvent(true)
-                    0 -> updateBooleanLiveEvent(false)
+                .subscribe({movieIDsCountInDB -> updateBooleanLiveEvent(movieIDsCountInDB)
                     //todo tu chyba trzeba dac error handling
-                }}, { logD(it) }
+                }, { logD(it) }
                 )
         )
         return booleanLiveEvent
     }
 
-    private fun updateBooleanLiveEvent(value: Boolean) {
-        booleanLiveEvent.postValue(value)
+    private fun updateBooleanLiveEvent(idCount: Int) {
+        when(idCount) {
+            0 -> booleanLiveEvent.postValue(false)
+            else -> booleanLiveEvent.postValue(true)
+        }
     }
 
     fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
