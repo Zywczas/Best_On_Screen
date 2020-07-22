@@ -86,7 +86,7 @@ class ApiRepository @Inject constructor(
                 override fun onComplete() {
                     updateLiveData()
                 }
-//todo sprawdzic czy da sie tutaj dac exception zamiast kod bledu
+
                 override fun onError(e: Throwable?) {
                     logD(e)
                     updateLiveDataWithError()

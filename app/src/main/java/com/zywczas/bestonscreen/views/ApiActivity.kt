@@ -17,6 +17,7 @@ import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
@@ -107,6 +108,7 @@ class ApiActivity : AppCompatActivity() {
             Observer { tripleMoviesPageCategory ->
                 hideProgressBar()
                 val incomingPage = tripleMoviesPageCategory.second
+
                 when (incomingPage) {
                     ERROR_FLAG -> { showToast("Problem with downloading movies.") }
                     NO_MORE_PAGES_FLAG -> { showToast("This is the last page in this category.") }
@@ -114,7 +116,7 @@ class ApiActivity : AppCompatActivity() {
                         val incomingMovies = tripleMoviesPageCategory.first
                         val incomingCategory = tripleMoviesPageCategory.third
 
-                        adapter.submitList(incomingMovies.toMutableList())
+                        updateDisplayedMovies(incomingMovies)
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingPage, incomingCategory)
                     }
@@ -126,6 +128,10 @@ class ApiActivity : AppCompatActivity() {
 
     private fun hideProgressBar() {
         progressBar.isVisible = false
+    }
+
+    private fun updateDisplayedMovies(movies: List<Movie>) {
+        adapter.submitList(movies.toMutableList())
     }
 
     private fun setupToolbarTitle(category: Category){
