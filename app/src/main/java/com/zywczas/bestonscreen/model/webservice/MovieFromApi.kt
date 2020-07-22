@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.model.webservice
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.zywczas.bestonscreen.utilities.logD
 
 class MovieFromApi {
 
@@ -45,32 +46,21 @@ class MovieFromApi {
 
     var assignedGenresAmount: Int = 0
 
-    fun assignGenresListToVariables(genreIds: List<Int>){
-        var nextGenreVar = 1
+    fun convertGenreIdsToVariables(genreIds: List<Int>){
+        var varNumber = 1
 
         for (id in genreIds) {
-            assignToVariable(id, nextGenreVar)
-            nextGenreVar++
+            convertGenreIdToStringAndAssign(id, varNumber)
+            varNumber++
         }
     }
 
-    private fun assignToVariable(id: Int, nextGenreVar: Int) {
-        val genreTemp = convertToString(id)
+    private fun convertGenreIdToStringAndAssign(id: Int, varNumber: Int) {
+        val convertedGenre = convertToString(id)
         val availableGenreVars = 5
-//todo to dokonczyc
-        if (genreTemp != null && nextGenreVar <= availableGenreVars) {
-            when (nextGenreVar) {
-                1 -> {genre1 = genreTemp
-                    assignedGenresAmount = 1}
-                2 -> {genre2 = genreTemp
-                    assignedGenresAmount = 2}
-                3 -> {genre3 = genreTemp
-                    assignedGenresAmount = 3}
-                4 -> {genre4 = genreTemp
-                    assignedGenresAmount = 4}
-                5 -> {genre5 = genreTemp
-                    assignedGenresAmount = 5 }
-            }
+
+        if (convertedGenre != null && varNumber <= availableGenreVars) {
+            assignToVariable(convertedGenre, varNumber)
         }
     }
 
@@ -95,7 +85,25 @@ class MovieFromApi {
             53 -> "Thriller"
             10752 -> "War"
             37 -> "Western"
-            else -> null
+            else -> { logD("Cannot convert genre Id to String")
+                null
+            }
+
+        }
+    }
+
+    private fun assignToVariable(convertedGenre: String, varNumber: Int) {
+        when (varNumber) {
+            1 -> {genre1 = convertedGenre
+                assignedGenresAmount = 1}
+            2 -> {genre2 = convertedGenre
+                assignedGenresAmount = 2}
+            3 -> {genre3 = convertedGenre
+                assignedGenresAmount = 3}
+            4 -> {genre4 = convertedGenre
+                assignedGenresAmount = 4}
+            5 -> {genre5 = convertedGenre
+                assignedGenresAmount = 5 }
         }
     }
 
