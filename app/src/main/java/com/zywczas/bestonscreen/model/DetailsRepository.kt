@@ -18,70 +18,76 @@ class DetailsRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movieDao: MovieDao,
     private val booleanLiveEvent: LiveEvent<Boolean>,
-    val stringEventLiveData : MutableLiveData<Event<String>>
+    private val stringEventLiveData : MutableLiveData<Event<String>>
 ){
     fun clearDisposables() = compositeDisposables.clear()
 
-    fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
-        val completableRx3 = RxJavaBridge.toV3Completable(
-            movieDao.addMovie(toMovieFromDB(movie))
-        )
-        compositeDisposables.add(
-            completableRx3
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableCompletableObserver(){
-                    override fun onComplete() {
-                        stringEventLiveData.postValue(Event("Movie added to your list"))
-                    }
-                    override fun onError(e: Throwable?) {
-                        logD(e)
-                        stringEventLiveData.postValue(Event("Problem with adding the movie"))
-                    }
-                })
-        )
-        return stringEventLiveData
-    }
-
     fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfIsInDB(movieId))
+
         compositeDisposables.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({when(it){
                     //todo zamienic na true i false
-                    1 -> booleanLiveEvent.postValue(true)
-                    0 -> booleanLiveEvent.postValue(false)
+                    1 -> updateBooleanLiveEvent(true)
+                    0 -> updateBooleanLiveEvent(false)
+                    //todo tu chyba trzeba dac error handling
                 }}, { logD(it) }
                 )
         )
         return booleanLiveEvent
     }
 
-    fun deleteMovieFromDB(movie : Movie) :  MutableLiveData<Event<String>> {
-        val completableRx3 = RxJavaBridge.toV3Completable(
-            movieDao.deleteMovie(
-                toMovieFromDB(
-                    movie
-                )
-            )
-        )
+    private fun updateBooleanLiveEvent(value: Boolean) {
+        booleanLiveEvent.postValue(value)
+    }
 
+    fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
+        val completable = RxJavaBridge.toV3Completable(
+            movieDao.addMovie(toMovieFromDB(movie))
+        )
         compositeDisposables.add(
-            completableRx3
+            completable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver(){
                     override fun onComplete() {
-                        stringEventLiveData.postValue(Event("Movie deleted from your list"))
+                        updateStringEventLiveData("Movie added to your list")
                     }
 
                     override fun onError(e: Throwable?) {
-                        stringEventLiveData.postValue(Event("Problem with deleting the movie"))
                         logD(e)
+                        updateStringEventLiveData("Problem with adding the movie")
+                    }
+                })
+        )
+        return stringEventLiveData
+    }
+
+    private fun updateStringEventLiveData(value: String) {
+        stringEventLiveData.postValue(Event(value))
+    }
+
+    fun deleteMovieFromDB(movie : Movie) :  MutableLiveData<Event<String>> {
+        val completable = RxJavaBridge.toV3Completable(
+            movieDao.deleteMovie(toMovieFromDB(movie))
+        )
+
+        compositeDisposables.add(
+            completable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableCompletableObserver(){
+                    override fun onComplete() {
+                        updateStringEventLiveData("Movie deleted from your list")
                     }
 
+                    override fun onError(e: Throwable?) {
+                        updateStringEventLiveData("Problem with deleting the movie")
+                        logD(e)
+                    }
                 })
         )
         return stringEventLiveData
