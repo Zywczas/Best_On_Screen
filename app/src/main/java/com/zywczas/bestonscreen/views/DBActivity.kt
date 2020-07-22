@@ -47,7 +47,7 @@ class DBActivity : AppCompatActivity() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {
-            setupChain2()
+            setupChain()
         }
     }
 
@@ -56,7 +56,7 @@ class DBActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupChain2() {
+    private fun setupChain() {
         val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
 
         if(isRecyclerViewSetup) {
