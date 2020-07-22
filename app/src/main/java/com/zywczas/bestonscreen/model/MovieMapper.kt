@@ -15,7 +15,7 @@ fun toMovie(movieFromApi: MovieFromApi) = Movie(
     movieFromApi.genre3,
     movieFromApi.genre4,
     movieFromApi.genre5,
-    movieFromApi.assignedGenres
+    movieFromApi.assignedGenresAmount
 )
 
 fun toMovie(movieFromDB: MovieFromDB) = Movie(

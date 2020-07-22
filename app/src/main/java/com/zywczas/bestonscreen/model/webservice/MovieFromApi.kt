@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.model.webservice
 
-import android.util.Log
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -44,33 +43,33 @@ class MovieFromApi {
 
     var genre5: String? = null
 
-    var assignedGenres: Int = 0
+    var assignedGenresAmount: Int = 0
 
     fun assignGenresListToVariables(genreIds: List<Int>){
         var nextGenreVar = 1
 
         for (id in genreIds) {
-            if (nextGenreVar <= 5)
             assignToVariable(id, nextGenreVar)
             nextGenreVar++
         }
     }
-//todo to skonczyc
+
     private fun assignToVariable(id: Int, nextGenreVar: Int) {
         val genreTemp = convertToString(id)
-
-        if (genreTemp != null) {
+        val availableGenreVars = 5
+//todo to dokonczyc
+        if (genreTemp != null && nextGenreVar <= availableGenreVars) {
             when (nextGenreVar) {
                 1 -> {genre1 = genreTemp
-                    assignedGenres = 1}
+                    assignedGenresAmount = 1}
                 2 -> {genre2 = genreTemp
-                    assignedGenres = 2}
+                    assignedGenresAmount = 2}
                 3 -> {genre3 = genreTemp
-                    assignedGenres = 3}
+                    assignedGenresAmount = 3}
                 4 -> {genre4 = genreTemp
-                    assignedGenres = 4}
+                    assignedGenresAmount = 4}
                 5 -> {genre5 = genreTemp
-                    assignedGenres = 5 }
+                    assignedGenresAmount = 5 }
             }
         }
     }
