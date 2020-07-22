@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.model
 
+import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.utilities.LiveEvent
@@ -16,6 +17,7 @@ class DBRepository @Inject constructor(
     private val compositeDisposables: CompositeDisposable,
     private val movies: ArrayList<Movie>,
     private val moviesLiveEvent: LiveEvent<List<Movie>>,
+    private val messageLiveEvent: MutableLiveData<String>,
     private val movieDao: MovieDao
 ) {
     fun clearDisposables() = compositeDisposables.clear()
@@ -31,7 +33,8 @@ class DBRepository @Inject constructor(
                 .map { moviesFromDB -> convertToMovies(moviesFromDB) }
                 .subscribe({ movies -> updateLiveEvent(movies)
                     //todo dodac jakas lepsza obsluge bledu
-                }, { logD(it) }
+                }, { logD(it)
+                sendErrorMessage()}
                 )
         )
         return moviesLiveEvent
@@ -48,4 +51,9 @@ class DBRepository @Inject constructor(
     private fun updateLiveEvent(movies: List<Movie>) {
         moviesLiveEvent.postValue(movies)
     }
+    //todo dokonczyc
+    private fun sendErrorMessage() {
+
+    }
+
 }
