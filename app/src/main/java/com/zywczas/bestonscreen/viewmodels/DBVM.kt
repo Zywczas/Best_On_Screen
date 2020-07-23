@@ -14,7 +14,7 @@ class DBVM (private val repo: DBRepository,
 
     fun clearDisposables() = repo.clearDisposables()
 
-    fun listenToErrors() = repo.getErrorLiveEvent()
+    fun listenToError() = repo.getErrorLiveEvent()
 
     fun getDbMovies() = repo.getMoviesFromDB() as LiveData<List<Movie>>
 

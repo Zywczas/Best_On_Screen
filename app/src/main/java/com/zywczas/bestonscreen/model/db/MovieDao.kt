@@ -18,6 +18,6 @@ interface MovieDao {
     fun getMovies() : Flowable<List<MovieFromDB>>
 
     @Query("SELECT COUNT(id) FROM movies WHERE id ==  :movieId")
-    fun checkIfIsInDB(movieId : Int) : Observable<Int>
+    fun getIdCount(movieId : Int) : Observable<Int>
 
 }

@@ -48,7 +48,7 @@ class DBActivity : AppCompatActivity() {
 
         if (areDependenciesInjected) {
             setupChain()
-            setupLiveDataErrorListener()
+            setupErrorListener()
         }
     }
 
@@ -108,8 +108,8 @@ class DBActivity : AppCompatActivity() {
         emptyListTextView.isVisible = true
     }
 
-    private fun setupLiveDataErrorListener(){
-        viewModel.listenToErrors().observe(this, Observer {
+    private fun setupErrorListener(){
+        viewModel.listenToError().observe(this, Observer {
             showToast(it)
         })
     }

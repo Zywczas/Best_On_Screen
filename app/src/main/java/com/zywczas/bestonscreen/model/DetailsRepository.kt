@@ -23,15 +23,15 @@ class DetailsRepository @Inject constructor(
     fun clearDisposables() = compositeDisposables.clear()
 
     fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
-        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.checkIfIsInDB(movieId))
+        val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.getIdCount(movieId))
 
         compositeDisposables.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({movieIDsCountInDB -> updateBooleanLiveEvent(movieIDsCountInDB)
-                    //todo tu chyba trzeba dac error handling
-                }, { logD(it) }
+                .subscribe({idCount -> updateBooleanLiveEvent(idCount)
+                }, { updateBooleanLiveEventWithFalse()
+                    logD(it) }
                 )
         )
         return booleanLiveEvent
@@ -42,6 +42,10 @@ class DetailsRepository @Inject constructor(
             0 -> booleanLiveEvent.postValue(false)
             else -> booleanLiveEvent.postValue(true)
         }
+    }
+
+    private fun updateBooleanLiveEventWithFalse() {
+        booleanLiveEvent.postValue(false)
     }
 
     fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
