@@ -38,7 +38,7 @@ class DetailsActivity : AppCompatActivity() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {
-            setupChain()
+            setupLevel1()
         }
     }
 
@@ -47,7 +47,7 @@ class DetailsActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupChain() {
+    private fun setupLevel1() {
         val areViewModelAndIntentSetup = getViewModelAndIntentAndConfirmFinish()
 
         if(areViewModelAndIntentSetup) {

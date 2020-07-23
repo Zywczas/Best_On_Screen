@@ -52,7 +52,7 @@ class ApiActivity : AppCompatActivity() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
 
         if (areDependenciesInjected) {
-            setupChain()
+            setupLevel1()
         }
     }
 
@@ -61,11 +61,11 @@ class ApiActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupChain() {
+    private fun setupLevel1() {
         val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
 
         if(isRecyclerViewSetup) {
-            setupChain2()
+            setupLevel2()
         }
     }
 
@@ -95,7 +95,7 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupChain2(){
+    private fun setupLevel2(){
         val isObserverSetup = setupObserverAndConfirmFinish()
 
         if(isObserverSetup) {
