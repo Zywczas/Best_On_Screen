@@ -9,40 +9,47 @@ class MovieFromApi {
     @SerializedName("id")
     @Expose
     var id: Int? = null
+        get() = field ?: 0
 
     @SerializedName("poster_path")
     @Expose
     var posterPath: String? = null
+        get() = field ?: ""
 
     @SerializedName("genre_ids")
     @Expose
     var genreIds: List<Int>? = null
+        get() = field ?: arrayListOf(0)
 
     @SerializedName("title")
     @Expose
     var title: String? = null
+        get() = field ?: ""
 
     @SerializedName("vote_average")
     @Expose
     var voteAverage: Double? = null
+        get() = field ?: 0.0
 
     @SerializedName("overview")
     @Expose
     var overview: String? = null
+        get() = field ?: ""
 
     @SerializedName("release_date")
     @Expose
     var releaseDate: String? = null
+        get() = field ?: ""
 
-    var genre1: String? = null
+    var genre1: String = ""
 
-    var genre2: String? = null
+    var genre2: String = ""
 
-    var genre3: String? = null
+    var genre3: String = ""
 
-    var genre4: String? = null
+    var genre4: String = ""
 
-    var genre5: String? = null
+    var genre5: String = ""
 
     var assignedGenresAmount: Int = 0
 

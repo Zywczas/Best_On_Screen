@@ -19,7 +19,7 @@ class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
         } as LiveData<Event<String>>
 
     fun getGenresDescription(movie: Movie) : String {
-        return when (movie.genresAmount) {
+        return when (movie.assignedGenresAmount) {
             1 -> "Genre: ${movie.genre1}"
             2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
             3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"

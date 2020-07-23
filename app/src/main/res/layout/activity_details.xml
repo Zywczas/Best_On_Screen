@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextViewDetails"
                 tools:text="Rate: "
-                android:text='@{"Rate: " + movie.voteAverage.toString()}' />
+                android:text='@{"Rate: " + movie.voteAverage}' />
 
             <TextView
                 android:id="@+id/releaseDateTextViewDetails"

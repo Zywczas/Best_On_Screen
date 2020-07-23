@@ -9,38 +9,38 @@ class MovieFromDB(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int?,
+    var id: Int,
 
-    @ColumnInfo(name = "poster_path")
-    var posterPath: String?,
+    @ColumnInfo(name = "poster_path", defaultValue = "")
+    var posterPath: String,
 
-    @ColumnInfo(name = "title")
-    var title: String?,
+    @ColumnInfo(name = "title", defaultValue = "")
+    var title: String,
 
-    @ColumnInfo(name = "vote_average")
-    var voteAverage: Double?,
+    @ColumnInfo(name = "vote_average", defaultValue = "0.0")
+    var voteAverage: Double,
 
-    @ColumnInfo(name = "overview")
-    var overview: String?,
+    @ColumnInfo(name = "overview", defaultValue = "")
+    var overview: String,
 
-    @ColumnInfo(name = "release_date")
-    var releaseDate: String?,
+    @ColumnInfo(name = "release_date", defaultValue = "")
+    var releaseDate: String,
 
-    @ColumnInfo(name = "genre1")
-    var genre1: String?,
+    @ColumnInfo(name = "genre1", defaultValue = "")
+    var genre1: String,
 
-    @ColumnInfo(name = "genre2")
-    var genre2: String?,
+    @ColumnInfo(name = "genre2", defaultValue = "")
+    var genre2: String,
 
-    @ColumnInfo(name = "genre3")
-    var genre3: String?,
+    @ColumnInfo(name = "genre3", defaultValue = "")
+    var genre3: String,
 
-    @ColumnInfo(name = "genre4")
-    var genre4: String?,
+    @ColumnInfo(name = "genre4", defaultValue = "")
+    var genre4: String,
 
-    @ColumnInfo(name = "genre5")
-    var genre5: String?,
+    @ColumnInfo(name = "genre5", defaultValue = "")
+    var genre5: String,
 
-    @ColumnInfo(name = "genres_amount")
-    var genresAmount: Int?
+    @ColumnInfo(name = "genres_amount", defaultValue = "0")
+    var assignedGenresAmount: Int
 )
