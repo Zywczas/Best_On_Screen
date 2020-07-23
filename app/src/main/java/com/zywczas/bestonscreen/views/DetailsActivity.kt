@@ -12,6 +12,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.databinding.ActivityDetailsBinding
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
@@ -25,7 +26,7 @@ class DetailsActivity : AppCompatActivity() {
     lateinit var factory: DetailsVMFactory
     @Inject
     lateinit var picasso: Picasso
-    lateinit var movieFromParcel: Movie
+    lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,30 +58,36 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun getViewModelAndIntentAndConfirmFinish() : Boolean {
-        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-        intent.getParcelableExtra<Movie>(EXTRA_MOVIE)?.let { movieFromParcel = it }
-        return true
+        val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+
+        return if (movieFromParcel != null) {
+            movie = movieFromParcel
+            viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
+            true
+        } else {
+            showToast("Cannot access the movie.")
+            logD("Cannot get movie from parcel in ${this.localClassName}")
+            false
+        }
     }
 
     private fun setupDataBinding() {
         val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
         binding.viewModel = viewModel
-        binding.movie = movieFromParcel
+        binding.movie = movie
     }
 
-//todo pomyslec nad zmiana tych nulli
     private fun setupAddToListBtnState() {
-        movieFromParcel.id?.let {
-            viewModel.isMovieInDb(it).observe(this,
-                Observer {isInDb ->
-                    addToListBtn.isChecked = isInDb
-                    addToListBtn.tag = isInDb
-                })
-        }
+        viewModel.isMovieInDb(movie.id).observe(this,
+            Observer {isInDb ->
+                addToListBtn.isChecked = isInDb
+                addToListBtn.tag = isInDb
+            })
+
     }
 
     private fun setupPosterImage() {
-        val posterPath = "https://image.tmdb.org/t/p/w300" + movieFromParcel.posterPath
+        val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
 
         picasso.load(posterPath)
             .resize(250, 0)
@@ -91,7 +98,7 @@ class DetailsActivity : AppCompatActivity() {
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
 
-        viewModel.addOrDeleteMovie(movieFromParcel, isButtonChecked)
+        viewModel.addOrDeleteMovie(movie, isButtonChecked)
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }
             })

@@ -151,10 +151,16 @@ class ApiActivity : AppCompatActivity() {
     private fun getMoviesOnViewModelInit(){
         if (viewModel.isViewModelInitialization()) {
             showProgressBar()
-            //todo sprobowc te nulle wszystkie pousuwac
-            intent.getStringExtra(EXTRA_CATEGORY)?.let { movieCategory = Category.valueOf(it) }
-            viewModel.getApiMovies(movieCategory, nextPage)
-            viewModel.finishViewModelInitialization()
+            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+
+            if (categoryFromIntent != null) {
+                movieCategory = Category.valueOf(categoryFromIntent)
+                viewModel.getApiMovies(movieCategory, nextPage)
+                viewModel.finishViewModelInitialization()
+            } else {
+                showToast("Cannot access the category.")
+                logD("Cannot get movie category from intent in ${this.localClassName}")
+            }
         }
     }
 

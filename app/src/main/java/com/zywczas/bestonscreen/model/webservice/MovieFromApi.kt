@@ -85,7 +85,7 @@ class MovieFromApi {
             53 -> "Thriller"
             10752 -> "War"
             37 -> "Western"
-            else -> { logD("Cannot convert genre Id to String")
+            else -> { logD("Cannot convert genre Id to String in ${this.javaClass.name}")
                 "missing info"
             }
 
