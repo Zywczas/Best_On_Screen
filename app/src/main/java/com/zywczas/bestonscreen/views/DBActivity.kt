@@ -37,7 +37,6 @@ class DBActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-
         startDBActivitySetupChain()
         setupDrawer()
         setupTags()
@@ -45,7 +44,6 @@ class DBActivity : AppCompatActivity() {
 
     private fun startDBActivitySetupChain() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-
         if (areDependenciesInjected) {
             setupLevel1()
             setupErrorListener()
@@ -59,7 +57,6 @@ class DBActivity : AppCompatActivity() {
 
     private fun setupLevel1() {
         val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
-
         if(isRecyclerViewSetup) {
             displayMoviesOrMessage()
         }

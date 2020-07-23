@@ -24,7 +24,6 @@ class DetailsRepository @Inject constructor(
 
     fun checkIfMovieIsInDB (movieId: Int) : LiveEvent<Boolean> {
         val movieFromDBObservable = RxJavaBridge.toV3Observable(movieDao.getIdCount(movieId))
-
         compositeDisposables.add(
             movieFromDBObservable
                 .subscribeOn(Schedulers.io())
@@ -78,7 +77,6 @@ class DetailsRepository @Inject constructor(
         val completable = RxJavaBridge.toV3Completable(
             movieDao.deleteMovie(toMovieFromDB(movie))
         )
-
         compositeDisposables.add(
             completable
                 .subscribeOn(Schedulers.io())

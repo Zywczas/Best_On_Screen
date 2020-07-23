@@ -24,7 +24,6 @@ class DBRepository @Inject constructor(
 
     fun getMoviesFromDB () : LiveEvent<List<Movie>> {
         val databaseFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())
-
         compositeDisposables.add(
             databaseFlowable
                 .subscribeOn(Schedulers.io())

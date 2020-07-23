@@ -41,7 +41,6 @@ class ApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
@@ -50,7 +49,6 @@ class ApiActivity : AppCompatActivity() {
 
     private fun startApiActivitySetupChain() {
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-
         if (areDependenciesInjected) {
             setupLevel1()
         }
@@ -63,7 +61,6 @@ class ApiActivity : AppCompatActivity() {
 
     private fun setupLevel1() {
         val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
-
         if(isRecyclerViewSetup) {
             setupLevel2()
         }
@@ -97,7 +94,6 @@ class ApiActivity : AppCompatActivity() {
 
     private fun setupLevel2(){
         val isObserverSetup = setupObserverAndConfirmFinish()
-
         if(isObserverSetup) {
             getMoviesOnViewModelInit()
         }
@@ -108,14 +104,12 @@ class ApiActivity : AppCompatActivity() {
             Observer { tripleMoviesPageCategory ->
                 hideProgressBar()
                 val incomingPage = tripleMoviesPageCategory.second
-
                 when (incomingPage) {
                     ERROR_FLAG -> { showToast("Problem with downloading movies.") }
                     NO_MORE_PAGES_FLAG -> { showToast("This is the last page in this category.") }
                     else -> {
                         val incomingMovies = tripleMoviesPageCategory.first
                         val incomingCategory = tripleMoviesPageCategory.third
-
                         updateDisplayedMovies(incomingMovies)
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingPage, incomingCategory)
@@ -152,7 +146,6 @@ class ApiActivity : AppCompatActivity() {
         if (viewModel.isViewModelInitialization()) {
             showProgressBar()
             val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
-
             if (categoryFromIntent != null) {
                 movieCategory = Category.valueOf(categoryFromIntent)
                 viewModel.getApiMovies(movieCategory, nextPage)

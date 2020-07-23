@@ -38,11 +38,9 @@ class MovieAdapter(
             title.text = movie.title
             rate.text = String.format(Locale.getDefault(), "%.1f", movie.voteAverage)
             val posterPath = "https://image.tmdb.org/t/p/w200" + movie.posterPath
-
             picasso.load(posterPath)
                 .error(R.drawable.error_image)
                 .into(posterImage)
-
             itemView.setOnClickListener { itemClick(movie) }
         }
     }

@@ -37,7 +37,6 @@ class ApiRepository @Inject constructor(
     fun getMoviesFromApi (nextCategory: Category, nextPage: Int) : MutableLiveData<Triple<List<Movie>, Int, Category>> {
         this.category = nextCategory
         this.nextPage = nextPage
-
         return if (nextPage > lastPageOfCategory) {
             sendLastPageFlag()
         } else {
@@ -63,7 +62,6 @@ class ApiRepository @Inject constructor(
 
     private fun downloadMoviesToLiveData(){
         val apiObservable = setupApiObservable()
-
         compositeDisposables.add(apiObservable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

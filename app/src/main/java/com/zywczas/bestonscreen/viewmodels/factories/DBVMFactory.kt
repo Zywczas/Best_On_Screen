@@ -10,6 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class DBVMFactory @Inject constructor (private val repo: DBRepository)
     : ViewModelAssistedFactory<DBVM> {
+
     override fun create(handle: SavedStateHandle): DBVM {
         return DBVM(repo, handle)
     }

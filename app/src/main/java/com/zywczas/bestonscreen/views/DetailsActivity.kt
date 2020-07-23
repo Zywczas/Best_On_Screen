@@ -30,14 +30,12 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         startDetailsActivitySetupChain()
         setupPosterImage()
     }
 
     private fun startDetailsActivitySetupChain(){
         val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-
         if (areDependenciesInjected) {
             setupLevel1()
         }
@@ -50,7 +48,6 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun setupLevel1() {
         val areViewModelAndIntentSetup = getViewModelAndIntentAndConfirmFinish()
-
         if(areViewModelAndIntentSetup) {
             setupDataBinding()
             setupAddToListBtnState()
@@ -59,7 +56,6 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun getViewModelAndIntentAndConfirmFinish() : Boolean {
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-
         return if (movieFromParcel != null) {
             movie = movieFromParcel
             viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
@@ -88,7 +84,6 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun setupPosterImage() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
-
         picasso.load(posterPath)
             .resize(250, 0)
             .error(R.drawable.error_image)
@@ -97,7 +92,6 @@ class DetailsActivity : AppCompatActivity() {
 
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
-
         viewModel.addOrDeleteMovie(movie, isButtonChecked)
             .observe(this, Observer {
                 it.getContentIfNotHandled()?.let { m -> showToast(m) }

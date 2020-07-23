@@ -48,7 +48,6 @@ class MovieFromApi {
 
     fun convertGenreIdsToVariables(genreIds: List<Int>){
         var varNumber = 1
-
         for (id in genreIds) {
             convertGenreIdToStringAndAssign(id, varNumber)
             varNumber++
@@ -58,7 +57,6 @@ class MovieFromApi {
     private fun convertGenreIdToStringAndAssign(id: Int, varNumber: Int) {
         val convertedGenre = convertToString(id)
         val availableGenreVars = 5
-
         if (varNumber <= availableGenreVars) {
             assignToVariable(convertedGenre, varNumber)
         }
@@ -88,7 +86,6 @@ class MovieFromApi {
             else -> { logD("Cannot convert genre Id to String in ${this.javaClass.name}")
                 "missing info"
             }
-
         }
     }
 
