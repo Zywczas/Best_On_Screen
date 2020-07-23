@@ -59,12 +59,12 @@ class MovieFromApi {
         val convertedGenre = convertToString(id)
         val availableGenreVars = 5
 
-        if (convertedGenre != null && varNumber <= availableGenreVars) {
+        if (varNumber <= availableGenreVars) {
             assignToVariable(convertedGenre, varNumber)
         }
     }
 
-    private fun convertToString(id: Int) : String? {
+    private fun convertToString(id: Int) : String {
         return when (id) {
             28 -> "Action"
             12 -> "Adventure"
@@ -86,7 +86,7 @@ class MovieFromApi {
             10752 -> "War"
             37 -> "Western"
             else -> { logD("Cannot convert genre Id to String")
-                null
+                "missing info"
             }
 
         }
