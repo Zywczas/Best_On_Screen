@@ -35,35 +35,33 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun startDetailsActivitySetupChain(){
-        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-        if (areDependenciesInjected) {
-            setupLevel1()
+        injectDependencies{ success ->
+            if (success) {
+                getViewModelAndIntent { success2 ->
+                    if (success2) {
+                        setupDataBinding()
+                        setupAddToListBtnStateObserver()
+                    }
+                }
+            }
         }
     }
 
-    private fun injectDependenciesAndConfirmFinish() : Boolean {
+    private fun injectDependencies(complete: (Boolean) -> Unit){
         App.moviesComponent.inject(this)
-        return true
+        complete(true)
     }
 
-    private fun setupLevel1() {
-        val areViewModelAndIntentSetup = getViewModelAndIntentAndConfirmFinish()
-        if(areViewModelAndIntentSetup) {
-            setupDataBinding()
-            setupAddToListBtnState()
-        }
-    }
-
-    private fun getViewModelAndIntentAndConfirmFinish() : Boolean {
+    private fun getViewModelAndIntent(complete: (Boolean) -> Unit){
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         return if (movieFromParcel != null) {
             movie = movieFromParcel
             viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-            true
+            complete(true)
         } else {
-            showToast("Cannot access the movie.")
+            showToast("Cannot load the movie.")
             logD("Cannot get movie from parcel in ${this.localClassName}")
-            false
+            complete(false)
         }
     }
 
@@ -73,7 +71,7 @@ class DetailsActivity : AppCompatActivity() {
         binding.movie = movie
     }
 
-    private fun setupAddToListBtnState() {
+    private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDb(movie.id).observe(this,
             Observer {isInDb ->
                 addToListBtn.isChecked = isInDb

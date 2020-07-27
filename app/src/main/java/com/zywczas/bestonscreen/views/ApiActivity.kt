@@ -48,28 +48,30 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun startApiActivitySetupChain() {
-        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-        if (areDependenciesInjected) {
-            setupLevel1()
+        injectDependencies{success ->
+            if (success) {
+                setupAdapterAndLayoutManager {success2 ->
+                    if (success2) {
+                        setupMoviesObserver { success3 ->
+                            if (success3) {
+                                getMoviesOnViewModelInit()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun injectDependenciesAndConfirmFinish() : Boolean {
+    private fun injectDependencies(complete: (Boolean) -> Unit) {
         App.moviesComponent.inject(this)
-        return true
+        complete(true)
     }
 
-    private fun setupLevel1() {
-        val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
-        if(isRecyclerViewSetup) {
-            setupLevel2()
-        }
-    }
-
-    private fun setupAdapterAndLayoutManagerAndConfirmFinish() : Boolean {
+    private fun setupAdapterAndLayoutManager(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
-        return true
+        complete(true)
     }
 
     private fun setupAdapter(){
@@ -92,24 +94,17 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupLevel2(){
-        val isObserverSetup = setupObserverAndConfirmFinish()
-        if(isObserverSetup) {
-            getMoviesOnViewModelInit()
-        }
-    }
-
-    private fun setupObserverAndConfirmFinish() : Boolean {
+    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.getLD().observe(this,
-            Observer { tripleMoviesPageCategory ->
+            Observer { trioMoviesPageCategory ->
                 hideProgressBar()
-                val incomingPage = tripleMoviesPageCategory.second
+                val incomingPage = trioMoviesPageCategory.second
                 when (incomingPage) {
                     ERROR_FLAG -> { showToast("Problem with downloading movies.") }
                     NO_MORE_PAGES_FLAG -> { showToast("This is the last page in this category.") }
                     else -> {
-                        val incomingMovies = tripleMoviesPageCategory.first
-                        val incomingCategory = tripleMoviesPageCategory.third
+                        val incomingMovies = trioMoviesPageCategory.first
+                        val incomingCategory = trioMoviesPageCategory.third
                         updateDisplayedMovies(incomingMovies)
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingPage, incomingCategory)
@@ -117,7 +112,7 @@ class ApiActivity : AppCompatActivity() {
                 }
             }
         )
-        return true
+        complete(true)
     }
 
     private fun hideProgressBar() {

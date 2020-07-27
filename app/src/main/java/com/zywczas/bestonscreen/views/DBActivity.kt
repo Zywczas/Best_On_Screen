@@ -43,29 +43,27 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun startDBActivitySetupChain() {
-        val areDependenciesInjected = injectDependenciesAndConfirmFinish()
-        if (areDependenciesInjected) {
-            setupLevel1()
-            setupErrorListener()
+        injectDependencies { success ->
+            if (success) {
+                setupErrorListener()
+                setupAdapterAndLayoutManager{ success2 ->
+                    if (success2){
+                        setupMoviesObserver()
+                    }
+                }
+            }
         }
     }
 
-    private fun injectDependenciesAndConfirmFinish() : Boolean {
+    private fun injectDependencies(complete: (Boolean) -> Unit) {
         App.moviesComponent.inject(this)
-        return true
+        complete(true)
     }
 
-    private fun setupLevel1() {
-        val isRecyclerViewSetup = setupAdapterAndLayoutManagerAndConfirmFinish()
-        if(isRecyclerViewSetup) {
-            displayMoviesOrMessage()
-        }
-    }
-
-    private fun setupAdapterAndLayoutManagerAndConfirmFinish() : Boolean {
+    private fun setupAdapterAndLayoutManager(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
-        return true
+        complete(true)
     }
 
     private fun setupAdapter(){
@@ -88,7 +86,7 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun displayMoviesOrMessage() {
+    private fun setupMoviesObserver() {
         viewModel.getDbMovies().observe(this, Observer { movies ->
             updateDisplayedMovies(movies)
             if (movies.isEmpty()){
@@ -110,7 +108,7 @@ class DBActivity : AppCompatActivity() {
             showToast(it)
         })
     }
-
+//todo sprawdzic czy potrzebuje wszystkie stringi
     private fun setupDrawer(){
         val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
