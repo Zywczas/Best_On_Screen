@@ -54,7 +54,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun getViewModelAndIntent(complete: (Boolean) -> Unit){
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-        return if (movieFromParcel != null) {
+        if (movieFromParcel != null) {
             movie = movieFromParcel
             viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
             complete(true)

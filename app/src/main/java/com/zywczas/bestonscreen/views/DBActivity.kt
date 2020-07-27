@@ -60,6 +60,12 @@ class DBActivity : AppCompatActivity() {
         complete(true)
     }
 
+    private fun setupErrorListener(){
+        viewModel.listenToError().observe(this, Observer {
+            showToast(it)
+        })
+    }
+
     private fun setupAdapterAndLayoutManager(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
@@ -103,11 +109,6 @@ class DBActivity : AppCompatActivity() {
         emptyListTextView.isVisible = true
     }
 
-    private fun setupErrorListener(){
-        viewModel.listenToError().observe(this, Observer {
-            showToast(it)
-        })
-    }
 //todo sprawdzic czy potrzebuje wszystkie stringi
     private fun setupDrawer(){
         val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
