@@ -109,7 +109,6 @@ class DBActivity : AppCompatActivity() {
         emptyListTextView.isVisible = true
     }
 
-//todo sprawdzic czy potrzebuje wszystkie stringi
     private fun setupDrawer(){
         val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
             R.string.nav_drawer_open,R.string.nav_drawer_closed)
