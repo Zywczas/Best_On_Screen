@@ -35,10 +35,10 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun startDetailsActivitySetupChain(){
-        injectDependencies{ success ->
-            if (success) {
-                getViewModelAndIntent { success2 ->
-                    if (success2) {
+        injectDependencies{ injectionFinished ->
+            if (injectionFinished) {
+                getViewModelAndIntent { success ->
+                    if (success) {
                         setupDataBinding()
                         setupAddToListBtnStateObserver()
                     }

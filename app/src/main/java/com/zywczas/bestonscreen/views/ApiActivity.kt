@@ -48,12 +48,12 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun startApiActivitySetupChain() {
-        injectDependencies{success ->
-            if (success) {
-                setupAdapterAndLayoutManager {success2 ->
-                    if (success2) {
-                        setupMoviesObserver { success3 ->
-                            if (success3) {
+        injectDependencies{injectionFinished ->
+            if (injectionFinished) {
+                setupAdapterAndLayoutManager {recyclerViewSetupFinished ->
+                    if (recyclerViewSetupFinished) {
+                        setupMoviesObserver { observerSetupFinished ->
+                            if (observerSetupFinished) {
                                 getMoviesOnViewModelInit()
                             }
                         }

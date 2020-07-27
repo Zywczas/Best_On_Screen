@@ -43,11 +43,11 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun startDBActivitySetupChain() {
-        injectDependencies { success ->
-            if (success) {
+        injectDependencies { injectionFinished ->
+            if (injectionFinished) {
                 setupErrorListener()
-                setupAdapterAndLayoutManager{ success2 ->
-                    if (success2){
+                setupAdapterAndLayoutManager{ recyclerViewSetupFinished ->
+                    if (recyclerViewSetupFinished){
                         setupMoviesObserver()
                     }
                 }
