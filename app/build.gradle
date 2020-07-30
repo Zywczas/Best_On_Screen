@@ -45,7 +45,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.13'
     implementation 'com.google.android.material:material:1.1.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter'
     //espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //androidx.test
