@@ -61,9 +61,11 @@ class ApiRepository @Inject constructor(
     private fun resetDownloadedMovies() = movies.clear()
 
     private fun downloadMoviesToLiveData(){
+        //todo dac Single tutaj
         val apiObservable = setupApiObservable()
         compositeDisposables.add(apiObservable
             .subscribeOn(Schedulers.io())
+                //todo sprobowac usunac observe on tam gdzie mamy live data
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap { apiResponse ->
                 apiResponse.page?.let { currentPage = it }

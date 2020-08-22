@@ -136,7 +136,7 @@ class ApiActivity : AppCompatActivity() {
         nextPage = incomingPage + 1
         movieCategory = incomingCategory
     }
-
+//todo zamienic to na onSavedIntanceState
     private fun getMoviesOnViewModelInit(){
         if (viewModel.isViewModelInitialization()) {
             showProgressBar()
@@ -231,4 +231,6 @@ class ApiActivity : AppCompatActivity() {
         viewModel.clearDisposables()
         super.onDestroy()
     }
+
+    //todo dodac internet error handling
 }

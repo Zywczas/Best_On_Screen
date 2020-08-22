@@ -43,7 +43,7 @@ class MoviesModule(private val application: Application) {
 
     @Provides @Singleton
     fun providePicasso() : Picasso = Picasso.get()
-
+ 
     @Provides @Singleton
     fun provideMovieDao() : MovieDao =
         Room.databaseBuilder(application.applicationContext, MoviesDataBase::class.java, "MoviesDB")

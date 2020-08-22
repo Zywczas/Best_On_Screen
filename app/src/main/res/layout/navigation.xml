@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/MyToWatchListTextView"
+        android:id="@+id/myToWatchListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
         app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
         app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
-        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
 
     <TextView
         android:id="@+id/upcomingTextView"
@@ -85,9 +85,9 @@
         android:background="@android:color/darker_gray"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="@+id/MyToWatchListTextView"
+        app:layout_constraintEnd_toEndOf="@+id/myToWatchListTextView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/MyToWatchListTextView"
-        app:layout_constraintTop_toBottomOf="@+id/MyToWatchListTextView" />
+        app:layout_constraintStart_toStartOf="@+id/myToWatchListTextView"
+        app:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

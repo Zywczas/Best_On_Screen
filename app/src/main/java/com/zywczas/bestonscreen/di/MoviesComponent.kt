@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component (modules = [MoviesModule::class])
-    interface MoviesComponent {
+interface MoviesComponent {
 
     fun inject (app: DBActivity)
     fun inject (app: ApiActivity)
