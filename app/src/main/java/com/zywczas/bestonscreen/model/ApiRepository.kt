@@ -34,7 +34,7 @@ class ApiRepository @Inject constructor(
 
     fun getLiveData() = moviesLiveData as LiveData<Triple<List<Movie>, Int, Category>>
 
-    fun getMoviesFromApi (nextCategory: Category, nextPage: Int) : MutableLiveData<Triple<List<Movie>, Int, Category>> {
+    fun getMoviesFromApi (nextCategory: Category, nextPage: Int) {
         this.category = nextCategory
         this.nextPage = nextPage
         return if (nextPage > lastPageOfCategory) {
@@ -44,18 +44,16 @@ class ApiRepository @Inject constructor(
         }
     }
 
-    private fun sendLastPageFlag() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
+    private fun sendLastPageFlag() {
         val anyCategory = Category.POPULAR
         moviesLiveData.postValue(Triple(movies, NO_MORE_PAGES_FLAG, anyCategory))
-        return moviesLiveData
     }
 
-    private fun downloadAndSendMovies() : MutableLiveData<Triple<List<Movie>, Int, Category>> {
+    private fun downloadAndSendMovies() {
         if (nextPage == firstPageOfNewCategory ) {
             resetDownloadedMovies()
         }
         downloadMoviesToLiveData()
-        return moviesLiveData
     }
 
     private fun resetDownloadedMovies() = movies.clear()
