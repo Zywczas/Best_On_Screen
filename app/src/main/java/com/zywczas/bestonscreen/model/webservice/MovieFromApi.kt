@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.model.webservice
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.zywczas.bestonscreen.utilities.logD
 
 class MovieFromApi {
 
@@ -83,9 +82,7 @@ class MovieFromApi {
             53 -> "Thriller"
             10752 -> "War"
             37 -> "Western"
-            else -> { logD("Cannot convert genre Id to String in ${this.javaClass.name}")
-                "missing info"
-            }
+            else -> "missing info"
         }
     }
 
