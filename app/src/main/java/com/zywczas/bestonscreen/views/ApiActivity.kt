@@ -50,7 +50,7 @@ class ApiActivity : AppCompatActivity() {
     private fun startApiActivitySetupChain() {
         injectDependencies{injectionFinished ->
             if (injectionFinished) {
-                setupAdapterAndLayoutManager {recyclerViewSetupFinished ->
+                setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
                         setupMoviesObserver { observerSetupFinished ->
                             if (observerSetupFinished) {
@@ -68,7 +68,7 @@ class ApiActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun setupAdapterAndLayoutManager(complete: (Boolean) -> Unit) {
+    private fun setupRecyclerView(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
         complete(true)

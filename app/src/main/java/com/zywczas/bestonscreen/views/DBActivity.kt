@@ -54,13 +54,11 @@ class DBActivity : AppCompatActivity() {
 
     //todo nie powinno się używać metod typu deprecated ( funkcja isInternetConnected() )
 
-    //todo klasy takie jak np. Person służące tylko do reprezentowania, i manipulowanie danymi powinny być kotlinowymi data classami
-
     private fun startDBActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
                 setupErrorListener()
-                setupAdapterAndLayoutManager{ recyclerViewSetupFinished ->
+                setupRecyclerView{ recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished){
                         setupMoviesObserver()
                     }
@@ -80,7 +78,7 @@ class DBActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupAdapterAndLayoutManager(complete: (Boolean) -> Unit) {
+    private fun setupRecyclerView(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
         complete(true)
