@@ -42,6 +42,20 @@ class DBActivity : AppCompatActivity() {
         setupTags()
     }
 
+    //todo funkcje typu “setupStage” niepotrzebnie komplikują kod, i źle wpływają na jego czytelność, nie przynosząc żadnych korzyści.
+
+    //todo logika zawarta w repozytorium powinna znajdować się we viewmodelu. Przy takim podejściu jak widoczne w zadaniu, viewModel tak naprawde nie pełni żadnej funkcji.
+
+    //todo dane z viewModelu powinny być przekazywane do widoku (activity, fragment) poprzez livedata lub observable. Dzięki temu możemy zabezpieczyć się przed wyciekami pamięci.
+
+    //todo  repozytorium nie powinno zwracać LiveData
+
+    //todo  funkcje viewmodelu nie powinny zwracac zadnej wartości. Wszystkie dane powinny być wystawiane w postaci publicznych zmiennych typu LiveData.
+
+    //todo nie powinno się używać metod typu deprecated ( funkcja isInternetConnected() )
+
+    //klasy takie jak np. Person służące tylko do reprezentowania, i manipulowanie danymi powinny być kotlinowymi data classami
+
     private fun startDBActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
