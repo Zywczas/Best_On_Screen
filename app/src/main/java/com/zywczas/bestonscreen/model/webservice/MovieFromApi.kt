@@ -3,35 +3,36 @@ package com.zywczas.bestonscreen.model.webservice
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class MovieFromApi {
+data class MovieFromApi (
 
     @SerializedName("id")
     @Expose
-    var id: Int? = null
+    var id: Int? = null,
 
     @SerializedName("poster_path")
     @Expose
-    var posterPath: String? = null
+    var posterPath: String? = null,
 
     @SerializedName("genre_ids")
     @Expose
-    var genreIds: List<Int>? = null
+    var genreIds: List<Int>? = null,
 
     @SerializedName("title")
     @Expose
-    var title: String? = null
+    var title: String? = null,
 
     @SerializedName("vote_average")
     @Expose
-    var voteAverage: Double? = null
+    var voteAverage: Double? = null,
 
     @SerializedName("overview")
     @Expose
-    var overview: String? = null
+    var overview: String? = null,
 
     @SerializedName("release_date")
     @Expose
     var releaseDate: String? = null
+) {
 
     var genre1: String = ""
 

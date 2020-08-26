@@ -210,6 +210,7 @@ class ApiActivity : AppCompatActivity() {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
         if (clickedCategory == movieCategory) {
+            //todo dac tutaj poprawny String zamiast TOP_RATED
             showToast("This is $clickedCategory.")
         } else {
             switchToNewMoviesCategory(clickedCategory)

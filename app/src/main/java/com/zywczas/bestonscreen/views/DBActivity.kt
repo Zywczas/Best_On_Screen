@@ -54,7 +54,7 @@ class DBActivity : AppCompatActivity() {
 
     //todo nie powinno się używać metod typu deprecated ( funkcja isInternetConnected() )
 
-    //klasy takie jak np. Person służące tylko do reprezentowania, i manipulowanie danymi powinny być kotlinowymi data classami
+    //todo klasy takie jak np. Person służące tylko do reprezentowania, i manipulowanie danymi powinny być kotlinowymi data classami
 
     private fun startDBActivitySetupChain() {
         injectDependencies { injectionFinished ->

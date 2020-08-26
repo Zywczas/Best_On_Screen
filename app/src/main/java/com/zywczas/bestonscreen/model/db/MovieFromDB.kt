@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity (tableName = "movies")
-class MovieFromDB(
+data class MovieFromDB(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
