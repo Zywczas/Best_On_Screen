@@ -22,16 +22,19 @@ import javax.inject.Singleton
 class MoviesModule(private val application: Application) {
 
     @Provides
-    fun provideCompositeDisposable() : CompositeDisposable = CompositeDisposable()
+    fun provideCompositeDisposable() = CompositeDisposable()
 
     @Provides
-    fun provideArrayListOfMovies() : ArrayList<Movie> = ArrayList()
+    fun provideArrayListOfMovies() = ArrayList<Movie>()
 
     @Provides
-    fun provideStringEventLd() : MutableLiveData<Event<String>> = MutableLiveData()
+    fun provideStringEventLd() = MutableLiveData<Event<String>>()
 
     @Provides
-    fun provideMutableLdTripleMoviesIntCategory() : MutableLiveData<Triple<List<Movie>, Int, Category>> = MutableLiveData()
+    fun provideMutableLdTripleMoviesIntCategory() = MutableLiveData<Triple<List<Movie>, Int, Category>>()
+
+    @Provides
+    fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()
 
     @Provides @Singleton
     fun provideTMDBService() : ApiService = Retrofit.Builder()

@@ -40,9 +40,11 @@ class DBActivity : AppCompatActivity() {
         startDBActivitySetupChain()
         setupDrawer()
         setupTags()
-    }
 
-    //todo funkcje typu “setupStage” niepotrzebnie komplikują kod, i źle wpływają na jego czytelność, nie przynosząc żadnych korzyści.
+
+
+
+    }
 
     //todo logika zawarta w repozytorium powinna znajdować się we viewmodelu. Przy takim podejściu jak widoczne w zadaniu, viewModel tak naprawde nie pełni żadnej funkcji.
 
@@ -60,7 +62,11 @@ class DBActivity : AppCompatActivity() {
                 setupErrorListener()
                 setupRecyclerView{ recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished){
-                        setupMoviesObserver()
+                        setupMoviesObserver{isObserverSetup ->
+                            if (isObserverSetup){
+//                                getMovies()
+                            }
+                        }
                     }
                 }
             }
@@ -73,8 +79,10 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun setupErrorListener(){
-        viewModel.listenToError().observe(this, Observer {
-            showToast(it)
+        viewModel.errorLD.observe(this, Observer {it.getContentIfNotHandled()?.let {
+            message -> showToast(message)
+        }
+
         })
     }
 
@@ -104,13 +112,19 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupMoviesObserver() {
-        viewModel.getDbMovies().observe(this, Observer { movies ->
-            updateDisplayedMovies(movies)
-            if (movies.isEmpty()){
-                showMessageAboutEmptyDB()
+    //todo dac osobno sluchanie live data i osobno getMovies on init
+
+    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
+        viewModel.moviesLD.observe(this, Observer { movies ->
+            if (movies != null) {
+                updateDisplayedMovies(movies)
+                if (movies.isEmpty()){
+                    showMessageAboutEmptyDB()
+                }
             }
+
         })
+        complete(true)
     }
 
     private fun updateDisplayedMovies(movies: List<Movie>){
@@ -120,6 +134,10 @@ class DBActivity : AppCompatActivity() {
     private fun showMessageAboutEmptyDB(){
         emptyListTextView.isVisible = true
     }
+
+//    private fun getMovies(){
+//        viewModel.getDbMovies()
+//    }
 
     private fun setupDrawer(){
         val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
@@ -164,9 +182,9 @@ class DBActivity : AppCompatActivity() {
         closeDrawerOrMinimizeApp()
     }
 
-    override fun onDestroy() {
-        viewModel.clearDisposables()
-        super.onDestroy()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+//        outState.putBoolean(CONFIGURATION_CHANGE, true)
     }
 
 }
