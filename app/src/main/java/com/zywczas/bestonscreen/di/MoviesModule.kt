@@ -36,6 +36,10 @@ class MoviesModule(private val application: Application) {
     @Provides
     fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()
 
+    //todo sprawdzic co tu usunac
+    @Provides
+    fun provideBooleanMutableLiveData() = MutableLiveData<Boolean>()
+
     @Provides @Singleton
     fun provideTMDBService() : ApiService = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")

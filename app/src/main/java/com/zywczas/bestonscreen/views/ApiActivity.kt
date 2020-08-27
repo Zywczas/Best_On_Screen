@@ -31,8 +31,9 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
-    private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
+    private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
     private lateinit var adapter: MovieAdapter
+
     @Inject
     lateinit var picassoForAdapter: Picasso
     private var movieCategory = Category.POPULAR
@@ -48,7 +49,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun startApiActivitySetupChain() {
-        injectDependencies{injectionFinished ->
+        injectDependencies { injectionFinished ->
             if (injectionFinished) {
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
@@ -74,7 +75,7 @@ class ApiActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun setupAdapter(){
+    private fun setupAdapter() {
         adapter = MovieAdapter(this, picassoForAdapter) { movie ->
             val detailsActivity = Intent(this, DetailsActivity::class.java)
             detailsActivity.putExtra(EXTRA_MOVIE, movie)
@@ -83,10 +84,10 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.adapter = adapter
     }
 
-    private fun setupLayoutManager(){
+    private fun setupLayoutManager() {
         var spanCount = 2
         val orientation = resources.configuration.orientation
-        if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(this, spanCount)
@@ -95,13 +96,17 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.getLD().observe(this,
+        viewModel.moviesLD.observe(this,
             Observer { trioMoviesPageCategory ->
                 hideProgressBar()
                 val incomingPage = trioMoviesPageCategory.second
                 when (incomingPage) {
-                    ERROR_FLAG -> { showToast("Problem with downloading movies.") }
-                    NO_MORE_PAGES_FLAG -> { showToast("This is the last page in this category.") }
+                    ERROR_FLAG -> {
+                        showToast("Problem with downloading movies.")
+                    }
+                    NO_MORE_PAGES_FLAG -> {
+                        showToast("This is the last page in this category.")
+                    }
                     else -> {
                         val incomingMovies = trioMoviesPageCategory.first
                         val incomingCategory = trioMoviesPageCategory.third
@@ -123,7 +128,7 @@ class ApiActivity : AppCompatActivity() {
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun setupToolbarTitle(category: Category){
+    private fun setupToolbarTitle(category: Category) {
         val titleCategory = when (category) {
             Category.POPULAR -> "Popular"
             Category.UPCOMING -> "Upcoming"
@@ -136,29 +141,37 @@ class ApiActivity : AppCompatActivity() {
         nextPage = incomingPage + 1
         movieCategory = incomingCategory
     }
-//todo zamienic to na onSavedIntanceState
-    private fun getMoviesOnViewModelInit(){
-        if (viewModel.isViewModelInitialization()) {
-            showProgressBar()
-            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
-            if (categoryFromIntent != null) {
-                movieCategory = Category.valueOf(categoryFromIntent)
-                viewModel.getApiMovies(movieCategory, nextPage)
+
+    //todo zamienic to na onSavedIntanceState
+    private fun getMoviesOnViewModelInit() {
+        viewModel.isViewModelInitialization.observe(this, Observer {shouldGetFirstMovies ->
+            if (shouldGetFirstMovies == true) {
+                getFirstMoviesOnce()
                 viewModel.finishViewModelInitialization()
-            } else {
-                showToast("Cannot access the category.")
-                logD("Cannot get movie category from intent in ${this.localClassName}")
             }
+        })
+    }
+
+    private fun getFirstMoviesOnce(){
+        showProgressBar()
+        val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+        if (categoryFromIntent != null) {
+            movieCategory = Category.valueOf(categoryFromIntent)
+            viewModel.getApiMovies(movieCategory, nextPage)
+        } else {
+            showToast("Cannot access the category.")
         }
     }
 
-    private fun showProgressBar(){
+    private fun showProgressBar() {
         progressBar.isVisible = true
     }
 
-    private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
-            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+    private fun setupDrawer() {
+        val toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar,
+            R.string.nav_drawer_open, R.string.nav_drawer_closed
+        )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
@@ -182,7 +195,7 @@ class ApiActivity : AppCompatActivity() {
         })
     }
 
-    private fun downloadNextPage(){
+    private fun downloadNextPage() {
         showProgressBar()
         viewModel.getApiMovies(movieCategory, nextPage)
     }
@@ -200,7 +213,7 @@ class ApiActivity : AppCompatActivity() {
         }
     }
 
-    private fun switchToDBActivity(){
+    private fun switchToDBActivity() {
         val toWatchIntent = Intent(this, DBActivity::class.java)
         startActivity(toWatchIntent)
         finish()
@@ -217,7 +230,7 @@ class ApiActivity : AppCompatActivity() {
         }
     }
 
-    private fun switchToNewMoviesCategory(clickedCategory: Category){
+    private fun switchToNewMoviesCategory(clickedCategory: Category) {
         showProgressBar()
         val firstPageOfNewCategory = 1
         viewModel.getApiMovies(clickedCategory, firstPageOfNewCategory)
