@@ -33,15 +33,16 @@ class ApiActivity : AppCompatActivity() {
     lateinit var factory: ApiVMFactory
     private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
     private lateinit var adapter: MovieAdapter
-
     @Inject
     lateinit var picassoForAdapter: Picasso
     private var movieCategory = Category.POPULAR
     private var nextPage = 1
+    private var wasOrientationChanged : Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
+        wasOrientationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
@@ -142,25 +143,17 @@ class ApiActivity : AppCompatActivity() {
         movieCategory = incomingCategory
     }
 
-    //todo zamienic to na onSavedIntanceState
     private fun getMoviesOnViewModelInit() {
-        viewModel.isViewModelInitialization.observe(this, Observer {shouldGetFirstMovies ->
-            if (shouldGetFirstMovies == true) {
-                getFirstMoviesOnce()
-                viewModel.finishViewModelInitialization()
+            if (wasOrientationChanged == null) {
+                showProgressBar()
+                val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+                if (categoryFromIntent != null) {
+                    movieCategory = Category.valueOf(categoryFromIntent)
+                    viewModel.getApiMovies(movieCategory, nextPage)
+                } else {
+                    showToast("Cannot access the category.")
+                }
             }
-        })
-    }
-
-    private fun getFirstMoviesOnce(){
-        showProgressBar()
-        val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
-        if (categoryFromIntent != null) {
-            movieCategory = Category.valueOf(categoryFromIntent)
-            viewModel.getApiMovies(movieCategory, nextPage)
-        } else {
-            showToast("Cannot access the category.")
-        }
     }
 
     private fun showProgressBar() {
@@ -239,6 +232,11 @@ class ApiActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CONFIGURATION_CHANGE, true)
     }
 
     override fun onDestroy() {

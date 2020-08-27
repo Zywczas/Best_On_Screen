@@ -13,12 +13,11 @@ import javax.inject.Singleton
 @Singleton
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
-    private val moviesLD: MutableLiveData<Triple<List<Movie>, Int, Category>>,
-    private val isViewModelInit: MutableLiveData<Boolean>
+    private val moviesLD: MutableLiveData<Triple<List<Movie>, Int, Category>>
 ) : ViewModelAssistedFactory<ApiVM> {
 
     override fun create(handle: SavedStateHandle): ApiVM {
-        return ApiVM(repo, moviesLD, isViewModelInit, handle)
+        return ApiVM(repo, moviesLD, handle)
     }
 
 }

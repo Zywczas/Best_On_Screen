@@ -11,20 +11,9 @@ import com.zywczas.bestonscreen.model.Movie
 
 class ApiVM (private val repo: ApiRepository,
              private val moviesMLD : MutableLiveData<Triple<List<Movie>, Int, Category>>,
-             private val isViewModelInit: MutableLiveData<Boolean>,
             //SavedStateHandle not used yet, but implemented for future expansion
              private val handle: SavedStateHandle
 ) : ViewModel() {
-
-    init {
-        isViewModelInit.postValue(true)
-    }
-    val isViewModelInitialization = isViewModelInit as LiveData<Boolean>
-
-    fun finishViewModelInitialization(){
-        isViewModelInit.postValue(false)
-    }
-
 
     val moviesLD = repo.getLiveData()
 
