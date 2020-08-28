@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
@@ -32,6 +33,9 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideMutableLdTripleMoviesIntCategory() = MutableLiveData<Triple<List<Movie>, Int, Category>>()
+
+    @Provides
+    fun provideMediatorLdTripleMoviesIntCategory() = MediatorLiveData<Triple<List<Movie>, Int, Category>>()
 
     @Provides
     fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()

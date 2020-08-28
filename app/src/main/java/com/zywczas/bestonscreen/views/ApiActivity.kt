@@ -33,11 +33,12 @@ class ApiActivity : AppCompatActivity() {
     lateinit var factory: ApiVMFactory
     private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
     private lateinit var adapter: MovieAdapter
+
     @Inject
     lateinit var picassoForAdapter: Picasso
     private var movieCategory = Category.POPULAR
     private var nextPage = 1
-    private var wasOrientationChanged : Boolean? = null
+    private var wasOrientationChanged: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ class ApiActivity : AppCompatActivity() {
             if (injectionFinished) {
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
-                        setupLiveDataObservers{ observersSetupFinished ->
+                        setupLiveDataObservers { observersSetupFinished ->
                             if (observersSetupFinished) {
                                 getMoviesOnViewModelInit()
                             }
@@ -102,10 +103,12 @@ class ApiActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun setupErrorObserver(){
-        viewModel.errorLD.observe(this, Observer { it.getContentIfNotHandled()?.let {
-            message -> showToast(message)
-        } })
+    private fun setupErrorObserver() {
+        viewModel.errorLD.observe(this, Observer {
+            it.getContentIfNotHandled()?.let { message ->
+                showToast(message)
+            }
+        })
     }
 
     private fun setupMoviesObserver() {
@@ -113,24 +116,17 @@ class ApiActivity : AppCompatActivity() {
             Observer { trioMoviesPageCategory ->
                 hideProgressBar()
                 val incomingPage = trioMoviesPageCategory.second
-                when (incomingPage) {
-                    ERROR_FLAG -> {
-                        showToast("Problem with downloading movies.")
-                    }
-                    NO_MORE_PAGES_FLAG -> {
-                        showToast("This is the last page in this category.")
-                    }
-                    else -> {
-                        val incomingMovies = trioMoviesPageCategory.first
-                        val incomingCategory = trioMoviesPageCategory.third
-                        updateDisplayedMovies(incomingMovies)
-                        setupToolbarTitle(incomingCategory)
-                        prepareDataForNextCall(incomingPage, incomingCategory)
-                    }
-                }
+                val incomingMovies = trioMoviesPageCategory.first
+                val incomingCategory = trioMoviesPageCategory.third
+                logD("activity: ${incomingMovies[0].title}")
+                updateDisplayedMovies(incomingMovies)
+                setupToolbarTitle(incomingCategory)
+                prepareDataForNextCall(incomingPage, incomingCategory)
             }
         )
     }
+
+    //todo pousuwac logi
 
     private fun hideProgressBar() {
         progressBar.isVisible = false
@@ -155,16 +151,16 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun getMoviesOnViewModelInit() {
-            if (wasOrientationChanged == null) {
-                showProgressBar()
-                val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
-                if (categoryFromIntent != null) {
-                    movieCategory = Category.valueOf(categoryFromIntent)
-                    viewModel.getApiMovies(movieCategory, nextPage)
-                } else {
-                    showToast("Cannot access the category.")
-                }
+        if (wasOrientationChanged == null) {
+            showProgressBar()
+            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+            if (categoryFromIntent != null) {
+                movieCategory = Category.valueOf(categoryFromIntent)
+                viewModel.getApiMovies(movieCategory, nextPage)
+            } else {
+                showToast("Cannot access the category.")
             }
+        }
     }
 
     private fun showProgressBar() {

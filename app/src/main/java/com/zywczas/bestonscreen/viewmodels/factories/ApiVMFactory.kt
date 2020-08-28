@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels.factories
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.zywczas.bestonscreen.model.ApiRepository
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
-    private val moviesMLD: MutableLiveData<Triple<List<Movie>, Int, Category>>,
+    private val moviesMLD: MediatorLiveData<Triple<List<Movie>, Int, Category>>,
     private val movies: ArrayList<Movie>,
     private val errorMLD: MutableLiveData<Event<String>>
 ) : ViewModelAssistedFactory<ApiVM> {

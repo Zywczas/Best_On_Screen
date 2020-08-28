@@ -7,7 +7,9 @@ import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.ERROR_FLAG
 import com.zywczas.bestonscreen.utilities.NO_MORE_PAGES_FLAG
+import com.zywczas.bestonscreen.utilities.logD
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -25,18 +27,19 @@ class ApiRepository @Inject constructor(
     private lateinit var category: Category
 
     fun getApiMovies(category: Category, nextPage: Int): Flowable<Triple<List<Movie>, Int, Int>> {
+        movies.clear()
         this.category = category
         this.nextPage = nextPage
         val apiSingle = getApiSingle()
         return apiSingle
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMapPublisher { apiResponse ->
+            .map { apiResponse ->
                 val currentPage = apiResponse.page ?: 0
                 val lastPageOfCategory = apiResponse.totalPages ?: 0
                 apiResponse.movies?.let { convertIdsAndToMovies(it) }
-                Flowable.just(Triple(movies.toList(), currentPage, lastPageOfCategory))
+                Triple(movies.toList(), currentPage, lastPageOfCategory)
             }
+            .toFlowable()
     }
 
     private fun getApiSingle() = when (category) {
