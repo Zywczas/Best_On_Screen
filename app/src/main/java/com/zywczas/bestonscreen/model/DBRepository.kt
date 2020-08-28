@@ -21,6 +21,7 @@ class DBRepository @Inject constructor(
 //todo pousuwac observe on main thread w repo
 
     //todo repo ma nie dawac live data tylko observable
+    //todo zobaczyc czy nie zamienic array na list
     fun getMoviesFromDB(): Flowable<ArrayList<Movie>> {
         val databaseFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())
         return databaseFlowable

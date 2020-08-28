@@ -54,8 +54,8 @@ class ApiActivity : AppCompatActivity() {
             if (injectionFinished) {
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
-                        setupMoviesObserver { observerSetupFinished ->
-                            if (observerSetupFinished) {
+                        setupLiveDataObservers{ observersSetupFinished ->
+                            if (observersSetupFinished) {
                                 getMoviesOnViewModelInit()
                             }
                         }
@@ -96,7 +96,19 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
+    private fun setupLiveDataObservers(complete: (Boolean) -> Unit) {
+        setupErrorObserver()
+        setupMoviesObserver()
+        complete(true)
+    }
+
+    private fun setupErrorObserver(){
+        viewModel.errorLD.observe(this, Observer { it.getContentIfNotHandled()?.let {
+            message -> showToast(message)
+        } })
+    }
+
+    private fun setupMoviesObserver() {
         viewModel.moviesLD.observe(this,
             Observer { trioMoviesPageCategory ->
                 hideProgressBar()
@@ -118,7 +130,6 @@ class ApiActivity : AppCompatActivity() {
                 }
             }
         )
-        complete(true)
     }
 
     private fun hideProgressBar() {
@@ -237,11 +248,6 @@ class ApiActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(CONFIGURATION_CHANGE, true)
-    }
-
-    override fun onDestroy() {
-        viewModel.clearDisposables()
-        super.onDestroy()
     }
 
     //todo dodac internet error handling

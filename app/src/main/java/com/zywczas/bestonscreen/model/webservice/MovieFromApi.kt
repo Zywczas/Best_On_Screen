@@ -46,11 +46,13 @@ data class MovieFromApi (
 
     var assignedGenresAmount: Int = 0
 
-    fun convertGenreIdsToVariables(genreIds: List<Int>){
+    fun convertGenreIdsToVariables(){
         var varNumber = 1
-        for (id in genreIds) {
-            convertGenreIdToStringAndAssign(id, varNumber)
-            varNumber++
+        if (genreIds != null) {
+            for (id in genreIds!!) {
+                convertGenreIdToStringAndAssign(id, varNumber)
+                varNumber++
+            }
         }
     }
 
