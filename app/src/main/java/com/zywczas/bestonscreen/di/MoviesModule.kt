@@ -38,6 +38,9 @@ class MoviesModule(private val application: Application) {
     fun provideMediatorLdTripleMoviesIntCategory() = MediatorLiveData<Triple<List<Movie>, Int, Category>>()
 
     @Provides
+    fun provideMediatorLdPairMoviesCategory() = MediatorLiveData<Pair<List<Movie>, Category>>()
+
+    @Provides
     fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()
 
     //todo sprawdzic co tu usunac

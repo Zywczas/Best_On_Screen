@@ -33,11 +33,9 @@ class ApiActivity : AppCompatActivity() {
     lateinit var factory: ApiVMFactory
     private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
     private lateinit var adapter: MovieAdapter
-
     @Inject
     lateinit var picassoForAdapter: Picasso
     private var movieCategory = Category.POPULAR
-    private var nextPage = 1
     private var wasOrientationChanged: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +45,6 @@ class ApiActivity : AppCompatActivity() {
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
-        setupOnScrollListener()
     }
 
     private fun startApiActivitySetupChain() {
@@ -58,6 +55,7 @@ class ApiActivity : AppCompatActivity() {
                         setupLiveDataObservers { observersSetupFinished ->
                             if (observersSetupFinished) {
                                 getMoviesOnViewModelInit()
+                                setupOnScrollListener()
                             }
                         }
                     }
@@ -115,13 +113,11 @@ class ApiActivity : AppCompatActivity() {
         viewModel.moviesLD.observe(this,
             Observer { trioMoviesPageCategory ->
                 hideProgressBar()
-                val incomingPage = trioMoviesPageCategory.second
                 val incomingMovies = trioMoviesPageCategory.first
-                val incomingCategory = trioMoviesPageCategory.third
-                logD("activity: ${incomingMovies[0].title}")
+                val incomingCategory = trioMoviesPageCategory.second
                 updateDisplayedMovies(incomingMovies)
                 setupToolbarTitle(incomingCategory)
-                prepareDataForNextCall(incomingPage, incomingCategory)
+                prepareDataForNextCall(incomingCategory)
             }
         )
     }
@@ -144,9 +140,8 @@ class ApiActivity : AppCompatActivity() {
         }
         toolbar.title = "Movies: $titleCategory"
     }
-
-    private fun prepareDataForNextCall(incomingPage: Int, incomingCategory: Category) {
-        nextPage = incomingPage + 1
+//todo sprobowac usunac stad category
+    private fun prepareDataForNextCall(incomingCategory: Category) {
         movieCategory = incomingCategory
     }
 
@@ -156,7 +151,7 @@ class ApiActivity : AppCompatActivity() {
             val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
             if (categoryFromIntent != null) {
                 movieCategory = Category.valueOf(categoryFromIntent)
-                viewModel.getApiMovies(movieCategory, nextPage)
+                viewModel.getApiMovies(movieCategory)
             } else {
                 showToast("Cannot access the category.")
             }
@@ -165,21 +160,6 @@ class ApiActivity : AppCompatActivity() {
 
     private fun showProgressBar() {
         progressBar.isVisible = true
-    }
-
-    private fun setupDrawer() {
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar,
-            R.string.nav_drawer_open, R.string.nav_drawer_closed
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-    }
-
-    private fun setupTags() {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
     }
 
     private fun setupOnScrollListener() {
@@ -197,7 +177,22 @@ class ApiActivity : AppCompatActivity() {
 
     private fun downloadNextPage() {
         showProgressBar()
-        viewModel.getApiMovies(movieCategory, nextPage)
+        viewModel.getApiMovies(movieCategory)
+    }
+
+    private fun setupDrawer() {
+        val toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar,
+            R.string.nav_drawer_open, R.string.nav_drawer_closed
+        )
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    private fun setupTags() {
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
     }
 
     fun myToWatchListClicked(view: View) {
@@ -232,8 +227,7 @@ class ApiActivity : AppCompatActivity() {
 
     private fun switchToNewMoviesCategory(clickedCategory: Category) {
         showProgressBar()
-        val firstPageOfNewCategory = 1
-        viewModel.getApiMovies(clickedCategory, firstPageOfNewCategory)
+        viewModel.getApiMovies(clickedCategory)
         moviesRecyclerView.scrollToPosition(0)
     }
 

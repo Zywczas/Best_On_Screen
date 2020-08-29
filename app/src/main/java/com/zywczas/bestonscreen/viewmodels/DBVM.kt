@@ -20,6 +20,7 @@ class DBVM (
         repo.getMoviesFromDB()
             .doOnError { errorMLD.postValue(Event("Problem with accessing your movies")) }
     )
+    //todo dac orientation change handling
 
     val errorLD = errorMLD as LiveData<Event<String>>
 
