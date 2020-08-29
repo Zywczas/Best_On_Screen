@@ -35,7 +35,8 @@ class ApiActivity : AppCompatActivity() {
     private lateinit var adapter: MovieAdapter
     @Inject
     lateinit var picassoForAdapter: Picasso
-    private var movieCategory = Category.POPULAR
+    private val anyCategoryOnInit = Category.POPULAR
+    private var currentCategory = anyCategoryOnInit
     private var wasOrientationChanged: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,16 +143,17 @@ class ApiActivity : AppCompatActivity() {
     }
 //todo sprobowac usunac stad category
     private fun prepareDataForNextCall(incomingCategory: Category) {
-        movieCategory = incomingCategory
+        currentCategory = incomingCategory
     }
 
     private fun getMoviesOnViewModelInit() {
         if (wasOrientationChanged == null) {
             showProgressBar()
-            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)
+            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)?.let {
+                Category.valueOf(it)
+            }
             if (categoryFromIntent != null) {
-                movieCategory = Category.valueOf(categoryFromIntent)
-                viewModel.getApiMovies(movieCategory)
+                viewModel.getApiMovies(categoryFromIntent)
             } else {
                 showToast("Cannot access the category.")
             }
@@ -177,7 +179,7 @@ class ApiActivity : AppCompatActivity() {
 
     private fun downloadNextPage() {
         showProgressBar()
-        viewModel.getApiMovies(movieCategory)
+        viewModel.getApiMovies(currentCategory)
     }
 
     private fun setupDrawer() {
@@ -217,7 +219,7 @@ class ApiActivity : AppCompatActivity() {
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
-        if (clickedCategory == movieCategory) {
+        if (clickedCategory == currentCategory) {
             //todo dac tutaj poprawny String zamiast TOP_RATED
             showToast("This is $clickedCategory.")
         } else {

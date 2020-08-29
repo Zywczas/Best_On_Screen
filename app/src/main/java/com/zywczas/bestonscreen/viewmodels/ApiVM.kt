@@ -16,24 +16,26 @@ class ApiVM(
     private val handle: SavedStateHandle
 ) : ViewModel() {
 
-    private var nextPage = 1
-    private  var currentCategory = Category.POPULAR
     private val firstPageOfNewCategory = 1
+    private var nextPage = firstPageOfNewCategory
     private var lastPageOfCategory = firstPageOfNewCategory
+    private val anyCategoryOnInit = Category.POPULAR
+    private var nextCategory = anyCategoryOnInit
 
     val moviesLD = moviesMLD as LiveData<Pair<List<Movie>, Category>>
     val errorLD = errorMLD as LiveData<Event<String>>
 
     fun getApiMovies(nextCategory: Category) {
-        val isNewCategory = nextCategory != currentCategory
+        val isNewCategory = nextCategory != this.nextCategory
         if (isNewCategory) {
             resetData()
-            this.currentCategory = nextCategory
+            this.nextCategory = nextCategory
         }
-        return if (nextPage > lastPageOfCategory) {
+        if (nextPage > lastPageOfCategory) {
             sendError("No more pages.")
         } else {
             downloadAndSendMovies()
+            nextPage++
         }
     }
 
@@ -49,19 +51,15 @@ class ApiVM(
 
     private fun downloadAndSendMovies() {
         val source = LiveDataReactiveStreams.fromPublisher(
-            repo.getApiMovies(currentCategory, nextPage)
+            repo.getApiMovies(nextCategory, nextPage)
         )
         moviesMLD.addSource(source) {
             movies.addAll(it.first)
             lastPageOfCategory = it.second
-            moviesMLD.postValue(Pair(movies.toList(), currentCategory))
-            nextPage++
+            moviesMLD.postValue(Pair(movies.toList(), nextCategory))
             moviesMLD.removeSource(source)
         }
     }
 
-
-
-//todo sprobowac ogarnac page i category wewnatrz view model, nie w repo albo aktywity
     //todo pozamieniac pozniej na Livedata od REsult
 }
