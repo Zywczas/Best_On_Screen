@@ -1,6 +1,19 @@
 package com.zywczas.bestonscreen.model
 
-//todo sprawdzic czy nie dac tutaj toString
 enum class Category {
-    POPULAR, TOP_RATED, UPCOMING
+
+    POPULAR {
+        override fun toString(): String {
+            return "Popular"
+        }
+    }, TOP_RATED{
+        override fun toString(): String {
+            return "Top Rated"
+        }
+    }, UPCOMING{
+        override fun toString(): String {
+            return "Upcoming"
+        }
+    }
+
 }

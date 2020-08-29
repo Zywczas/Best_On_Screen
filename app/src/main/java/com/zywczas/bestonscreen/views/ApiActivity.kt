@@ -16,8 +16,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.*
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
@@ -133,15 +132,10 @@ class ApiActivity : AppCompatActivity() {
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun setupToolbarTitle(category: Category) {
-        val titleCategory = when (category) {
-            Category.POPULAR -> "Popular"
-            Category.UPCOMING -> "Upcoming"
-            Category.TOP_RATED -> "Top Rated"
-        }
-        toolbar.title = "Movies: $titleCategory"
+    private fun setupToolbarTitle(incomingCategory: Category) {
+        toolbar.title = "Movies: $incomingCategory"
     }
-//todo sprobowac usunac stad category
+
     private fun prepareDataForNextCall(incomingCategory: Category) {
         currentCategory = incomingCategory
     }
@@ -149,14 +143,8 @@ class ApiActivity : AppCompatActivity() {
     private fun getMoviesOnViewModelInit() {
         if (wasOrientationChanged == null) {
             showProgressBar()
-            val categoryFromIntent = intent.getStringExtra(EXTRA_CATEGORY)?.let {
-                Category.valueOf(it)
-            }
-            if (categoryFromIntent != null) {
-                viewModel.getApiMovies(categoryFromIntent)
-            } else {
-                showToast("Cannot access the category.")
-            }
+            val intentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
+            viewModel.getApiMovies(intentCategory)
         }
     }
 
@@ -220,7 +208,6 @@ class ApiActivity : AppCompatActivity() {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
         if (clickedCategory == currentCategory) {
-            //todo dac tutaj poprawny String zamiast TOP_RATED
             showToast("This is $clickedCategory.")
         } else {
             switchToNewMoviesCategory(clickedCategory)

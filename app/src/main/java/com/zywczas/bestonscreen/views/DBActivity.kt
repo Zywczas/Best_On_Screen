@@ -15,8 +15,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.*
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
@@ -173,7 +172,7 @@ class DBActivity : AppCompatActivity() {
 
     private fun switchToApiActivity(category: Category){
         val apiIntent = Intent(this, ApiActivity::class.java)
-        apiIntent.putExtra(EXTRA_CATEGORY, category.toString())
+        apiIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(apiIntent)
         finish()
     }
@@ -181,7 +180,7 @@ class DBActivity : AppCompatActivity() {
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
     }
-
+//todo dodac obracNIE EKRANU
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 //        outState.putBoolean(CONFIGURATION_CHANGE, true)
