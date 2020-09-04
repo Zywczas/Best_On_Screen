@@ -17,9 +17,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildFeatures {
-        dataBinding = true
-    }
 
     compileOptions {
         targetCompatibility = 1.8

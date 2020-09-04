@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="viewModel"
-            type="com.zywczas.bestonscreen.viewmodels.DetailsVM" />
-        <variable
-            name="movie"
-            type="com.zywczas.bestonscreen.model.Movie" />
-    </data>
-
-<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movieDetailsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -67,8 +56,7 @@
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextViewDetails"
-                tools:text="Rate: "
-                android:text='@{"Rate: " + movie.voteAverage}' />
+                tools:text="Rate: " />
 
             <TextView
                 android:id="@+id/releaseDateTextViewDetails"
@@ -83,8 +71,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/rateTextViewDetails"
                 app:layout_constraintTop_toTopOf="@+id/rateTextViewDetails"
-                tools:text="Release date: "
-                android:text='@{"Release date: " + movie.releaseDate}'/>
+                tools:text="Release date: " />
 
             <TextView
                 android:id="@+id/genresTextViewDetails"
@@ -98,8 +85,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addToListBtn"
-                tools:text="Genres: "
-                android:text='@{viewModel.getGenresDescription(movie)}'/>
+                tools:text="Genres: " />
 
             <TextView
                 android:id="@+id/overviewTextViewDetails"
@@ -115,8 +101,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/genresTextViewDetails"
-                tools:text="overview... "
-                android:text='@{movie.overview}'/>
+                tools:text="overview... " />
 
             <TextView
                 android:id="@+id/titleTextViewDetails"
@@ -130,8 +115,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/posterImageViewDetails"
-                tools:text="title..."
-                android:text='@{movie.title}'/>
+                tools:text="title..." />
 
 
             <ToggleButton
@@ -155,4 +139,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+

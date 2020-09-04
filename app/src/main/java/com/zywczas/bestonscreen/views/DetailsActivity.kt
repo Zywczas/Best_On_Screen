@@ -1,18 +1,17 @@
 package com.zywczas.bestonscreen.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.databinding.ActivityDetailsBinding
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.logD
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
@@ -30,17 +29,16 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_details)
         startDetailsActivitySetupChain()
-        setupPosterImage()
     }
 
     private fun startDetailsActivitySetupChain(){
-        injectDependencies{ injectionFinished ->
-            if (injectionFinished) {
-                getViewModelAndIntent { success ->
+        injectDependencies{ isInjectionFinished ->
+            if (isInjectionFinished) {
+                getViewModel { success ->
                     if (success) {
-                        setupDataBinding()
-                        setupAddToListBtnStateObserver()
+                        setupUIState()
                     }
                 }
             }
@@ -52,23 +50,42 @@ class DetailsActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun getViewModelAndIntent(complete: (Boolean) -> Unit){
+    private fun getViewModel(complete: (Boolean) -> Unit){
+        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
+        complete(true)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupUIState() {
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         if (movieFromParcel != null) {
             movie = movieFromParcel
-            viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-            complete(true)
+            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+            picasso.load(posterPath)
+                .resize(250, 0)
+                .error(R.drawable.error_image)
+                .into(posterImageViewDetails)
+            titleTextViewDetails.text = movie.title
+            rateTextViewDetails.text = "Rate: " + movie.voteAverage.toString()
+            releaseDateTextViewDetails.text = "Release date: " + movie.releaseDate
+            overviewTextViewDetails.text = movie.overview
+            genresTextViewDetails.text = getGenresDescription()
+            setupAddToListBtnStateObserver()
         } else {
-            showToast("Cannot load the movie.")
-            logD("Cannot get movie from parcel in ${this.localClassName}")
-            complete(false)
+            addToListBtn.isVisible = false
+            showToast("Cannot load the movie. Go back and try again.")
         }
     }
 
-    private fun setupDataBinding() {
-        val binding : ActivityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details)
-        binding.viewModel = viewModel
-        binding.movie = movie
+    private fun getGenresDescription() : String {
+        return when (movie.assignedGenresAmount) {
+            1 -> "Genre: ${movie.genre1}"
+            2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
+            3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
+            4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
+            5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
+            else -> "no information"
+        }
     }
 
     private fun setupAddToListBtnStateObserver() {
@@ -77,15 +94,6 @@ class DetailsActivity : AppCompatActivity() {
                 addToListBtn.isChecked = isInDb
                 addToListBtn.tag = isInDb
             })
-
-    }
-
-    private fun setupPosterImage() {
-        val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
-        picasso.load(posterPath)
-            .resize(250, 0)
-            .error(R.drawable.error_image)
-            .into(posterImageViewDetails)
     }
 
     fun addToListClicked(view: View) {

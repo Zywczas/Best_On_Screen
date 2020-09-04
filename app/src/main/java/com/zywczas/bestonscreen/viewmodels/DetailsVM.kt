@@ -18,16 +18,5 @@ class DetailsVM (private val repo: DetailsRepository) : ViewModel(){
             true -> repo.deleteMovieFromDB(movie)
         } as LiveData<Event<String>>
 
-    fun getGenresDescription(movie: Movie) : String {
-        return when (movie.assignedGenresAmount) {
-            1 -> "Genre: ${movie.genre1}"
-            2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
-            3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
-            4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
-            5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
-            else -> "no information about genres"
-        }
-    }
-
 
 }
