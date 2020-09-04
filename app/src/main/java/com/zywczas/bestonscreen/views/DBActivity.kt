@@ -31,7 +31,8 @@ class DBActivity : AppCompatActivity() {
     lateinit var factory: DBVMFactory
     private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
     private lateinit var adapter: MovieAdapter
-    @Inject lateinit var picassoForAdapter: Picasso
+    @Inject
+    lateinit var picassoForAdapter: Picasso
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

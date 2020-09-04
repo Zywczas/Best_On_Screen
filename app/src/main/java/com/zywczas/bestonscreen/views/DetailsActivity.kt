@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
@@ -20,25 +21,30 @@ import javax.inject.Inject
 
 class DetailsActivity : AppCompatActivity() {
 
-    lateinit var viewModel: DetailsVM
+    private lateinit var viewModel: DetailsVM
     @Inject
     lateinit var factory: DetailsVMFactory
     @Inject
     lateinit var picasso: Picasso
-    lateinit var movie: Movie
+    private lateinit var movie: Movie
+    private var wasOrientationChanged : Boolean? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+        wasOrientationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         startDetailsActivitySetupChain()
     }
 
     private fun startDetailsActivitySetupChain(){
         injectDependencies{ isInjectionFinished ->
             if (isInjectionFinished) {
-                getViewModel { success ->
+                getViewModelAndIntent { success ->
                     if (success) {
                         setupUIState()
+                        setupAddToListBtnStateObserver()
+                        setupIsMovieInDbObserverOnViewModelInit()
                     }
                 }
             }
@@ -50,31 +56,30 @@ class DetailsActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun getViewModel(complete: (Boolean) -> Unit){
-        viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
-        complete(true)
+    private fun getViewModelAndIntent(complete: (Boolean) -> Unit){
+        val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+        if (movieFromParcel != null) {
+            movie = movieFromParcel
+            viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
+            complete(true)
+        } else {
+            addToListBtn.isVisible = false
+            showToast("Cannot load the movie. Go back and try again.")
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
-        val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-        if (movieFromParcel != null) {
-            movie = movieFromParcel
             val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
             picasso.load(posterPath)
                 .resize(250, 0)
                 .error(R.drawable.error_image)
                 .into(posterImageViewDetails)
             titleTextViewDetails.text = movie.title
-            rateTextViewDetails.text = "Rate: " + movie.voteAverage.toString()
-            releaseDateTextViewDetails.text = "Release date: " + movie.releaseDate
+            rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
+            releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
             overviewTextViewDetails.text = movie.overview
             genresTextViewDetails.text = getGenresDescription()
-            setupAddToListBtnStateObserver()
-        } else {
-            addToListBtn.isVisible = false
-            showToast("Cannot load the movie. Go back and try again.")
-        }
     }
 
     private fun getGenresDescription() : String {
@@ -89,11 +94,17 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun setupAddToListBtnStateObserver() {
-        viewModel.isMovieInDb(movie.id).observe(this,
+        viewModel.isMovieInDbLD.observe(this,
             Observer {isInDb ->
                 addToListBtn.isChecked = isInDb
                 addToListBtn.tag = isInDb
             })
+    }
+
+    private fun setupIsMovieInDbObserverOnViewModelInit(){
+        if (wasOrientationChanged == null) {
+            viewModel.checkIfIsInDb(movie.id)
+        }
     }
 
     fun addToListClicked(view: View) {
@@ -104,8 +115,8 @@ class DetailsActivity : AppCompatActivity() {
             })
     }
 
-    override fun onDestroy() {
-        viewModel.clearDisposables()
-        super.onDestroy()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CONFIGURATION_CHANGE, true)
     }
 }
