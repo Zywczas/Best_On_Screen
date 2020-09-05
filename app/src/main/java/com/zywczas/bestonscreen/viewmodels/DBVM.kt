@@ -17,6 +17,7 @@ class DBVM (
 ) : ViewModel() {
 
 //todo nie obsluguje errors, dac ta specjalna klase
+
     val moviesLD = LiveDataReactiveStreams.fromPublisher(
         repo.getMoviesFromDB()
             .doOnError { errorMLD.postValue(Event("Problem with accessing your movies")) }

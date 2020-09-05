@@ -32,6 +32,9 @@ class MoviesModule(private val application: Application) {
     fun provideStringEventLd() = MutableLiveData<Event<String>>()
 
     @Provides
+    fun provideStringEventMediatorLiveData() = MediatorLiveData<Event<String>>()
+
+    @Provides
     fun provideMutableLdTripleMoviesIntCategory() = MutableLiveData<Triple<List<Movie>, Int, Category>>()
 
     @Provides
