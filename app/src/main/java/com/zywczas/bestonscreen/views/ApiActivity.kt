@@ -52,8 +52,8 @@ class ApiActivity : AppCompatActivity() {
             if (injectionFinished) {
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
-                        setupLiveDataObservers { observersSetupFinished ->
-                            if (observersSetupFinished) {
+                        setupMoviesObserver { observerSetupFinished ->
+                            if (observerSetupFinished) {
                                 getMoviesOnViewModelInit()
                                 setupOnScrollListener()
                             }
@@ -95,21 +95,7 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupLiveDataObservers(complete: (Boolean) -> Unit) {
-        setupErrorObserver()
-        setupMoviesObserver()
-        complete(true)
-    }
-
-    private fun setupErrorObserver() {
-        viewModel.errorLD.observe(this, Observer {
-            it.getContentIfNotHandled()?.let { message ->
-                showToast(message)
-            }
-        })
-    }
-
-    private fun setupMoviesObserver() {
+    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.moviesLD.observe(this,
             Observer { vmResource ->
                 //todo moze podzielic na mniejsze
@@ -132,6 +118,7 @@ class ApiActivity : AppCompatActivity() {
                 }
             }
         )
+        complete(true)
     }
 
     //todo pousuwac logi

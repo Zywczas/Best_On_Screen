@@ -32,7 +32,7 @@ class ApiRepository @Inject constructor(
                 apiResponse.movies?.let { convertIdsAndToMovies(it) }
                 Resource.success(Pair(movies.toList(), lastPageOfCategory))
             }
-            .onErrorReturn { t -> Resource.error("Problem with downloading movies.", null) }
+            .onErrorReturn { Resource.error("Problem with downloading movies.", null) }
             .toFlowable()
     }
 
@@ -54,7 +54,5 @@ class ApiRepository @Inject constructor(
             movies.add(toMovie(m))
         }
     }
-
-    //todo sprobowac usunac observe on tam gdzie mamy live data
 
 }

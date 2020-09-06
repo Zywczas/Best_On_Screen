@@ -16,12 +16,11 @@ import javax.inject.Singleton
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
     private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
-    private val movies: ArrayList<Movie>,
-    private val errorMLD: MutableLiveData<Event<String>>
+    private val movies: ArrayList<Movie>
 ) : ViewModelAssistedFactory<ApiVM> {
 
     override fun create(handle: SavedStateHandle): ApiVM {
-        return ApiVM(repo, moviesMLD, movies, errorMLD, handle)
+        return ApiVM(repo, moviesMLD, movies, handle)
     }
 
 }

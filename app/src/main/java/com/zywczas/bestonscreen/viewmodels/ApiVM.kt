@@ -13,7 +13,6 @@ class ApiVM(
     private val repo: ApiRepository,
     private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
     private val movies: ArrayList<Movie>,
-    private val errorMLD: MutableLiveData<Event<String>>,
     //SavedStateHandle not used yet, but implemented for future expansion
     private val handle: SavedStateHandle
 ) : ViewModel() {
@@ -25,7 +24,6 @@ class ApiVM(
     private var nextCategory = anyCategoryOnInit
 
     val moviesLD = moviesMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
-    val errorLD = errorMLD as LiveData<Event<String>>
 
     fun getApiMovies(nextCategory: Category) {
         val isNewCategory = nextCategory != this.nextCategory
@@ -63,7 +61,7 @@ class ApiVM(
                 ERROR -> {
                     sendError(repoResource.message!!)
                 }
-//todo sprawdzic jak z ladowaniem internetu
+//todo sprawdzic jak z ladowaniem internetu, moze pominac ladowanie tutaj
                 LOADING -> {
                     moviesMLD.postValue(Resource.loading(null))
                 }
