@@ -12,7 +12,7 @@ class DetailsVM(
     private val isMovieInDbLE: LiveEvent<Boolean>,
     private val messageEventMLD: MediatorLiveData<Event<String>>
 ) : ViewModel() {
-
+//todo jak zmienie na resource to sprawdzic czy dalej wysyla podwojne live data za krotryms razem po obrotach
     val isMovieInDbLD = isMovieInDbLE as LiveData<Boolean>
     val messageLD = messageEventMLD as LiveData<Event<String>>
 
