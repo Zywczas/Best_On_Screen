@@ -4,12 +4,12 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
@@ -19,7 +19,6 @@ import com.zywczas.bestonscreen.model.*
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
-import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
 import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
@@ -29,7 +28,7 @@ class DBActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBVMFactory
-    private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
+    private lateinit var viewModel: DBVM
     private lateinit var adapter: MovieAdapter
 
     @Inject
@@ -56,6 +55,7 @@ class DBActivity : AppCompatActivity() {
     private fun startDBActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
+                initViewModel()
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
                         setupMoviesObserver()
@@ -68,6 +68,10 @@ class DBActivity : AppCompatActivity() {
     private fun injectDependencies(complete: (Boolean) -> Unit) {
         App.moviesComponent.inject(this)
         complete(true)
+    }
+
+    private fun initViewModel(){
+        viewModel = ViewModelProvider(this, factory).get(DBVM::class.java)
     }
 
     private fun setupRecyclerView(complete: (Boolean) -> Unit) {

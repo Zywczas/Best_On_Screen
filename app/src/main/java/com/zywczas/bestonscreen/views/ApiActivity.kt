@@ -4,12 +4,12 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -20,7 +20,6 @@ import com.zywczas.bestonscreen.model.*
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
-import com.zywczas.bestonscreen.viewmodels.factories.GenericSavedStateViewModelFactory
 import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation.*
@@ -30,7 +29,7 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
-    private val viewModel: ApiVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
+    private lateinit var viewModel: ApiVM
     private lateinit var adapter: MovieAdapter
     @Inject
     lateinit var picassoForAdapter: Picasso
@@ -50,6 +49,7 @@ class ApiActivity : AppCompatActivity() {
     private fun startApiActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
+                initViewModel()
                 setupRecyclerView { recyclerViewSetupFinished ->
                     if (recyclerViewSetupFinished) {
                         setupMoviesObserver { observerSetupFinished ->
@@ -67,6 +67,10 @@ class ApiActivity : AppCompatActivity() {
     private fun injectDependencies(complete: (Boolean) -> Unit) {
         App.moviesComponent.inject(this)
         complete(true)
+    }
+
+    private fun initViewModel(){
+        viewModel = ViewModelProvider(this, factory).get(ApiVM::class.java)
     }
 
     private fun setupRecyclerView(complete: (Boolean) -> Unit) {

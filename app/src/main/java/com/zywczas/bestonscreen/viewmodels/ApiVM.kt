@@ -12,9 +12,7 @@ import com.zywczas.bestonscreen.utilities.Status.*
 class ApiVM(
     private val repo: ApiRepository,
     private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
-    private val movies: ArrayList<Movie>,
-    //SavedStateHandle not used yet, but implemented for future expansion
-    private val handle: SavedStateHandle
+    private val movies: ArrayList<Movie>
 ) : ViewModel() {
 
     private val firstPageOfNewCategory = 1

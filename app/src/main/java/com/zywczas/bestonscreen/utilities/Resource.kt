@@ -16,22 +16,4 @@ data class Resource<out T>(val status: Status, val data: T?, val message: String
         }
     }
 
-
 }
-
-//public class Resource<T> (val status: Status, val data: T?, val message: String) {
-//
-//     fun success(data : T, message : String) : Resource<T> {
-//        return new Resource<>(Status.SUCCESS, data, message);
-//    }
-//
-//    public static <T> Resource<T> error( @Nullable T data, @NonNull String msg) {
-//        return new Resource<>(Status.ERROR, data, msg);
-//    }
-//
-//    public static <T> Resource<T> loading(@Nullable T data) {
-//        return new Resource<>(Status.LOADING, data, null);
-//    }
-//
-//    public enum Status { SUCCESS, ERROR, LOADING}
-//

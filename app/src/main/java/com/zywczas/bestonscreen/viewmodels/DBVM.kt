@@ -7,11 +7,7 @@ import com.zywczas.bestonscreen.utilities.Event
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 //todo pousuwac savedstatehandle
-class DBVM(
-    repo: DBRepository,
-    //not used yet but implemented for future expansion
-    private val handle: SavedStateHandle
-) : ViewModel() {
+class DBVM (repo: DBRepository) : ViewModel() {
 
     val moviesLD =
         LiveDataReactiveStreams.fromPublisher(repo.getMoviesFromDB())
