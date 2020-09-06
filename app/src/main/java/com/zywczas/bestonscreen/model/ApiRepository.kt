@@ -3,6 +3,7 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -10,6 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ApiRepository @Inject constructor(
+    //todo chyba wszystkie mowies mozna wrzucic w klase, sprawdzic przy testach
     private val movies: ArrayList<Movie>,
     private val apiService: ApiService
 ) {
@@ -18,7 +20,7 @@ class ApiRepository @Inject constructor(
     private var page = 1
     private lateinit var category: Category
 
-    fun getApiMovies(category: Category, page: Int): Flowable<Pair<List<Movie>, Int>> {
+    fun getApiMovies(category: Category, page: Int): Flowable<Resource<Pair<List<Movie>, Int>>> {
         movies.clear()
         this.category = category
         this.page = page
@@ -28,8 +30,9 @@ class ApiRepository @Inject constructor(
             .map { apiResponse ->
                 val lastPageOfCategory = apiResponse.totalPages ?: 0
                 apiResponse.movies?.let { convertIdsAndToMovies(it) }
-                Pair(movies.toList(), lastPageOfCategory)
+                Resource.success(Pair(movies.toList(), lastPageOfCategory))
             }
+            .onErrorReturn { t -> Resource.error("Problem with downloading movies.", null) }
             .toFlowable()
     }
 

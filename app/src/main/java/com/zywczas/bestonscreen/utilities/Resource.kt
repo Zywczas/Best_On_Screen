@@ -1,10 +1,37 @@
 package com.zywczas.bestonscreen.utilities
 
-sealed class Resource<T>(
-    val data: T? = null,
-    val message: String? = null
-) {
-    class Success<T>(data: T, message: String) : Resource<T>(data, message)
-    class Loading<T>(data: T? = null) : Resource<T>(data)
-    class Error<T>(data: T? = null, message: String) : Resource<T>(data, message)
+data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
+
+    companion object {
+        fun <T> success(data: T?): Resource<T> {
+            return Resource(Status.SUCCESS, data, null)
+        }
+
+        fun <T> error(msg: String, data: T?): Resource<T> {
+            return Resource(Status.ERROR, data, msg)
+        }
+
+        fun <T> loading(data: T?): Resource<T> {
+            return Resource(Status.LOADING, data, null)
+        }
+    }
+
+
 }
+
+//public class Resource<T> (val status: Status, val data: T?, val message: String) {
+//
+//     fun success(data : T, message : String) : Resource<T> {
+//        return new Resource<>(Status.SUCCESS, data, message);
+//    }
+//
+//    public static <T> Resource<T> error( @Nullable T data, @NonNull String msg) {
+//        return new Resource<>(Status.ERROR, data, msg);
+//    }
+//
+//    public static <T> Resource<T> loading(@Nullable T data) {
+//        return new Resource<>(Status.LOADING, data, null);
+//    }
+//
+//    public enum Status { SUCCESS, ERROR, LOADING}
+//

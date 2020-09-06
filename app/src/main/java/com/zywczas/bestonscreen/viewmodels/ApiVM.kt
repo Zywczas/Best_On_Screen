@@ -5,11 +5,13 @@ import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.utilities.Resource
+import com.zywczas.bestonscreen.utilities.Status.*
 
 
 class ApiVM(
     private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Pair<List<Movie>, Category>>,
+    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
     private val movies: ArrayList<Movie>,
     private val errorMLD: MutableLiveData<Event<String>>,
     //SavedStateHandle not used yet, but implemented for future expansion
@@ -22,7 +24,7 @@ class ApiVM(
     private val anyCategoryOnInit = Category.POPULAR
     private var nextCategory = anyCategoryOnInit
 
-    val moviesLD = moviesMLD as LiveData<Pair<List<Movie>, Category>>
+    val moviesLD = moviesMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
     val errorLD = errorMLD as LiveData<Event<String>>
 
     fun getApiMovies(nextCategory: Category) {
@@ -46,19 +48,34 @@ class ApiVM(
     }
 
     private fun sendError(message: String) {
-        errorMLD.postValue(Event(message))
+        moviesMLD.postValue(Resource.error(message, null))
     }
 
     private fun downloadAndSendMovies() {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.getApiMovies(nextCategory, nextPage)
         )
-        moviesMLD.addSource(source) {
-            movies.addAll(it.first)
-            lastPageOfCategory = it.second
-            moviesMLD.postValue(Pair(movies.toList(), nextCategory))
+        moviesMLD.addSource(source) {repoResource ->
+            when (repoResource.status) {
+                SUCCESS -> {
+                    updateAndSendData(repoResource.data!!)
+                }
+                ERROR -> {
+                    sendError(repoResource.message!!)
+                }
+//todo sprawdzic jak z ladowaniem internetu
+                LOADING -> {
+                    moviesMLD.postValue(Resource.loading(null))
+                }
+            }
             moviesMLD.removeSource(source)
         }
+    }
+
+    private fun updateAndSendData(data: Pair<List<Movie>, Int>) {
+        movies.addAll(data.first)
+        lastPageOfCategory = data.second
+        moviesMLD.postValue(Resource.success(Pair(movies.toList(), nextCategory)))
     }
 
     //todo pozamieniac pozniej na Livedata od REsult

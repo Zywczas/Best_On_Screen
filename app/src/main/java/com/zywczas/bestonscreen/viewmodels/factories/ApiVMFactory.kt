@@ -7,6 +7,7 @@ import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Pair<List<Movie>, Category>>,
+    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
     private val movies: ArrayList<Movie>,
     private val errorMLD: MutableLiveData<Event<String>>
 ) : ViewModelAssistedFactory<ApiVM> {

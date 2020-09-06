@@ -11,6 +11,7 @@ import javax.inject.Inject
  * LiveEvent is a substitution for LiveData. It helps in managing Observes, especially
  * in removing them.
  */
+//todo chyba nigdzie nie uzywana, usunac
 open class LiveEvent<T> @Inject constructor(): MediatorLiveData<T>() {
 
     private val observers = ArraySet<ObserverWrapper<in T>>()

@@ -11,6 +11,7 @@ import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.utilities.Event
+import com.zywczas.bestonscreen.utilities.Resource
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -42,6 +43,10 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideMediatorLdPairMoviesCategory() = MediatorLiveData<Pair<List<Movie>, Category>>()
+
+    @Provides
+    fun provideMediatorLdResourcePairMoviesCategory() = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
+
 
     @Provides
     fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()
