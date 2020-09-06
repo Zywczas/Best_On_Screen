@@ -43,8 +43,10 @@ class DetailsActivity : AppCompatActivity() {
                 getViewModelAndIntent { success ->
                     if (success) {
                         setupUIState()
+                        //todo sprawdzic czy kolejnosc moze byc odwrtna
                         setupAddToListBtnStateObserver()
-                        setupIsMovieInDbObserverOnViewModelInit()
+                        initListeningOfIsMovieInDb()
+                        setupMessageObserver()
                     }
                 }
             }
@@ -101,18 +103,21 @@ class DetailsActivity : AppCompatActivity() {
             })
     }
 
-    private fun setupIsMovieInDbObserverOnViewModelInit(){
+    private fun initListeningOfIsMovieInDb(){
         if (wasOrientationChanged == null) {
             viewModel.checkIfIsInDb(movie.id)
         }
     }
 
+    private fun setupMessageObserver(){
+        viewModel.messageLD.observe(this, Observer { it.getContentIfNotHandled()?.let {
+            message -> showToast(message)
+        } })
+    }
+
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
         viewModel.addOrDeleteMovie(movie, isButtonChecked)
-            .observe(this, Observer {
-                it.getContentIfNotHandled()?.let { m -> showToast(m) }
-            })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

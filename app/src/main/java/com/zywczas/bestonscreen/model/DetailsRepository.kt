@@ -3,8 +3,8 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.utilities.Event
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,8 +15,8 @@ class DetailsRepository @Inject constructor(
 ){
 
     fun checkIfMovieIsInDB (movieId: Int) : Flowable<Boolean> {
-        val isMovieInDbObservable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
-        return isMovieInDbObservable
+        val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
+        return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
             .map{ idCount -> toBoolean(idCount) }
     }
@@ -28,44 +28,35 @@ class DetailsRepository @Inject constructor(
         }
     }
 
-//    fun addMovieToDB (movie: Movie) : MutableLiveData<Event<String>> {
-//        val completable = RxJavaBridge.toV3Completable(
-//            movieDao.addMovie(toMovieFromDB(movie))
-//        )
-//
-//            completable
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(object : DisposableCompletableObserver(){
-//                    override fun onComplete() {
-//                        updateStringEventLiveData("Movie added to your list")
-//                    }
-//
-//                    override fun onError(e: Throwable?) {
-//                        logD(e)
-//                        updateStringEventLiveData("Problem with adding the movie")
-//                    }
-//                })
-//
-//        return stringEventLiveData
-//    }
-
     fun addMovieToDB (movie: Movie) : Flowable<Event<String>> {
-        val single = movieDao.insertMovie(toMovieFromDB(movie))
+        val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toMovieFromDB(movie)))
+
         return single
             .subscribeOn(Schedulers.io())
-            .onErrorReturn { Event("Cannot add the movie to your list") }
-            .doOnSuccess { Event("Movie Added to your list") }
-            .toFlowable()
+            .flatMapPublisher {rowId ->
+                if (rowId > 0) {
+                    Flowable.just(Event("Movie added to your list"))
+                } else {
+                    Flowable.just(Event("Cannot add the movie. Try again."))
+                }
+                //todo to dac resource z podzieleniem na rozne przypadki rowId
+
+            }
     }
 
     fun deleteMovieFromDB(movie : Movie) :  Flowable<Event<String>> {
-        val single = movieDao.deleteMovie(toMovieFromDB(movie))
+        val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toMovieFromDB(movie)))
         return single
             .subscribeOn(Schedulers.io())
-            .onErrorReturn { Event("Cannot delete the movie.") }
-            .doOnSuccess { Event("Movie removed from your list") }
-            .toFlowable()
+            .flatMapPublisher { numberOfRowsRemoved ->
+                if (numberOfRowsRemoved > 0 ){
+                    Flowable.just(Event("Movie removed from your list"))
+                } else {
+                    Flowable.just(Event("Cannot remove the movie. Try again."))
+                }
+            //todo to dac resource z podzieleniem na rozne przypadki rowId
+
+        }
     }
 
 }
