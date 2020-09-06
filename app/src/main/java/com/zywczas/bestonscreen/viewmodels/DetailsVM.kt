@@ -10,6 +10,7 @@ class DetailsVM(
     private val isMovieInDbEventMLD: MediatorLiveData<Event<Boolean>>,
     private val messageEventMLD: MediatorLiveData<Event<String>>
 ) : ViewModel() {
+
 //todo jak zmienie na resource to sprawdzic czy dalej wysyla podwojne live data za krotryms razem po obrotach
     val isMovieInDbLD = isMovieInDbEventMLD as LiveData<Event<Boolean>>
     val messageLD = messageEventMLD as LiveData<Event<String>>
@@ -30,7 +31,6 @@ class DetailsVM(
         }
     }
 
-    @Throws(Exception::class)
     private fun addMovieToDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.addMovieToDB(movie))
@@ -40,7 +40,6 @@ class DetailsVM(
         }
     }
 
-    @Throws(Exception::class)
     private fun deleteMovieFromDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.deleteMovieFromDB(movie))
