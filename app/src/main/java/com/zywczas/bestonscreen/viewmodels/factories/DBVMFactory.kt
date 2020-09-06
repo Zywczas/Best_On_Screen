@@ -10,13 +10,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DBVMFactory @Inject constructor(
-    private val repo: DBRepository,
-    private val movies: MutableLiveData<List<Movie>>,
-    private val error: MutableLiveData<Event<String>>
-    ) : ViewModelAssistedFactory<DBVM> {
+class DBVMFactory @Inject constructor( private val repo: DBRepository) : ViewModelAssistedFactory<DBVM> {
 
     override fun create(handle: SavedStateHandle): DBVM {
-        return DBVM(repo, movies, error, handle)
+        return DBVM(repo, handle)
     }
 }

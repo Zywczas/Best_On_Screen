@@ -29,8 +29,9 @@ class DBActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBVMFactory
-    private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory,this) }
+    private val viewModel: DBVM by viewModels { GenericSavedStateViewModelFactory(factory, this) }
     private lateinit var adapter: MovieAdapter
+
     @Inject
     lateinit var picassoForAdapter: Picasso
 
@@ -40,10 +41,6 @@ class DBActivity : AppCompatActivity() {
         startDBActivitySetupChain()
         setupDrawer()
         setupTags()
-
-
-
-
     }
 
     //todo logika zawarta w repozytorium powinna znajdować się we viewmodelu. Przy takim podejściu jak widoczne w zadaniu, viewModel tak naprawde nie pełni żadnej funkcji.
@@ -59,14 +56,9 @@ class DBActivity : AppCompatActivity() {
     private fun startDBActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
-                setupErrorListener()
-                setupRecyclerView{ recyclerViewSetupFinished ->
-                    if (recyclerViewSetupFinished){
-                        setupMoviesObserver{isObserverSetup ->
-                            if (isObserverSetup){
-//                                getMovies()
-                            }
-                        }
+                setupRecyclerView { recyclerViewSetupFinished ->
+                    if (recyclerViewSetupFinished) {
+                        setupMoviesObserver()
                     }
                 }
             }
@@ -78,21 +70,13 @@ class DBActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun setupErrorListener(){
-        viewModel.errorLD.observe(this, Observer {it.getContentIfNotHandled()?.let {
-            message -> showToast(message)
-        }
-
-        })
-    }
-
     private fun setupRecyclerView(complete: (Boolean) -> Unit) {
         setupAdapter()
         setupLayoutManager()
         complete(true)
     }
 
-    private fun setupAdapter(){
+    private fun setupAdapter() {
         adapter = MovieAdapter(this, picassoForAdapter) { movie ->
             val detailsActivity = Intent(this, DetailsActivity::class.java)
             detailsActivity.putExtra(EXTRA_MOVIE, movie)
@@ -101,10 +85,10 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.adapter = adapter
     }
 
-    private fun setupLayoutManager(){
+    private fun setupLayoutManager() {
         var spanCount = 2
         val orientation = resources.configuration.orientation
-        if (orientation ==  Configuration.ORIENTATION_LANDSCAPE){
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(this, spanCount)
@@ -112,36 +96,35 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    //todo dac osobno sluchanie live data i osobno getMovies on init
-
-    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.moviesLD.observe(this, Observer { movies ->
-            if (movies != null) {
-                updateDisplayedMovies(movies)
-                if (movies.isEmpty()){
-                    showMessageAboutEmptyDB()
+    private fun setupMoviesObserver() {
+        viewModel.moviesLD.observe(this, Observer { resource ->
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    updateDisplayedMovies(resource.data!!)
+                    if (resource.data.isEmpty()) {
+                        showMessageAboutEmptyDB()
+                    }
+                }
+                else -> {
+                    showToast("Cannot access movies from the data base.")
                 }
             }
-
         })
-        complete(true)
     }
 
-    private fun updateDisplayedMovies(movies: List<Movie>){
+    private fun updateDisplayedMovies(movies: List<Movie>) {
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun showMessageAboutEmptyDB(){
+    private fun showMessageAboutEmptyDB() {
         emptyListTextView.isVisible = true
     }
 
-//    private fun getMovies(){
-//        viewModel.getDbMovies()
-//    }
-
-    private fun setupDrawer(){
-        val toggle = ActionBarDrawerToggle(this,drawer_layout,toolbar,
-            R.string.nav_drawer_open,R.string.nav_drawer_closed)
+    private fun setupDrawer() {
+        val toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar,
+            R.string.nav_drawer_open, R.string.nav_drawer_closed
+        )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
@@ -152,7 +135,7 @@ class DBActivity : AppCompatActivity() {
         popularTextView.tag = Category.POPULAR
     }
 
-    fun myToWatchListClicked (view: View) {
+    fun myToWatchListClicked(view: View) {
         closeDrawerOrMinimizeApp()
         showToast("This is your list.")
     }
@@ -171,7 +154,7 @@ class DBActivity : AppCompatActivity() {
         switchToApiActivity(category)
     }
 
-    private fun switchToApiActivity(category: Category){
+    private fun switchToApiActivity(category: Category) {
         val apiIntent = Intent(this, ApiActivity::class.java)
         apiIntent.putExtra(EXTRA_CATEGORY, category)
         startActivity(apiIntent)
@@ -180,11 +163,6 @@ class DBActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         closeDrawerOrMinimizeApp()
-    }
-//todo dodac obracNIE EKRANU
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-//        outState.putBoolean(CONFIGURATION_CHANGE, true)
     }
 
 }
