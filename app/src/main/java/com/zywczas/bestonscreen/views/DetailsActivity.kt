@@ -22,12 +22,15 @@ import javax.inject.Inject
 class DetailsActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DetailsVM
+
     @Inject
     lateinit var factory: DetailsVMFactory
+
     @Inject
     lateinit var picasso: Picasso
     private lateinit var movie: Movie
-    private var wasOrientationChanged : Boolean? = null
+    //todo to usunac, poki co nie potrzebne
+    private var wasOrientationChanged: Boolean? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +40,15 @@ class DetailsActivity : AppCompatActivity() {
         startDetailsActivitySetupChain()
     }
 
-    private fun startDetailsActivitySetupChain(){
-        injectDependencies{ isInjectionFinished ->
+    private fun startDetailsActivitySetupChain() {
+        injectDependencies { isInjectionFinished ->
             if (isInjectionFinished) {
                 getViewModelAndIntent { success ->
                     if (success) {
                         setupUIState()
                         //todo sprawdzic czy kolejnosc moze byc odwrtna
                         setupAddToListBtnStateObserver()
-                        initListeningOfIsMovieInDb()
+                        checkIfMovieIsInDb()
                         setupMessageObserver()
                     }
                 }
@@ -53,12 +56,12 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun injectDependencies(complete: (Boolean) -> Unit){
+    private fun injectDependencies(complete: (Boolean) -> Unit) {
         App.moviesComponent.inject(this)
         complete(true)
     }
 
-    private fun getViewModelAndIntent(complete: (Boolean) -> Unit){
+    private fun getViewModelAndIntent(complete: (Boolean) -> Unit) {
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         if (movieFromParcel != null) {
             movie = movieFromParcel
@@ -72,19 +75,19 @@ class DetailsActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
-            val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
-            picasso.load(posterPath)
-                .resize(250, 0)
-                .error(R.drawable.error_image)
-                .into(posterImageViewDetails)
-            titleTextViewDetails.text = movie.title
-            rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
-            releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
-            overviewTextViewDetails.text = movie.overview
-            genresTextViewDetails.text = getGenresDescription()
+        val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+        picasso.load(posterPath)
+            .resize(250, 0)
+            .error(R.drawable.error_image)
+            .into(posterImageViewDetails)
+        titleTextViewDetails.text = movie.title
+        rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
+        releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
+        overviewTextViewDetails.text = movie.overview
+        genresTextViewDetails.text = getGenresDescription()
     }
 
-    private fun getGenresDescription() : String {
+    private fun getGenresDescription(): String {
         return when (movie.assignedGenresAmount) {
             1 -> "Genre: ${movie.genre1}"
             2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
@@ -97,27 +100,32 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(this,
-            Observer {isInDb ->
-                addToListBtn.isChecked = isInDb
-                addToListBtn.tag = isInDb
+            Observer {
+                it.getContentIfNotHandled()?.let { isInDb ->
+                    addToListBtn.isChecked = isInDb
+                    addToListBtn.tag = isInDb
+                }
             })
     }
 
-    private fun initListeningOfIsMovieInDb(){
-        if (wasOrientationChanged == null) {
-            viewModel.checkIfIsInDb(movie.id)
-        }
+    private fun checkIfMovieIsInDb() {
+        viewModel.checkIfIsInDb(movie.id)
     }
 
-    private fun setupMessageObserver(){
-        viewModel.messageLD.observe(this, Observer { it.getContentIfNotHandled()?.let {
-            message -> showToast(message)
-        } })
+    //todo jak dodaje film i obracam ekran to zle pokazuje live data
+
+    private fun setupMessageObserver() {
+        viewModel.messageLD.observe(this, Observer {
+            it.getContentIfNotHandled()?.let { message ->
+                showToast(message)
+            }
+        })
     }
 
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
         viewModel.addOrDeleteMovie(movie, isButtonChecked)
+        checkIfMovieIsInDb()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

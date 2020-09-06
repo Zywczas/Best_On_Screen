@@ -14,11 +14,11 @@ class DetailsRepository @Inject constructor(
     private val movieDao: MovieDao
 ){
 
-    fun checkIfMovieIsInDB (movieId: Int) : Flowable<Boolean> {
+    fun checkIfMovieIsInDB (movieId: Int) : Flowable<Event<Boolean>> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
         return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
-            .map{ idCount -> toBoolean(idCount) }
+            .map{ idCount -> Event(toBoolean(idCount)) }
     }
 
     private fun toBoolean(idCount: Int) : Boolean {

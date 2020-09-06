@@ -50,6 +50,12 @@ class MoviesModule(private val application: Application) {
     @Provides
     fun provideBooleanMutableLiveData() = MutableLiveData<Boolean>()
 
+    @Provides
+    fun provideBooleanMediatorLiveData() = MediatorLiveData<Boolean>()
+
+    @Provides
+    fun provideBooleanEventMediatorLiveData() = MediatorLiveData<Event<Boolean>>()
+
     @Provides @Singleton
     fun provideTMDBService() : ApiService = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")

@@ -10,7 +10,7 @@ import io.reactivex.Single
 @Dao
 interface MovieDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movieFromDB: MovieFromDB) : Single<Long>
 
     @Delete
