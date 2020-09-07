@@ -1,9 +1,14 @@
 package com.zywczas.bestonscreen.views
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -29,10 +34,10 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
-    private lateinit var viewModel: ApiVM
-    private lateinit var adapter: MovieAdapter
     @Inject
     lateinit var picassoForAdapter: Picasso
+    private lateinit var viewModel: ApiVM
+    private lateinit var adapter: MovieAdapter
     private val anyCategoryOnInit = Category.POPULAR
     private var currentCategory = anyCategoryOnInit
     private var wasOrientationChanged: Boolean? = null
@@ -44,6 +49,15 @@ class ApiActivity : AppCompatActivity() {
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
+        button.isVisible = true
+    }
+
+    fun checkInternet(view: View) {
+        if (Variables.isNetworkConnected == true) {
+            showToast("mamy internet")
+        } else {
+            showToast("nie ma neta")
+        }
     }
 
     private fun startApiActivitySetupChain() {
@@ -230,5 +244,5 @@ class ApiActivity : AppCompatActivity() {
         outState.putBoolean(CONFIGURATION_CHANGE, true)
     }
 
-    //todo dodac internet error handling
+
 }
