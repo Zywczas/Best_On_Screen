@@ -6,7 +6,6 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
-//todo pousuwac savedstatehandle
 class DBVM (repo: DBRepository) : ViewModel() {
 
     val moviesLD =

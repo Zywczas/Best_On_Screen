@@ -13,7 +13,6 @@ import javax.inject.Singleton
 class DetailsRepository @Inject constructor(
     private val movieDao: MovieDao
 ) {
-//todo posprawdzac czy w reszcie repo nie dac osobno tekstow
 
     private val checkError = "Cannot check the data base. Go back and try again."
     private val addSuccess = "Movie added to your list."

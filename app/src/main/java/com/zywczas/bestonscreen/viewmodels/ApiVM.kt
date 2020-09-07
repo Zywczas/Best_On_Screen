@@ -74,5 +74,4 @@ class ApiVM(
         moviesMLD.postValue(Resource.success(Pair(movies.toList(), nextCategory)))
     }
 
-    //todo pozamieniac pozniej na Livedata od REsult
 }

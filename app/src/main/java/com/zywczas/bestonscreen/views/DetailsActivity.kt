@@ -42,9 +42,6 @@ class DetailsActivity : AppCompatActivity() {
                 getViewModelAndIntent { success ->
                     if (success) {
                         setupUIState()
-                        //todo sprawdzic czy kolejnosc moze byc odwrtna
-                        setupAddToListBtnStateObserver()
-                        checkIfMovieIsInDb()
                         setupMessageObserver()
                     }
                 }
@@ -59,6 +56,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun getViewModelAndIntent(complete: (Boolean) -> Unit) {
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+
         if (movieFromParcel != null) {
             movie = movieFromParcel
             viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
@@ -72,15 +70,18 @@ class DetailsActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+
         picasso.load(posterPath)
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
+
         titleTextViewDetails.text = movie.title
         rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
         releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
         overviewTextViewDetails.text = movie.overview
         genresTextViewDetails.text = getGenresDescription()
+        setupAddToListBtnStateObserver()
     }
 
     private fun getGenresDescription() : String {
@@ -110,6 +111,8 @@ class DetailsActivity : AppCompatActivity() {
                     }
                 }
             })
+
+        checkIfMovieIsInDb()
     }
 
     private fun checkIfMovieIsInDb() {
@@ -126,6 +129,7 @@ class DetailsActivity : AppCompatActivity() {
 
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
+
         viewModel.addOrDeleteMovie(movie, isButtonChecked)
         checkIfMovieIsInDb()
     }

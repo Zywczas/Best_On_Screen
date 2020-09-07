@@ -125,8 +125,6 @@ class ApiActivity : AppCompatActivity() {
         complete(true)
     }
 
-    //todo pousuwac logi
-
     private fun hideProgressBar() {
         progressBar.isVisible = false
     }
