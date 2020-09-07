@@ -57,9 +57,10 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     fun provideBooleanMediatorLiveData() = MediatorLiveData<Boolean>()
+    //todo posprawdzac czy nazwy sa w tym samym szyku
 
     @Provides
-    fun provideBooleanEventMediatorLiveData() = MediatorLiveData<Event<Boolean>>()
+    fun provideBooleanResourceEventMediatorLiveData() = MediatorLiveData<Event<Resource<Boolean>>>()
 
     @Provides @Singleton
     fun provideTMDBService() : ApiService = Retrofit.Builder()

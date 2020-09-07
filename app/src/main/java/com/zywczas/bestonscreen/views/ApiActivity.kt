@@ -101,23 +101,23 @@ class ApiActivity : AppCompatActivity() {
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.moviesLD.observe(this,
-            Observer { vmResource ->
+            Observer { resource ->
                 //todo moze podzielic na mniejsze
                 hideProgressBar()
-                when (vmResource.status) {
+                when (resource.status) {
                     Status.SUCCESS -> {
-                        val incomingMovies = vmResource.data!!.first
-                        val incomingCategory = vmResource.data.second
+                        val incomingMovies = resource.data!!.first
+                        val incomingCategory = resource.data.second
                         updateDisplayedMovies(incomingMovies)
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingCategory)
                     }
                     Status.ERROR -> {
-                        showToast(vmResource.message!!)
+                        showToast(resource.message!!)
                     }
                     Status.LOADING -> {
                         //todo dodac internet handling
-                        showToast("still loading")
+                        showToast(resource.message!!)
                     }
                 }
             }

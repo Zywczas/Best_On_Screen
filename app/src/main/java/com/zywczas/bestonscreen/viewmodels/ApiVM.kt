@@ -61,7 +61,7 @@ class ApiVM(
                 }
 //todo sprawdzic jak z ladowaniem internetu, moze pominac ladowanie tutaj
                 LOADING -> {
-                    moviesMLD.postValue(Resource.loading(null))
+                    moviesMLD.postValue(Resource.loading("still loading", null))
                 }
             }
             moviesMLD.removeSource(source)

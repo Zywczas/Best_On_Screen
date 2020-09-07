@@ -13,6 +13,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.Status
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
@@ -21,22 +22,17 @@ import javax.inject.Inject
 
 class DetailsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: DetailsVM
-
     @Inject
     lateinit var factory: DetailsVMFactory
-
     @Inject
     lateinit var picasso: Picasso
     private lateinit var movie: Movie
-    //todo to usunac, poki co nie potrzebne
-    private var wasOrientationChanged: Boolean? = null
+    private lateinit var viewModel: DetailsVM
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
-        wasOrientationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         startDetailsActivitySetupChain()
     }
 
@@ -87,23 +83,31 @@ class DetailsActivity : AppCompatActivity() {
         genresTextViewDetails.text = getGenresDescription()
     }
 
-    private fun getGenresDescription(): String {
+    private fun getGenresDescription() : String {
         return when (movie.assignedGenresAmount) {
             1 -> "Genre: ${movie.genre1}"
             2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
             3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
             4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
             5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
-            else -> "no information"
+            else -> "Genres: no information"
         }
     }
 
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(this,
             Observer {
-                it.getContentIfNotHandled()?.let { isInDb ->
-                    addToListBtn.isChecked = isInDb
-                    addToListBtn.tag = isInDb
+                it.getContentIfNotHandled()?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            val isInDb = resource.data!!
+                            addToListBtn.isChecked = isInDb
+                            addToListBtn.tag = isInDb
+                        }
+                        else -> {
+                            showToast(resource.message!!)
+                        }
+                    }
                 }
             })
     }
@@ -111,8 +115,6 @@ class DetailsActivity : AppCompatActivity() {
     private fun checkIfMovieIsInDb() {
         viewModel.checkIfIsInDb(movie.id)
     }
-
-    //todo jak dodaje film i obracam ekran to zle pokazuje live data
 
     private fun setupMessageObserver() {
         viewModel.messageLD.observe(this, Observer {
@@ -128,8 +130,4 @@ class DetailsActivity : AppCompatActivity() {
         checkIfMovieIsInDb()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(CONFIGURATION_CHANGE, true)
-    }
 }
