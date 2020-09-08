@@ -53,12 +53,14 @@ class ApiActivity : AppCompatActivity() {
     }
 
     fun checkInternet(view: View) {
-        if (Variables.isNetworkConnected == true) {
+        if (Variables.isNetworkConnected) {
             showToast("mamy internet")
         } else {
             showToast("nie ma neta")
         }
     }
+
+    //todo jak nie ma internetu to nie wczytuje nic ale zle zapisuje strony w view model i blokuje categorie
 
     private fun startApiActivitySetupChain() {
         injectDependencies { injectionFinished ->
