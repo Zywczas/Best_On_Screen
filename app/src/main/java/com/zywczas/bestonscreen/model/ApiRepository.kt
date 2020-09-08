@@ -34,7 +34,6 @@ class ApiRepository @Inject constructor(
             }
             .onErrorReturn { Resource.error("Problem with downloading movies.", null) }
             .toFlowable()
-        //todo dodac jakos timeout message
     }
 
     private fun getApiSingle() = when (category) {

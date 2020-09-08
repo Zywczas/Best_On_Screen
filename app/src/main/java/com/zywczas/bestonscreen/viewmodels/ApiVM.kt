@@ -33,7 +33,6 @@ class ApiVM(
             sendError("No more pages.")
         } else {
             downloadAndSendMovies()
-            nextPage++
         }
     }
 
@@ -72,6 +71,7 @@ class ApiVM(
         movies.addAll(data.first)
         lastPageOfCategory = data.second
         moviesMLD.postValue(Resource.success(Pair(movies.toList(), nextCategory)))
+        nextPage++
     }
 
 }

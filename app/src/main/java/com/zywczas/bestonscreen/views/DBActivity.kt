@@ -28,11 +28,10 @@ class DBActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBVMFactory
-    private lateinit var viewModel: DBVM
-    private lateinit var adapter: MovieAdapter
-
     @Inject
     lateinit var picassoForAdapter: Picasso
+    private lateinit var viewModel: DBVM
+    private lateinit var adapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +39,7 @@ class DBActivity : AppCompatActivity() {
         startDBActivitySetupChain()
         setupDrawer()
         setupTags()
+        checkInternetConnection()
     }
 
     private fun startDBActivitySetupChain() {
@@ -100,7 +100,7 @@ class DBActivity : AppCompatActivity() {
                     }
                 }
                 else -> {
-                    showToast("Cannot access movies from the data base.")
+                    showToast("Cannot access movies from the data base. Close the app and try again.")
                 }
             }
         })
@@ -129,6 +129,12 @@ class DBActivity : AppCompatActivity() {
         popularTextView.tag = Category.POPULAR
     }
 
+    private fun checkInternetConnection(){
+        if (!Variables.isNetworkConnected){
+            showToast(CONNECTION_PROBLEM)
+        }
+    }
+
     fun myToWatchListClicked(view: View) {
         closeDrawerOrMinimizeApp()
         showToast("This is your list.")
@@ -144,8 +150,12 @@ class DBActivity : AppCompatActivity() {
 
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
-        val category = view.tag as Category
-        switchToApiActivity(category)
+        if (Variables.isNetworkConnected) {
+            val category = view.tag as Category
+            switchToApiActivity(category)
+        } else {
+            showToast(CONNECTION_PROBLEM)
+        }
     }
 
     private fun switchToApiActivity(category: Category) {

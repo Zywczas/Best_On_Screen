@@ -1,14 +1,9 @@
 package com.zywczas.bestonscreen.views
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -34,6 +29,7 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
+
     @Inject
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: ApiVM
@@ -60,8 +56,6 @@ class ApiActivity : AppCompatActivity() {
         }
     }
 
-    //todo jak nie ma internetu to nie wczytuje nic ale zle zapisuje strony w view model i blokuje categorie
-
     private fun startApiActivitySetupChain() {
         injectDependencies { injectionFinished ->
             if (injectionFinished) {
@@ -85,7 +79,7 @@ class ApiActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         viewModel = ViewModelProvider(this, factory).get(ApiVM::class.java)
     }
 
@@ -128,6 +122,7 @@ class ApiActivity : AppCompatActivity() {
                         setupToolbarTitle(incomingCategory)
                         prepareDataForNextCall(incomingCategory)
                     }
+                    //todo usunac loading
                     Status.ERROR -> {
                         showToast(resource.message!!)
                     }
@@ -154,16 +149,28 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun prepareDataForNextCall(incomingCategory: Category) {
+        //todo to chyba jz nie potrzebne
         currentCategory = incomingCategory
     }
 
     private fun getMoviesOnViewModelInit() {
         if (wasOrientationChanged == null) {
-            showProgressBar()
-            val intentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
-            viewModel.getApiMovies(intentCategory)
+            currentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
+            downloadNextPageIfConnected()
         }
     }
+
+    private fun downloadNextPageIfConnected() {
+        if (Variables.isNetworkConnected) {
+            showProgressBar()
+            viewModel.getApiMovies(currentCategory)
+        } else {
+            showToast(CONNECTION_PROBLEM)
+        }
+    }
+
+
+    //todo usunac guzik i funkcje
 
     private fun showProgressBar() {
         progressBar.isVisible = true
@@ -176,15 +183,10 @@ class ApiActivity : AppCompatActivity() {
                 val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
                         newState == RecyclerView.SCROLL_STATE_IDLE
                 if (isRecyclerViewBottom) {
-                    downloadNextPage()
+                    downloadNextPageIfConnected()
                 }
             }
         })
-    }
-
-    private fun downloadNextPage() {
-        showProgressBar()
-        viewModel.getApiMovies(currentCategory)
     }
 
     private fun setupDrawer() {
@@ -227,14 +229,10 @@ class ApiActivity : AppCompatActivity() {
         if (clickedCategory == currentCategory) {
             showToast("This is $clickedCategory.")
         } else {
-            switchToNewMoviesCategory(clickedCategory)
+            currentCategory = clickedCategory
+            downloadNextPageIfConnected()
+            moviesRecyclerView.scrollToPosition(0)
         }
-    }
-
-    private fun switchToNewMoviesCategory(clickedCategory: Category) {
-        showProgressBar()
-        viewModel.getApiMovies(clickedCategory)
-        moviesRecyclerView.scrollToPosition(0)
     }
 
     override fun onBackPressed() {

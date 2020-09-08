@@ -11,10 +11,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
-import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.Status
-import com.zywczas.bestonscreen.utilities.showToast
+import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.activity_details.*
@@ -34,6 +31,7 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
         startDetailsActivitySetupChain()
+        checkInternetConnection()
     }
 
     private fun startDetailsActivitySetupChain() {
@@ -127,9 +125,14 @@ class DetailsActivity : AppCompatActivity() {
         })
     }
 
+    private fun checkInternetConnection(){
+        if (!Variables.isNetworkConnected){
+            showToast(CONNECTION_PROBLEM)
+        }
+    }
+
     fun addToListClicked(view: View) {
         val isButtonChecked = addToListBtn.tag as Boolean
-
         viewModel.addOrDeleteMovie(movie, isButtonChecked)
         checkIfMovieIsInDb()
     }
