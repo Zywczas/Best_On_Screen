@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
+    private val moviesMLD: MediatorLiveData<Resource<List<Movie>>>,
     private val movies: ArrayList<Movie>
 ) : ViewModelProvider.NewInstanceFactory() {
 

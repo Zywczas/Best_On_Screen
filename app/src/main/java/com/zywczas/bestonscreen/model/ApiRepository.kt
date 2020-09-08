@@ -17,14 +17,10 @@ class ApiRepository @Inject constructor(
 ) {
 
     private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
-    private var page = 1
-    private lateinit var category: Category
 
     fun getApiMovies(category: Category, page: Int): Flowable<Resource<Pair<List<Movie>, Int>>> {
         movies.clear()
-        this.category = category
-        this.page = page
-        val apiSingle = getApiSingle()
+        val apiSingle = getApiSingle(category, page)
         return apiSingle
             .subscribeOn(Schedulers.io())
             .map { apiResponse ->
@@ -36,7 +32,7 @@ class ApiRepository @Inject constructor(
             .toFlowable()
     }
 
-    private fun getApiSingle() = when (category) {
+    private fun getApiSingle(category: Category, page: Int) = when (category) {
         Category.POPULAR -> {
             apiService.getPopularMovies(apiKey, page)
         }
@@ -47,7 +43,7 @@ class ApiRepository @Inject constructor(
             apiService.getUpcomingMovies(apiKey, page)
         }
     }
-
+//todo dac tutaj return List
     private fun convertIdsAndToMovies(moviesFromApi: List<MovieFromApi>){
         for (m in moviesFromApi) {
             m.convertGenreIdsToVariables()

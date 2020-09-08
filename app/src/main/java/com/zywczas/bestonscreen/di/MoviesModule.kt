@@ -42,10 +42,7 @@ class MoviesModule(private val application: Application) {
     fun provideMediatorLdTripleMoviesIntCategory() = MediatorLiveData<Triple<List<Movie>, Int, Category>>()
 
     @Provides
-    fun provideMediatorLdPairMoviesCategory() = MediatorLiveData<Pair<List<Movie>, Category>>()
-
-    @Provides
-    fun provideMediatorLdResourcePairMoviesCategory() = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
+    fun provideMediatorLdResourceMovies() = MediatorLiveData<Resource<List<Movie>>>()
 
 
     @Provides

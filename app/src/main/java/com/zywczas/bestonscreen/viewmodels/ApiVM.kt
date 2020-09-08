@@ -4,14 +4,13 @@ import androidx.lifecycle.*
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status.*
 
 
 class ApiVM(
     private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>,
+    private val moviesMLD: MediatorLiveData<Resource<List<Movie>>>,
     private val movies: ArrayList<Movie>
 ) : ViewModel() {
 
@@ -21,14 +20,16 @@ class ApiVM(
     private val anyCategoryOnInit = Category.POPULAR
     private var nextCategory = anyCategoryOnInit
 
-    val moviesLD = moviesMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
+    val moviesLD = moviesMLD as LiveData<Resource<List<Movie>>>
 
-    fun getApiMovies(nextCategory: Category) {
-        val isNewCategory = nextCategory != this.nextCategory
+    fun getApiMovies(category: Category) {
+        val isNewCategory = category != this.nextCategory
+
         if (isNewCategory) {
             resetData()
-            this.nextCategory = nextCategory
+            this.nextCategory = category
         }
+
         if (nextPage > lastPageOfCategory) {
             sendError("No more pages.")
         } else {
@@ -50,17 +51,14 @@ class ApiVM(
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.getApiMovies(nextCategory, nextPage)
         )
+
         moviesMLD.addSource(source) {repoResource ->
             when (repoResource.status) {
                 SUCCESS -> {
                     updateAndSendData(repoResource.data!!)
                 }
-                ERROR -> {
+                else -> {
                     sendError(repoResource.message!!)
-                }
-//todo sprawdzic jak z ladowaniem internetu, moze pominac ladowanie tutaj
-                LOADING -> {
-                    moviesMLD.postValue(Resource.loading("still loading", null))
                 }
             }
             moviesMLD.removeSource(source)
@@ -70,7 +68,7 @@ class ApiVM(
     private fun updateAndSendData(data: Pair<List<Movie>, Int>) {
         movies.addAll(data.first)
         lastPageOfCategory = data.second
-        moviesMLD.postValue(Resource.success(Pair(movies.toList(), nextCategory)))
+        moviesMLD.postValue(Resource.success(movies.toList()))
         nextPage++
     }
 

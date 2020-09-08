@@ -45,15 +45,6 @@ class ApiActivity : AppCompatActivity() {
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
-        button.isVisible = true
-    }
-
-    fun checkInternet(view: View) {
-        if (Variables.isNetworkConnected) {
-            showToast("mamy internet")
-        } else {
-            showToast("nie ma neta")
-        }
     }
 
     private fun startApiActivitySetupChain() {
@@ -108,26 +99,18 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
         moviesRecyclerView.setHasFixedSize(true)
     }
+    //todo ocenic odleglosci pionowe
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.moviesLD.observe(this,
             Observer { resource ->
-                //todo moze podzielic na mniejsze
                 hideProgressBar()
                 when (resource.status) {
                     Status.SUCCESS -> {
-                        val incomingMovies = resource.data!!.first
-                        val incomingCategory = resource.data.second
-                        updateDisplayedMovies(incomingMovies)
-                        setupToolbarTitle(incomingCategory)
-                        prepareDataForNextCall(incomingCategory)
+                        updateDisplayedMovies(resource.data!!)
+                        updateToolbarTitle()
                     }
-                    //todo usunac loading
-                    Status.ERROR -> {
-                        showToast(resource.message!!)
-                    }
-                    Status.LOADING -> {
-                        //todo dodac internet handling
+                    else -> {
                         showToast(resource.message!!)
                     }
                 }
@@ -144,13 +127,8 @@ class ApiActivity : AppCompatActivity() {
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun setupToolbarTitle(incomingCategory: Category) {
-        toolbar.title = "Movies: $incomingCategory"
-    }
-
-    private fun prepareDataForNextCall(incomingCategory: Category) {
-        //todo to chyba jz nie potrzebne
-        currentCategory = incomingCategory
+    private fun updateToolbarTitle() {
+        toolbar.title = "Movies: $currentCategory"
     }
 
     private fun getMoviesOnViewModelInit() {
@@ -168,9 +146,6 @@ class ApiActivity : AppCompatActivity() {
             showToast(CONNECTION_PROBLEM)
         }
     }
-
-
-    //todo usunac guzik i funkcje
 
     private fun showProgressBar() {
         progressBar.isVisible = true
