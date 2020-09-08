@@ -2,10 +2,8 @@ package com.zywczas.bestonscreen.di
 
 import android.app.Application
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
-import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
@@ -15,7 +13,6 @@ import com.zywczas.bestonscreen.utilities.Resource
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton

@@ -15,7 +15,8 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.*
+import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
@@ -99,7 +100,7 @@ class DBActivity : AppCompatActivity() {
                         showMessageAboutEmptyDB()
                     }
                 }
-                else -> {
+                Status.ERROR -> {
                     showToast("Cannot access movies from the data base. Close the app and try again.")
                 }
             }
@@ -159,9 +160,9 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun switchToApiActivity(category: Category) {
-        val apiIntent = Intent(this, ApiActivity::class.java)
-        apiIntent.putExtra(EXTRA_CATEGORY, category)
-        startActivity(apiIntent)
+        val apiActivityIntent = Intent(this, ApiActivity::class.java)
+        apiActivityIntent.putExtra(EXTRA_CATEGORY, category)
+        startActivity(apiActivityIntent)
         finish()
     }
 

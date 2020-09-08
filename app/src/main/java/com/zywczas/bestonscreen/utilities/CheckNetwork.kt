@@ -2,10 +2,7 @@ package com.zywczas.bestonscreen.utilities
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.LinkProperties
 import android.net.Network
-import android.net.NetworkCapabilities
-import com.zywczas.bestonscreen.utilities.Variables.isNetworkConnected
 
 class CheckNetwork(private val context: Context) {
 
@@ -18,12 +15,12 @@ class CheckNetwork(private val context: Context) {
 
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                isNetworkConnected = true
+                Variables.isNetworkConnected = true
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                isNetworkConnected = false
+                Variables.isNetworkConnected = false
             }
 
         })

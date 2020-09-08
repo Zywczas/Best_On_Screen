@@ -1,11 +1,15 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Resource
-import com.zywczas.bestonscreen.utilities.Status.*
+import com.zywczas.bestonscreen.utilities.Status
+
 
 
 class ApiVM(
@@ -15,21 +19,19 @@ class ApiVM(
 ) : ViewModel() {
 
     private val firstPageOfNewCategory = 1
+    private val anyCategoryOnInit = Category.POPULAR
     private var nextPage = firstPageOfNewCategory
     private var lastPageOfCategory = firstPageOfNewCategory
-    private val anyCategoryOnInit = Category.POPULAR
     private var nextCategory = anyCategoryOnInit
 
     val moviesLD = moviesMLD as LiveData<Resource<List<Movie>>>
 
     fun getApiMovies(category: Category) {
         val isNewCategory = category != this.nextCategory
-
         if (isNewCategory) {
             resetData()
             this.nextCategory = category
         }
-
         if (nextPage > lastPageOfCategory) {
             sendError("No more pages.")
         } else {
@@ -53,10 +55,10 @@ class ApiVM(
         )
         moviesMLD.addSource(source) {repoResource ->
             when (repoResource.status) {
-                SUCCESS -> {
+                Status.SUCCESS -> {
                     updateAndSendData(repoResource.data!!)
                 }
-                else -> {
+                Status.ERROR -> {
                     sendError(repoResource.message!!)
                 }
             }

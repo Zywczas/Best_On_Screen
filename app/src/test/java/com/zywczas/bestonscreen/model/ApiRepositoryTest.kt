@@ -3,9 +3,7 @@ package com.zywczas.bestonscreen.model
 import androidx.lifecycle.MutableLiveData
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 

@@ -16,7 +16,8 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.*
+import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
@@ -29,7 +30,6 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
-
     @Inject
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: ApiVM
@@ -99,7 +99,6 @@ class ApiActivity : AppCompatActivity() {
         moviesRecyclerView.layoutManager = layoutManager
         moviesRecyclerView.setHasFixedSize(true)
     }
-    //todo ocenic odleglosci pionowe
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.moviesLD.observe(this,
@@ -134,11 +133,11 @@ class ApiActivity : AppCompatActivity() {
     private fun getMoviesOnViewModelInit() {
         if (wasOrientationChanged == null) {
             currentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
-            downloadNextPageIfConnected()
+            downloadNextPageIfInternetConnected()
         }
     }
 
-    private fun downloadNextPageIfConnected() {
+    private fun downloadNextPageIfInternetConnected() {
         if (Variables.isNetworkConnected) {
             showProgressBar()
             viewModel.getApiMovies(currentCategory)
@@ -158,7 +157,7 @@ class ApiActivity : AppCompatActivity() {
                 val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
                         newState == RecyclerView.SCROLL_STATE_IDLE
                 if (isRecyclerViewBottom) {
-                    downloadNextPageIfConnected()
+                    downloadNextPageIfInternetConnected()
                 }
             }
         })
@@ -193,8 +192,8 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun switchToDBActivity() {
-        val toWatchIntent = Intent(this, DBActivity::class.java)
-        startActivity(toWatchIntent)
+        val databaseActivityIntent = Intent(this, DBActivity::class.java)
+        startActivity(databaseActivityIntent)
         finish()
     }
 
@@ -205,7 +204,7 @@ class ApiActivity : AppCompatActivity() {
             showToast("This is $clickedCategory.")
         } else {
             currentCategory = clickedCategory
-            downloadNextPageIfConnected()
+            downloadNextPageIfInternetConnected()
             moviesRecyclerView.scrollToPosition(0)
         }
     }

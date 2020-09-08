@@ -54,7 +54,6 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun getViewModelAndIntent(complete: (Boolean) -> Unit) {
         val movieFromParcel = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-
         if (movieFromParcel != null) {
             movie = movieFromParcel
             viewModel = ViewModelProvider(this, factory).get(DetailsVM::class.java)
@@ -68,12 +67,10 @@ class DetailsActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
-
         picasso.load(posterPath)
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-
         titleTextViewDetails.text = movie.title
         rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
         releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
@@ -103,13 +100,12 @@ class DetailsActivity : AppCompatActivity() {
                             addToListBtn.isChecked = isInDb
                             addToListBtn.tag = isInDb
                         }
-                        else -> {
+                        Status.ERROR -> {
                             showToast(resource.message!!)
                         }
                     }
                 }
             })
-
         checkIfMovieIsInDb()
     }
 

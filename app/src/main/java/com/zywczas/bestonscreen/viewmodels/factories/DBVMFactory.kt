@@ -1,12 +1,8 @@
 package com.zywczas.bestonscreen.viewmodels.factories
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zywczas.bestonscreen.model.DBRepository
-import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import javax.inject.Inject
 import javax.inject.Singleton

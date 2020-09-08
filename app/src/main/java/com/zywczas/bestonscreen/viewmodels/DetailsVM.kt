@@ -1,25 +1,28 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import androidx.lifecycle.*
-import com.zywczas.bestonscreen.model.Movie
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.DetailsRepository
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.Resource
 
 class DetailsVM(
     private val repo: DetailsRepository,
-    private val isMovieInDbEventMLD: MediatorLiveData<Event<Resource<Boolean>>>,
-    private val messageEventMLD: MediatorLiveData<Event<String>>
+    private val isMovieInDbMLD: MediatorLiveData<Event<Resource<Boolean>>>,
+    private val messageMLD: MediatorLiveData<Event<String>>
 ) : ViewModel() {
 
-    val isMovieInDbLD = isMovieInDbEventMLD as LiveData<Event<Resource<Boolean>>>
-    val messageLD = messageEventMLD as LiveData<Event<String>>
+    val isMovieInDbLD = isMovieInDbMLD as LiveData<Event<Resource<Boolean>>>
+    val messageLD = messageMLD as LiveData<Event<String>>
 
     fun checkIfIsInDb(movieId: Int) {
         val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))
-        isMovieInDbEventMLD.addSource(source) {
-            isMovieInDbEventMLD.postValue(it)
-            isMovieInDbEventMLD.removeSource(source)
+        isMovieInDbMLD.addSource(source) {
+            isMovieInDbMLD.postValue(it)
+            isMovieInDbMLD.removeSource(source)
         }
     }
 
@@ -33,18 +36,18 @@ class DetailsVM(
     private fun addMovieToDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.addMovieToDB(movie))
-        messageEventMLD.addSource(source) { event ->
-            messageEventMLD.postValue(event)
-            messageEventMLD.removeSource(source)
+        messageMLD.addSource(source) { event ->
+            messageMLD.postValue(event)
+            messageMLD.removeSource(source)
         }
     }
 
     private fun deleteMovieFromDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.deleteMovieFromDB(movie))
-        messageEventMLD.addSource(source) { event ->
-            messageEventMLD.postValue(event)
-            messageEventMLD.removeSource(source)
+        messageMLD.addSource(source) { event ->
+            messageMLD.postValue(event)
+            messageMLD.removeSource(source)
         }
     }
 
