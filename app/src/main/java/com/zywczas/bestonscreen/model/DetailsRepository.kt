@@ -22,7 +22,6 @@ class DetailsRepository @Inject constructor(
 
     fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Resource<Boolean>>> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
-
         return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
             .map { idCount -> Event(Resource.success(toBoolean(idCount))) }
@@ -30,7 +29,6 @@ class DetailsRepository @Inject constructor(
     }
 
     private fun toBoolean(idCount: Int): Boolean {
-
         return when (idCount) {
             0 -> false
             else -> true
@@ -39,7 +37,6 @@ class DetailsRepository @Inject constructor(
 
     fun addMovieToDB(movie: Movie): Flowable<Event<String>> {
         val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toMovieFromDB(movie)))
-
         return single
             .subscribeOn(Schedulers.io())
             .flatMapPublisher { rowId ->
@@ -54,7 +51,6 @@ class DetailsRepository @Inject constructor(
 
     fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> {
         val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toMovieFromDB(movie)))
-
         return single
             .subscribeOn(Schedulers.io())
             .flatMapPublisher { numberOfRowsRemoved ->

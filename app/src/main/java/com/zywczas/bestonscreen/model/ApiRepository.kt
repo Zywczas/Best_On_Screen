@@ -11,7 +11,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ApiRepository @Inject constructor(
-    //todo chyba wszystkie mowies mozna wrzucic w klase, sprawdzic przy testach
     private val movies: ArrayList<Movie>,
     private val apiService: ApiService
 ) {
@@ -43,7 +42,7 @@ class ApiRepository @Inject constructor(
             apiService.getUpcomingMovies(apiKey, page)
         }
     }
-//todo dac tutaj return List
+
     private fun convertIdsAndToMovies(moviesFromApi: List<MovieFromApi>){
         for (m in moviesFromApi) {
             m.convertGenreIdsToVariables()

@@ -24,37 +24,13 @@ import javax.inject.Singleton
 class MoviesModule(private val application: Application) {
 
     @Provides
-    fun provideCompositeDisposable() = CompositeDisposable()
-
-    @Provides
     fun provideArrayListOfMovies() = ArrayList<Movie>()
-
-    @Provides
-    fun provideStringEventLd() = MutableLiveData<Event<String>>()
 
     @Provides
     fun provideStringEventMediatorLiveData() = MediatorLiveData<Event<String>>()
 
     @Provides
-    fun provideMutableLdTripleMoviesIntCategory() = MutableLiveData<Triple<List<Movie>, Int, Category>>()
-
-    @Provides
-    fun provideMediatorLdTripleMoviesIntCategory() = MediatorLiveData<Triple<List<Movie>, Int, Category>>()
-
-    @Provides
-    fun provideMediatorLdResourceMovies() = MediatorLiveData<Resource<List<Movie>>>()
-
-
-    @Provides
-    fun provideMoviesMutableLiveData() = MutableLiveData<List<Movie>>()
-
-    //todo sprawdzic co tu usunac
-    @Provides
-    fun provideBooleanMutableLiveData() = MutableLiveData<Boolean>()
-
-    @Provides
-    fun provideBooleanMediatorLiveData() = MediatorLiveData<Boolean>()
-    //todo posprawdzac czy nazwy sa w tym samym szyku
+    fun provideMoviesResourceMediatorLiveData() = MediatorLiveData<Resource<List<Movie>>>()
 
     @Provides
     fun provideBooleanResourceEventMediatorLiveData() = MediatorLiveData<Event<Resource<Boolean>>>()

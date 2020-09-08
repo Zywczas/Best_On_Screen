@@ -51,7 +51,6 @@ class ApiVM(
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.getApiMovies(nextCategory, nextPage)
         )
-
         moviesMLD.addSource(source) {repoResource ->
             when (repoResource.status) {
                 SUCCESS -> {

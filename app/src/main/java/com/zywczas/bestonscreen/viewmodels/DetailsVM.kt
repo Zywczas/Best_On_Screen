@@ -14,10 +14,9 @@ class DetailsVM(
 
     val isMovieInDbLD = isMovieInDbEventMLD as LiveData<Event<Resource<Boolean>>>
     val messageLD = messageEventMLD as LiveData<Event<String>>
-//todo poprawic wszedzie odleglosci pionowe
+
     fun checkIfIsInDb(movieId: Int) {
         val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))
-
         isMovieInDbEventMLD.addSource(source) {
             isMovieInDbEventMLD.postValue(it)
             isMovieInDbEventMLD.removeSource(source)
@@ -34,7 +33,6 @@ class DetailsVM(
     private fun addMovieToDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.addMovieToDB(movie))
-
         messageEventMLD.addSource(source) { event ->
             messageEventMLD.postValue(event)
             messageEventMLD.removeSource(source)
@@ -44,7 +42,6 @@ class DetailsVM(
     private fun deleteMovieFromDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.deleteMovieFromDB(movie))
-
         messageEventMLD.addSource(source) { event ->
             messageEventMLD.postValue(event)
             messageEventMLD.removeSource(source)
