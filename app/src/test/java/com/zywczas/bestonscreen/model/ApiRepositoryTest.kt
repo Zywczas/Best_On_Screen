@@ -19,11 +19,11 @@ internal class ApiRepositoryTest {
     @Mock
     lateinit var apiService: ApiService
 
-    @BeforeEach
-    private fun init(){
-        MockitoAnnotations.initMocks(this)
-        apiRepository = ApiRepository(movies, apiService)
-    }
+//    @BeforeEach
+//    private fun init(){
+//        MockitoAnnotations.initMocks(this)
+//        apiRepository = ApiRepository(movies, apiService)
+//    }
 
     /*
     czy pobiera filmy i zwraca pojedynczy wynik tylko raz i nic wiecej

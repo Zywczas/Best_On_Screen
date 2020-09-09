@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.MovieDao
+import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import org.junit.jupiter.api.BeforeEach
@@ -10,7 +11,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import io.reactivex.Flowable
 import org.junit.jupiter.api.Assertions
-
+import java.lang.RuntimeException
 
 internal class DBRepositoryTest {
 
@@ -26,6 +27,7 @@ internal class DBRepositoryTest {
         dbRepo = DBRepository(movieDao)
     }
 
+    @Throws(RuntimeException::class)
     @Test
     fun getMoviesFromDb_returnMovieList(){
         //arrange
@@ -38,17 +40,24 @@ internal class DBRepositoryTest {
         //assert
         Mockito.verify(movieDao).getMovies()
         Mockito.verifyNoMoreInteractions(movieDao)
-        Assertions.assertEquals(Resource.success(movies), returnedValue)
+        Assertions.assertEquals(movies, returnedValue)
 
     }
 
     //todo trzeba dawac blockingFirst przy RxJava
-    /*
-    empty db, return empty list
-     */
 
-    /*
-    return error on
-     */
+    @Throws(NoSuchElementException::class)
+    @Test
+    fun getMoviesFromDB_emptyDB_returnEmptyList(){
+        //arrange
+        val moviesFromDB = listOf<MovieFromDB>()
+        val returnedData = Flowable.just(moviesFromDB)
+        Mockito.`when`(movieDao.getMovies()).thenReturn(returnedData)
+        //act
+        val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
+        //assert
+        Assertions.assertEquals(listOf<Movie>(), returnedValue)
+    }
+
 
 }

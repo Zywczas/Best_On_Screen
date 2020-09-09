@@ -23,7 +23,6 @@ class ApiVM(
     private var nextPage = firstPageOfNewCategory
     private var lastPageOfCategory = firstPageOfNewCategory
     private var nextCategory = anyCategoryOnInit
-
     private val movies = mutableListOf<Movie>()
 
     val moviesLD = moviesMLD as LiveData<Resource<List<Movie>>>

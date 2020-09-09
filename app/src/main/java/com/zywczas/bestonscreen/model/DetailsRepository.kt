@@ -10,9 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DetailsRepository @Inject constructor(
-    private val movieDao: MovieDao
-) {
+class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
 
     private val checkError = "Cannot check the data base. Go back and try again."
     private val addSuccess = "Movie added to your list."
