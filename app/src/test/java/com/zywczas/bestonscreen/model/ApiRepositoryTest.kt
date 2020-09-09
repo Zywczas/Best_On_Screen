@@ -12,7 +12,7 @@ internal class ApiRepositoryTest {
     //todo pomyslec nad osobnym testem dla interfejsu
 
     //system under test
-    lateinit var apiRepository: ApiRepository
+    private lateinit var apiRepository: ApiRepository
 
     @Mock
     lateinit var movies: ArrayList<Movie>

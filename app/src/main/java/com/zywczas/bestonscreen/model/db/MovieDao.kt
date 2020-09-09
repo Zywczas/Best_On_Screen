@@ -4,15 +4,18 @@ package com.zywczas.bestonscreen.model.db
 import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
-
+import java.lang.Exception
 
 
 @Dao
 interface MovieDao {
 
+    //todo przy testowaniu dao trzeba rzucac exception
+    @Throws(Exception::class)
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertMovie(movieFromDB: MovieFromDB) : Single<Long>
 
+    @Throws(Exception::class)
     @Delete
     fun deleteMovie(movieFromDB: MovieFromDB) : Single<Int>
 

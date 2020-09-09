@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 internal class MovieFromApiTest {
 
     //system under test
-    lateinit var movieFromApi: MovieFromApi
+    private lateinit var movieFromApi: MovieFromApi
 
     @BeforeEach
     private fun init(){
