@@ -27,20 +27,28 @@ internal class DBRepositoryTest {
     }
 
     @Test
-    fun getMoviesFromDb_returnMovies(){
+    fun getMoviesFromDb_returnMovieList(){
         //arrange
         val movies = TestUtil.moviesList
         val moviesFromDB = TestUtil.moviesFromDb
-        val expectedValue = Resource.success(movies)
         val returnedData = Flowable.just(moviesFromDB)
         Mockito.`when`(movieDao.getMovies()).thenReturn(returnedData)
-
-        //act //todo trzeba dawac blockingFirst przy RxJava
+        //act
         val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
-
         //assert
-        Assertions.assertEquals(expectedValue, returnedValue)
+        Mockito.verify(movieDao).getMovies()
+        Mockito.verifyNoMoreInteractions(movieDao)
+        Assertions.assertEquals(Resource.success(movies), returnedValue)
 
     }
+
+    //todo trzeba dawac blockingFirst przy RxJava
+    /*
+    empty db, return empty list
+     */
+
+    /*
+    return error on
+     */
 
 }
