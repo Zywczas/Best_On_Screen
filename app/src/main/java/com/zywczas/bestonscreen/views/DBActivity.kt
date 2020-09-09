@@ -29,6 +29,7 @@ class DBActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBVMFactory
+
     @Inject
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: DBVM
@@ -61,7 +62,7 @@ class DBActivity : AppCompatActivity() {
         complete(true)
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         viewModel = ViewModelProvider(this, factory).get(DBVM::class.java)
     }
 
@@ -91,18 +92,11 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupMoviesObserver() {
-        viewModel.moviesLD.observe(this, Observer { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    updateDisplayedMovies(resource.data!!)
-                    if (resource.data.isEmpty()) {
-                        showMessageAboutEmptyDB()
-                    }
-                }
-                Status.ERROR -> {
-                    showToast("Cannot access movies from the data base. Close the app and try again.")
-                }
+    private fun setupMoviesObserver(){
+        viewModel.moviesLD.observe(this, Observer { movies ->
+            updateDisplayedMovies(movies)
+            if (movies.isEmpty()){
+                showMessageAboutEmptyDB()
             }
         })
     }
@@ -130,8 +124,8 @@ class DBActivity : AppCompatActivity() {
         popularTextView.tag = Category.POPULAR
     }
 
-    private fun checkInternetConnection(){
-        if (!Variables.isNetworkConnected){
+    private fun checkInternetConnection() {
+        if (!Variables.isNetworkConnected) {
             showToast(CONNECTION_PROBLEM)
         }
     }
