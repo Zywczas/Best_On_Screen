@@ -15,30 +15,18 @@ internal class ApiRepositoryTest {
     lateinit var apiRepository: ApiRepository
 
     @Mock
-    lateinit var compositeDisposable: CompositeDisposable
-    @Mock
     lateinit var movies: ArrayList<Movie>
     @Mock
     lateinit var apiService: ApiService
-    @Mock
-    lateinit var moviesLiveData : MutableLiveData<Triple<List<Movie>, Int, Category>>
 
     @BeforeEach
     private fun init(){
         MockitoAnnotations.initMocks(this)
-        apiRepository = ApiRepository(compositeDisposable, movies, apiService, moviesLiveData)
+        apiRepository = ApiRepository(movies, apiService)
     }
 
     /*
-    czy live data dziala z observer
-     */
-
-    /*
-    czy nie dziala bez observera
-     */
-
-    /*
-    czy pobiera filmy
+    czy pobiera filmy i zwraca pojedynczy wynik tylko raz i nic wiecej
      */
 
     /*
@@ -50,6 +38,12 @@ internal class ApiRepositoryTest {
      */
 
     /*
-
+        blad jak zla strona, np -1
      */
+
+    /*
+    blad jak zly api key
+     */
+
+
 }
