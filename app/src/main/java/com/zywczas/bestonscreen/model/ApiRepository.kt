@@ -11,11 +11,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ApiRepository @Inject constructor(
-    private val movies: ArrayList<Movie>,
     private val apiService: ApiService
 ) {
 
     private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
+    private val movies = mutableListOf<Movie>()
 
     fun getApiMovies(category: Category, page: Int): Flowable<Resource<Pair<List<Movie>, Int>>> {
         movies.clear()

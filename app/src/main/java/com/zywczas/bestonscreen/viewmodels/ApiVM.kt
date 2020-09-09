@@ -14,8 +14,8 @@ import com.zywczas.bestonscreen.utilities.Status
 
 class ApiVM(
     private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Resource<List<Movie>>>,
-    private val movies: ArrayList<Movie>
+    //todo sprawdzic czy nie pousuwac tego z konstuktora
+    private val moviesMLD: MediatorLiveData<Resource<List<Movie>>>
 ) : ViewModel() {
 
     private val firstPageOfNewCategory = 1
@@ -23,6 +23,8 @@ class ApiVM(
     private var nextPage = firstPageOfNewCategory
     private var lastPageOfCategory = firstPageOfNewCategory
     private var nextCategory = anyCategoryOnInit
+
+    private val movies = mutableListOf<Movie>()
 
     val moviesLD = moviesMLD as LiveData<Resource<List<Movie>>>
 

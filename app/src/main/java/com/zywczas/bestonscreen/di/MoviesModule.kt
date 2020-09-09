@@ -21,9 +21,6 @@ import javax.inject.Singleton
 class MoviesModule(private val application: Application) {
 
     @Provides
-    fun provideArrayListOfMovies() = ArrayList<Movie>()
-
-    @Provides
     fun provideStringEventMediatorLiveData() = MediatorLiveData<Event<String>>()
 
     @Provides
