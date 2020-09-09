@@ -91,18 +91,11 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupMoviesObserver() {
-        viewModel.moviesLD.observe(this, Observer { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    updateDisplayedMovies(resource.data!!)
-                    if (resource.data.isEmpty()) {
-                        showMessageAboutEmptyDB()
-                    }
-                }
-                Status.ERROR -> {
-                    showToast("Cannot access movies from the data base. Close the app and try again.")
-                }
+    private fun setupMoviesObserver(){
+        viewModel.moviesLD.observe(this, Observer { movies ->
+            updateDisplayedMovies(movies)
+            if (movies.isEmpty()){
+                showMessageAboutEmptyDB()
             }
         })
     }
