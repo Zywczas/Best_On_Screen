@@ -3,7 +3,7 @@ package com.zywczas.bestonscreen.model.webservice
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class MovieFromApi (
+data class MovieFromApi(
 
     @SerializedName("id")
     @Expose
@@ -46,25 +46,26 @@ data class MovieFromApi (
 
     var assignedGenresAmount: Int = 0
 
-    fun convertGenreIdsToVariables(){
-        var varNumber = 1
-        if (genreIds != null) {
-            for (id in genreIds!!) {
-                convertGenreIdToStringAndAssign(id, varNumber)
-                varNumber++
+    fun convertGenreIdsToVariables() {
+        if (genreIds == null) {
+            return
+        }
+        var nextVarToAssign = 1
+        val availableGenreVars = 5
+        for (id in genreIds!!) {
+            if (nextVarToAssign <= availableGenreVars) {
+                convertGenreIdToStringAndAssign(id, nextVarToAssign)
+                nextVarToAssign++
             }
         }
     }
 
     private fun convertGenreIdToStringAndAssign(id: Int, varNumber: Int) {
         val convertedGenre = convertToString(id)
-        val availableGenreVars = 5
-        if (varNumber <= availableGenreVars) {
-            assignToVariable(convertedGenre, varNumber)
-        }
+        assignToVariable(convertedGenre, varNumber)
     }
 
-    private fun convertToString(id: Int) : String {
+    private fun convertToString(id: Int): String {
         return when (id) {
             28 -> "Action"
             12 -> "Adventure"
@@ -91,16 +92,26 @@ data class MovieFromApi (
 
     private fun assignToVariable(convertedGenre: String, varNumber: Int) {
         when (varNumber) {
-            1 -> {genre1 = convertedGenre
-                assignedGenresAmount = 1}
-            2 -> {genre2 = convertedGenre
-                assignedGenresAmount = 2}
-            3 -> {genre3 = convertedGenre
-                assignedGenresAmount = 3}
-            4 -> {genre4 = convertedGenre
-                assignedGenresAmount = 4}
-            5 -> {genre5 = convertedGenre
-                assignedGenresAmount = 5 }
+            1 -> {
+                genre1 = convertedGenre
+                assignedGenresAmount = 1
+            }
+            2 -> {
+                genre2 = convertedGenre
+                assignedGenresAmount = 2
+            }
+            3 -> {
+                genre3 = convertedGenre
+                assignedGenresAmount = 3
+            }
+            4 -> {
+                genre4 = convertedGenre
+                assignedGenresAmount = 4
+            }
+            5 -> {
+                genre5 = convertedGenre
+                assignedGenresAmount = 5
+            }
         }
     }
 
