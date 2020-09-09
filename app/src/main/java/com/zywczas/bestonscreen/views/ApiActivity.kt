@@ -36,12 +36,12 @@ class ApiActivity : AppCompatActivity() {
     private lateinit var adapter: MovieAdapter
     private val anyCategoryOnInit = Category.POPULAR
     private var currentCategory = anyCategoryOnInit
-    private var wasOrientationChanged: Boolean? = null
+    private var wasConfigurationChanged: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-        wasOrientationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
@@ -131,7 +131,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun getMoviesOnViewModelInit() {
-        if (wasOrientationChanged == null) {
+        if (wasConfigurationChanged == null) {
             currentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
             downloadNextPageIfInternetConnected()
         }
