@@ -46,6 +46,7 @@ class ApiActivity : AppCompatActivity() {
         setupDrawer()
         setupTags()
     }
+    //todo po obrocie resetuje sei categoria i przy kolejnej stronie wczytuje pierwsza strone categorii popular, bo nie pobiera category z live data
 
     private fun startApiActivitySetupChain() {
         injectDependencies { injectionFinished ->

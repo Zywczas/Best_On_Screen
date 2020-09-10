@@ -5,10 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 class ApiResponse(
 
-    @SerializedName("total_pages")
-    @Expose
-    var totalPages: Int? = null,
-
     @SerializedName("results")
     @Expose
     var movies: List<MovieFromApi>? = null

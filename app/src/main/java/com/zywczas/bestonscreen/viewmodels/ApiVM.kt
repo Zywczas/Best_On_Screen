@@ -21,7 +21,6 @@ class ApiVM(
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var nextPage = firstPageOfNewCategory
-    private var lastPageOfCategory = firstPageOfNewCategory
     private var nextCategory = anyCategoryOnInit
     private val movies = mutableListOf<Movie>()
 
@@ -33,21 +32,12 @@ class ApiVM(
             resetData()
             this.nextCategory = category
         }
-        if (nextPage > lastPageOfCategory) {
-            sendError("No more pages.")
-        } else {
-            downloadAndSendMovies()
-        }
+        downloadAndSendMovies()
     }
 
     private fun resetData() {
         movies.clear()
         nextPage = 1
-        lastPageOfCategory = 1
-    }
-
-    private fun sendError(message: String) {
-        moviesMLD.postValue(Resource.error(message, null))
     }
 
     private fun downloadAndSendMovies() {
@@ -60,16 +50,15 @@ class ApiVM(
                     updateAndSendData(repoResource.data!!)
                 }
                 Status.ERROR -> {
-                    sendError(repoResource.message!!)
+                    moviesMLD.postValue(repoResource)
                 }
             }
             moviesMLD.removeSource(source)
         }
     }
 
-    private fun updateAndSendData(data: Pair<List<Movie>, Int>) {
-        movies.addAll(data.first)
-        lastPageOfCategory = data.second
+    private fun updateAndSendData(data: List<Movie>) {
+        movies.addAll(data)
         moviesMLD.postValue(Resource.success(movies.toList()))
         nextPage++
     }

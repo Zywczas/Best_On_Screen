@@ -1,11 +1,13 @@
 package com.zywczas.bestonscreen.model
 
 
+import android.util.Log
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,18 +18,19 @@ class ApiRepository @Inject constructor(
 
     private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
     private val movies = mutableListOf<Movie>()
+    private val invalidApiKeyStatus = "HTTP 401"
+    private val noMorePagesStatus = "HTTP 422"
 
-    fun getApiMovies(category: Category, page: Int): Flowable<Resource<Pair<List<Movie>, Int>>> {
+    fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
         movies.clear()
         val apiSingle = getApiSingle(category, page)
         return apiSingle
             .subscribeOn(Schedulers.io())
             .map { apiResponse ->
-                val lastPageOfCategory = apiResponse.totalPages ?: 0
                 apiResponse.movies?.let { convertIdsAndToMovies(it) }
-                Resource.success(Pair(movies.toList(), lastPageOfCategory))
+                Resource.success(movies.toList())
             }
-            .onErrorReturn { Resource.error("Problem with downloading movies.", null) }
+            .onErrorReturn { e -> getError(e) }
             .toFlowable()
     }
 
@@ -43,10 +46,21 @@ class ApiRepository @Inject constructor(
         }
     }
 
-    private fun convertIdsAndToMovies(moviesFromApi: List<MovieFromApi>){
+    private fun convertIdsAndToMovies(moviesFromApi: List<MovieFromApi>) {
         for (m in moviesFromApi) {
             m.convertGenreIdsToVariables()
             movies.add(toMovie(m))
+        }
+    }
+
+    private fun getError(e: Throwable) : Resource<List<Movie>>{
+        return when (e.message.toString().trim()) {
+            invalidApiKeyStatus ->
+                Resource.error("Invalid API key. Contact technical support.", null)
+            noMorePagesStatus ->
+                Resource.error("No more pages in this category.", null)
+            else ->
+                Resource.error("Problem with downloading movies. Check connection.",null)
         }
     }
 
