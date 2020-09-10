@@ -3,7 +3,6 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.util.TestUtil
-import com.zywczas.bestonscreen.utilities.Resource
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -11,7 +10,6 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import io.reactivex.Flowable
 import org.junit.jupiter.api.Assertions
-import java.lang.RuntimeException
 
 internal class DBRepositoryTest {
 
@@ -27,11 +25,11 @@ internal class DBRepositoryTest {
         dbRepo = DBRepository(movieDao)
     }
 
-    @Throws(RuntimeException::class)
+    @Throws(Exception::class)
     @Test
     fun getMoviesFromDb_returnMovieList(){
         //arrange
-        val movies = TestUtil.moviesList
+        val movies = TestUtil.movies
         val moviesFromDB = TestUtil.moviesFromDb
         val returnedData = Flowable.just(moviesFromDB)
         Mockito.`when`(movieDao.getMovies()).thenReturn(returnedData)
@@ -44,9 +42,7 @@ internal class DBRepositoryTest {
 
     }
 
-    //todo trzeba dawac blockingFirst przy RxJava
-
-    @Throws(NoSuchElementException::class)
+    @Throws(Exception::class)
     @Test
     fun getMoviesFromDB_emptyDB_returnEmptyList(){
         //arrange

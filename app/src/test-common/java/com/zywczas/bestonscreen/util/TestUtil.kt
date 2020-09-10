@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.util
 
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieFromDB
+import com.zywczas.bestonscreen.model.webservice.ApiResponse
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 object TestUtil {
@@ -87,6 +88,8 @@ object TestUtil {
     )
 
     val moviesFromApi = listOf(movieFromApi1, movieFromApi2)
-    val moviesList = listOf(movie1, movie2)
+    val movies = listOf(movie1, movie2)
     val moviesFromDb = listOf(movieFromDB1, movieFromDB2)
+    const val totalPagesInCategory = 20
+    val apiResponse = ApiResponse(totalPagesInCategory, moviesFromApi)
 }

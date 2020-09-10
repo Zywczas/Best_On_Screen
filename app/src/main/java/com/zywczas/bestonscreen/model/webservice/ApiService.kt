@@ -8,7 +8,7 @@ import retrofit2.http.Query
  * Interface for contacting with https://www.themoviedb.org/
  */
 interface ApiService {
-
+//todo sprawdzic czy to nie rzuca expecption
     @GET("movie/popular")
     fun getPopularMovies(
         @Query("api_key") apiKey: String,
