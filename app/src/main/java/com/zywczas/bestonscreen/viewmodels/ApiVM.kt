@@ -18,13 +18,13 @@ class ApiVM(
 
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
-    private var nextPage = firstPageOfNewCategory
+    private var page = firstPageOfNewCategory
     private var category = anyCategoryOnInit
     private val movies = mutableListOf<Movie>()
 
     val moviesLD = moviesMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
 
-    fun getApiMovies(nextCategory: Category = category) {
+    fun getNextMovies(nextCategory: Category = category) {
         val isNewCategory = nextCategory != category
         if (isNewCategory) {
             resetData()
@@ -35,12 +35,12 @@ class ApiVM(
 
     private fun resetData() {
         movies.clear()
-        nextPage = 1
+        page = 1
     }
 
     private fun downloadAndSendMovies() {
         val source = LiveDataReactiveStreams.fromPublisher(
-            repo.getApiMovies(category, nextPage)
+            repo.getApiMovies(category, page)
         )
         moviesMLD.addSource(source) {repoResource ->
             when (repoResource.status) {
@@ -58,7 +58,7 @@ class ApiVM(
     private fun updateAndSendData(data: List<Movie>) {
         movies.addAll(data)
         moviesMLD.postValue(Resource.success(Pair(movies.toList(), category)))
-        nextPage++
+        page++
     }
 
     private fun sendError(message: String){
