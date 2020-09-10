@@ -10,7 +10,6 @@ import java.lang.Exception
 @Dao
 interface MovieDao {
 
-    //todo przy testowaniu dao trzeba rzucac exception
     @Throws(Exception::class)
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertMovie(movieFromDB: MovieFromDB) : Single<Long>

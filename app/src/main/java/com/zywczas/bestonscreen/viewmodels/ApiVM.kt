@@ -12,7 +12,6 @@ import com.zywczas.bestonscreen.utilities.Status
 
 class ApiVM(
     private val repo: ApiRepository,
-    //todo sprawdzic czy nie pousuwac tego z konstuktora
     private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>
 ) : ViewModel() {
 
