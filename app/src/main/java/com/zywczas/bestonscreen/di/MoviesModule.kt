@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.Room
 import com.squareup.picasso.Picasso
+import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
@@ -24,7 +25,7 @@ class MoviesModule(private val application: Application) {
     fun provideStringEventMediatorLiveData() = MediatorLiveData<Event<String>>()
 
     @Provides
-    fun provideMoviesResourceMediatorLiveData() = MediatorLiveData<Resource<List<Movie>>>()
+    fun provideMoviesAndCategoryResourceMediatorLiveData() = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
 
     @Provides
     fun provideBooleanResourceEventMediatorLiveData() = MediatorLiveData<Event<Resource<Boolean>>>()

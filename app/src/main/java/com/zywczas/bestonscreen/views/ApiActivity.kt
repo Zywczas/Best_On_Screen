@@ -3,6 +3,7 @@ package com.zywczas.bestonscreen.views
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -34,15 +35,13 @@ class ApiActivity : AppCompatActivity() {
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: ApiVM
     private lateinit var adapter: MovieAdapter
-    private val anyCategoryOnInit = Category.POPULAR
-    private var currentCategory = anyCategoryOnInit
     private var wasConfigurationChanged: Boolean? = null
+    private var displayedCategory : Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
         wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
-        savedInstanceState?.getSerializable(EXTRA_CATEGORY)?.let { currentCategory = it as Category }
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
@@ -56,7 +55,7 @@ class ApiActivity : AppCompatActivity() {
                     if (recyclerViewSetupFinished) {
                         setupMoviesObserver { observerSetupFinished ->
                             if (observerSetupFinished) {
-                                getMoviesOnViewModelInit()
+                                getMoviesOnViewModelInitIfConnected()
                                 setupOnScrollListener()
                             }
                         }
@@ -107,8 +106,11 @@ class ApiActivity : AppCompatActivity() {
                 hideProgressBar()
                 when (resource.status) {
                     Status.SUCCESS -> {
-                        updateDisplayedMovies(resource.data!!)
-                        updateToolbarTitle()
+                        val incomingMovies = resource.data!!.first
+                        val incomingCategory = resource.data.second
+                        updateDisplayedMovies(incomingMovies)
+                        updateToolbarTitle(incomingCategory)
+                        displayedCategory = incomingCategory
                     }
                     else -> {
                         showToast(resource.message!!)
@@ -127,23 +129,19 @@ class ApiActivity : AppCompatActivity() {
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun updateToolbarTitle() {
-        toolbar.title = "Movies: $currentCategory"
+    private fun updateToolbarTitle(category: Category) {
+        toolbar.title = "Movies: $category"
     }
 
-    private fun getMoviesOnViewModelInit() {
+    private fun getMoviesOnViewModelInitIfConnected() {
         if (wasConfigurationChanged == null) {
-            currentCategory = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
-            downloadNextPageIfInternetConnected()
-        }
-    }
-
-    private fun downloadNextPageIfInternetConnected() {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            viewModel.getApiMovies(currentCategory)
-        } else {
-            showToast(CONNECTION_PROBLEM)
+            if (Variables.isNetworkConnected) {
+                val categoryFromIntent = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
+                showProgressBar()
+                viewModel.getApiMovies(categoryFromIntent)
+            } else {
+                showToast(CONNECTION_PROBLEM)
+            }
         }
     }
 
@@ -158,10 +156,19 @@ class ApiActivity : AppCompatActivity() {
                 val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
                         newState == RecyclerView.SCROLL_STATE_IDLE
                 if (isRecyclerViewBottom) {
-                    downloadNextPageIfInternetConnected()
+                    downloadNextPageIfConnected()
                 }
             }
         })
+    }
+
+    private fun downloadNextPageIfConnected() {
+        if (Variables.isNetworkConnected) {
+            showProgressBar()
+            viewModel.getApiMovies()
+        } else {
+            showToast(CONNECTION_PROBLEM)
+        }
     }
 
     private fun setupDrawer() {
@@ -201,12 +208,20 @@ class ApiActivity : AppCompatActivity() {
     fun categoryClicked(view: View) {
         closeDrawerOrMinimizeApp()
         val clickedCategory = view.tag as Category
-        if (clickedCategory == currentCategory) {
+        if (clickedCategory == displayedCategory) {
             showToast("This is $clickedCategory.")
         } else {
-            currentCategory = clickedCategory
-            downloadNextPageIfInternetConnected()
+            downloadNewCategoryIfConnected(clickedCategory)
+        }
+    }
+
+    private fun downloadNewCategoryIfConnected(category: Category){
+        if (Variables.isNetworkConnected){
+            showProgressBar()
+            viewModel.getApiMovies(category)
             moviesRecyclerView.scrollToPosition(0)
+        } else {
+            showToast(CONNECTION_PROBLEM)
         }
     }
 
@@ -217,7 +232,6 @@ class ApiActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(CONFIGURATION_CHANGE, true)
-        outState.putSerializable(EXTRA_CATEGORY, currentCategory)
     }
 
 

@@ -10,27 +10,25 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
 
-
-
 class ApiVM(
     private val repo: ApiRepository,
     //todo sprawdzic czy nie pousuwac tego z konstuktora
-    private val moviesMLD: MediatorLiveData<Resource<List<Movie>>>
+    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>
 ) : ViewModel() {
 
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var nextPage = firstPageOfNewCategory
-    private var nextCategory = anyCategoryOnInit
+    private var category = anyCategoryOnInit
     private val movies = mutableListOf<Movie>()
 
-    val moviesLD = moviesMLD as LiveData<Resource<List<Movie>>>
+    val moviesLD = moviesMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
 
-    fun getApiMovies(category: Category) {
-        val isNewCategory = category != this.nextCategory
+    fun getApiMovies(nextCategory: Category = category) {
+        val isNewCategory = nextCategory != category
         if (isNewCategory) {
             resetData()
-            this.nextCategory = category
+            category = nextCategory
         }
         downloadAndSendMovies()
     }
@@ -42,7 +40,7 @@ class ApiVM(
 
     private fun downloadAndSendMovies() {
         val source = LiveDataReactiveStreams.fromPublisher(
-            repo.getApiMovies(nextCategory, nextPage)
+            repo.getApiMovies(category, nextPage)
         )
         moviesMLD.addSource(source) {repoResource ->
             when (repoResource.status) {
@@ -50,7 +48,7 @@ class ApiVM(
                     updateAndSendData(repoResource.data!!)
                 }
                 Status.ERROR -> {
-                    moviesMLD.postValue(repoResource)
+                    sendError(repoResource.message!!)
                 }
             }
             moviesMLD.removeSource(source)
@@ -59,8 +57,12 @@ class ApiVM(
 
     private fun updateAndSendData(data: List<Movie>) {
         movies.addAll(data)
-        moviesMLD.postValue(Resource.success(movies.toList()))
+        moviesMLD.postValue(Resource.success(Pair(movies.toList(), category)))
         nextPage++
+    }
+
+    private fun sendError(message: String){
+        moviesMLD.postValue(Resource.error(message, Pair(emptyList(), category)))
     }
 
 }
