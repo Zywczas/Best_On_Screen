@@ -42,11 +42,11 @@ class ApiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
         wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+        savedInstanceState?.getSerializable(EXTRA_CATEGORY)?.let { currentCategory = it as Category }
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
     }
-    //todo po obrocie resetuje sei categoria i przy kolejnej stronie wczytuje pierwsza strone categorii popular, bo nie pobiera category z live data
 
     private fun startApiActivitySetupChain() {
         injectDependencies { injectionFinished ->
@@ -217,6 +217,7 @@ class ApiActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(CONFIGURATION_CHANGE, true)
+        outState.putSerializable(EXTRA_CATEGORY, currentCategory)
     }
 
 
