@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
 
-    private val checkError = "Cannot check the data base. Go back and try again."
+    val checkError = "Cannot check the data base. Close the app and try again."
     private val addSuccess = "Movie added to your list."
     private val addError = "Cannot add the movie. Close the app. Try again."
     private val deleteSuccess = "Movie removed from your list."

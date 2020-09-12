@@ -31,7 +31,7 @@ internal class ApiRepositoryTest {
 
     @BeforeEach
     private fun init(){
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         apiRepository = ApiRepository(apiService)
         expectedMovies = TestUtil.movies
         apiResponse = TestUtil.apiResponse
