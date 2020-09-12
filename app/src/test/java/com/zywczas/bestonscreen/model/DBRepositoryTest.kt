@@ -25,7 +25,6 @@ internal class DBRepositoryTest {
         dbRepo = DBRepository(movieDao)
     }
 
-    @Throws(Exception::class)
     @Test
     fun getMoviesFromDb_returnMovieList(){
         //arrange
@@ -42,7 +41,6 @@ internal class DBRepositoryTest {
 
     }
 
-    @Throws(Exception::class)
     @Test
     fun getMoviesFromDB_emptyDB_returnEmptyList(){
         //arrange

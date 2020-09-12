@@ -16,6 +16,8 @@ class ApiVM(
     private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>
 ) : ViewModel() {
 
+    //todo pomylec nad przeniesiemiec network handle do view models
+
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var page = firstPageOfNewCategory

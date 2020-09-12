@@ -91,5 +91,5 @@ object TestUtil {
     val movies = listOf(movie1, movie2)
     val moviesFromDb = listOf(movieFromDB1, movieFromDB2)
     const val totalPagesInCategory = 20
-    val apiResponse = ApiResponse(totalPagesInCategory, moviesFromApi)
+    val apiResponse = ApiResponse(moviesFromApi)
 }
