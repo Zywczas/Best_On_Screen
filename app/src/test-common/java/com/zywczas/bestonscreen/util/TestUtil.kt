@@ -7,7 +7,7 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 object TestUtil {
 
-    private val movieFromApi1 = MovieFromApi(
+    val movieFromApi1 = MovieFromApi(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         listOf(28, 53),
@@ -17,7 +17,7 @@ object TestUtil {
         "2020-08-25"
     )
 
-    private val movie1 = Movie(
+    val movie1 = Movie(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         "Hard Kill",
@@ -32,7 +32,7 @@ object TestUtil {
         2
         )
 
-    private val movieFromDB1 = MovieFromDB(
+    val movieFromDB1 = MovieFromDB(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         "Hard Kill",

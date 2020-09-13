@@ -13,10 +13,10 @@ import javax.inject.Singleton
 class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
 
     val checkError = "Cannot check the data base. Close the app and try again."
-    private val addSuccess = "Movie added to your list."
-    private val addError = "Cannot add the movie. Close the app. Try again."
-    private val deleteSuccess = "Movie removed from your list."
-    private val deleteError = "Cannot remove the movie. Close the app. Try again."
+    val addSuccess = "Movie added to your list."
+    val addError = "Cannot add the movie. Close the app. Try again."
+    val deleteSuccess = "Movie removed from your list."
+    val deleteError = "Cannot remove the movie. Close the app. Try again."
 
     fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Resource<Boolean>>> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
