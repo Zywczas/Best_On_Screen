@@ -77,7 +77,19 @@ internal class ApiRepositoryTest {
         assertEquals(Resource.success(expectedMovies), returnedValue)
     }
 
-    //todo dodac test dla pustej listy filmow
+    @Test
+    fun getApiMovies_noMovies_returnError(){
+        //arrange
+        val category = Category.UPCOMING
+        val emptyApiResponse= ApiResponse()
+        val returnedEmptyData = Single.just(emptyApiResponse)
+        val expectedMessage = apiRepository.noMoviesError
+        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
+        //act
+        val returnedValue = apiRepository.getApiMovies(category, 1).blockingFirst()
+        //assert
+        assertEquals(Resource.error(expectedMessage, null), returnedValue)
+    }
 
     @Test
     fun getApiMovies_noMorePagesException_returnError(){
@@ -85,7 +97,7 @@ internal class ApiRepositoryTest {
         val category = Category.UPCOMING
         val apiServiceCallStatus = apiRepository.noMorePagesStatus
         val exception = Exception(apiServiceCallStatus)
-        val expectedMessage = apiRepository.noMorePagesMessage
+        val expectedMessage = apiRepository.noMorePagesError
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(Single.error(exception))
         //act
         val returnedValue = apiRepository.getApiMovies(category, 5).blockingFirst()
@@ -99,7 +111,7 @@ internal class ApiRepositoryTest {
         val category = Category.UPCOMING
         val apiServiceCallStatus = apiRepository.invalidApiKeyStatus
         val exception = Exception(apiServiceCallStatus)
-        val expectedMessage = apiRepository.invalidApiKeyMessage
+        val expectedMessage = apiRepository.invalidApiKeyError
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(Single.error(exception))
         //act
         val returnedValue = apiRepository.getApiMovies(category, 5).blockingFirst()

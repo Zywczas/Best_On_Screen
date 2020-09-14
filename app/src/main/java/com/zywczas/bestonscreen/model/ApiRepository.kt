@@ -17,9 +17,10 @@ class ApiRepository @Inject constructor(
     val invalidApiKeyStatus = "HTTP 401"
     val noMorePagesStatus = "HTTP 422"
     //todo albo wrzucic wszystkie rrror w val albo cofnac ten do funkcji
-    val invalidApiKeyMessage = "Invalid API key. Contact technical support."
-    val noMorePagesMessage = "No more pages in this category."
+    val invalidApiKeyError = "Invalid API key. Contact technical support."
+    val noMorePagesError = "No more pages in this category."
     val generalApiError = "Problem with downloading movies. Close app and try again."
+    val noMoviesError = "Couldn't download more movies. Try again."
 
     fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
         val apiSingle = getApiSingle(category, page)
@@ -30,7 +31,7 @@ class ApiRepository @Inject constructor(
                 if (movies != null) {
                     Resource.success(movies)
                 } else {
-                    Resource.error("Couldn't download more movies. Try again.", null)
+                    Resource.error(noMoviesError, null)
                 }
             }
             .onErrorReturn { e -> getError(e) }
@@ -60,9 +61,9 @@ class ApiRepository @Inject constructor(
     private fun getError(e: Throwable) : Resource<List<Movie>>{
         return when (e.message.toString().trim()) {
             invalidApiKeyStatus ->
-                Resource.error(invalidApiKeyMessage, null)
+                Resource.error(invalidApiKeyError, null)
             noMorePagesStatus ->
-                Resource.error(noMorePagesMessage, null)
+                Resource.error(noMorePagesError, null)
             else -> {
                 Resource.error(generalApiError,null)   }
         }
