@@ -3,20 +3,23 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
-fun toMovie(movieFromApi: MovieFromApi) = Movie(
-    movieFromApi.id ?: 0,
-    movieFromApi.posterPath ?: "",
-    movieFromApi.title ?: "",
-    movieFromApi.voteAverage ?: 0.0,
-    movieFromApi.overview ?: "",
-    movieFromApi.releaseDate ?: "",
-    movieFromApi.genre1,
-    movieFromApi.genre2,
-    movieFromApi.genre3,
-    movieFromApi.genre4,
-    movieFromApi.genre5,
-    movieFromApi.assignedGenresAmount
-)
+fun toMovie(movieFromApi: MovieFromApi) : Movie {
+    movieFromApi.convertGenreIdsToVariables()
+    return Movie(
+        movieFromApi.id ?: 0,
+        movieFromApi.posterPath ?: "",
+        movieFromApi.title ?: "",
+        movieFromApi.voteAverage ?: 0.0,
+        movieFromApi.overview ?: "",
+        movieFromApi.releaseDate ?: "",
+        movieFromApi.genre1,
+        movieFromApi.genre2,
+        movieFromApi.genre3,
+        movieFromApi.genre4,
+        movieFromApi.genre5,
+        movieFromApi.assignedGenresAmount
+    )
+}
 
 fun toMovie(movieFromDB: MovieFromDB) = Movie(
     movieFromDB.id,

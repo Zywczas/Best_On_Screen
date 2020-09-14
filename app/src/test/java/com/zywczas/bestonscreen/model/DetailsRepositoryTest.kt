@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
 
 internal class DetailsRepositoryTest{
 
@@ -146,5 +147,5 @@ internal class DetailsRepositoryTest{
         assertEquals(expectedMessage, returnedValue)
     }
 
-    //todo dodac veryfi no more interactions i verify this method - sprawdzic czy to uzywac
+
 }

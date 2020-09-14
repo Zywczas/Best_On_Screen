@@ -20,16 +20,18 @@ class ApiRepository @Inject constructor(
     val invalidApiKeyMessage = "Invalid API key. Contact technical support."
     val noMorePagesMessage = "No more pages in this category."
     val generalApiError = "Problem with downloading movies. Close app and try again."
-    private val movies = mutableListOf<Movie>()
 
     fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
-        movies.clear()
         val apiSingle = getApiSingle(category, page)
         return apiSingle
             .subscribeOn(Schedulers.io())
             .map { apiResponse ->
-                apiResponse.movies?.let { convertIdsAndToMovies(it) }
-                Resource.success(movies.toList())
+                val movies = apiResponse.movies?.let { convertToMovies(it) }
+                if (movies != null) {
+                    Resource.success(movies)
+                } else {
+                    Resource.error("Couldn't download more movies. Try again.", null)
+                }
             }
             .onErrorReturn { e -> getError(e) }
             .toFlowable()
@@ -47,11 +49,12 @@ class ApiRepository @Inject constructor(
         }
     }
 
-    private fun convertIdsAndToMovies(moviesFromApi: List<MovieFromApi>) {
+    private fun convertToMovies(moviesFromApi: List<MovieFromApi>) : List<Movie> {
+        val movies = mutableListOf<Movie>()
         for (m in moviesFromApi) {
-            m.convertGenreIdsToVariables()
             movies.add(toMovie(m))
         }
+        return movies
     }
 
     private fun getError(e: Throwable) : Resource<List<Movie>>{

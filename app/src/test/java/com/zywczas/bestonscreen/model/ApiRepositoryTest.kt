@@ -77,6 +77,8 @@ internal class ApiRepositoryTest {
         assertEquals(Resource.success(expectedMovies), returnedValue)
     }
 
+    //todo dodac test dla pustej listy filmow
+
     @Test
     fun getApiMovies_noMorePagesException_returnError(){
         //arrange
