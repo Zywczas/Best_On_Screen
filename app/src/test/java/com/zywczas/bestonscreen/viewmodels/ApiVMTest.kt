@@ -39,6 +39,8 @@ internal class ApiVMTest{
         movies = TestUtil.movies
     }
 
+    private fun <Category> anyCategory(): Category = any<Category>()
+
     @Test
     fun observeEmptyMoviesAndCategoryWhenLiveDataSet(){
         //act
@@ -55,18 +57,12 @@ internal class ApiVMTest{
         //arrange
         val category = Category.POPULAR
         val returnedData = Flowable.just(Resource.success(movies))
-        var value : Resource<Pair<List<Movie>, Category>>? = null
-        `when`(repo.getApiMovies(category, 1)).thenReturn(returnedData)
+        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
         //act
-//        viewModel.getNextMovies(category)
-//        viewModel.moviesAndCategoryLD.observeForever {
-//            value = it
-//        }
-//        val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//        val returnedMovies = returnedValue?.data?.first
-//        val returnedCategory = returnedValue?.data?.second
+        viewModel.getNextMovies(category)
+        val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
         //assert
-//        assertEquals(Resource.success(Pair(movies, category)), value)
+        assertEquals(Resource.success(Pair(movies, category)), returnedValue)
     }
 
 //todo do testowania wszystkie lasy i funkcje testowane musza byc open
