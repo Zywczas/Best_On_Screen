@@ -15,4 +15,5 @@ open class Event<out T> constructor(private val content: T) {
             content
         }
     }
+
 }

@@ -64,9 +64,7 @@ dependencies {
     //JUnit5 The instrumentation test companion libraries
     androidTestImplementation "de.mannodermaus.junit5:android-test-core:1.2.0"
     androidTestRuntimeOnly "de.mannodermaus.junit5:android-test-runner:1.2.0"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.6.2"
-    //todo sprawdzic czy usunac ten komentarz
-    //Mockito - cannot be version 3 because it requires Java 8 (API 26)
+    //Mockito
     implementation 'org.mockito:mockito-core:3.5.2'
     //Mockk
     androidTestImplementation "io.mockk:mockk-android:1.10.0"
