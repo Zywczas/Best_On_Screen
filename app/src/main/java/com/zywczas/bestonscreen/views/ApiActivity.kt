@@ -111,7 +111,7 @@ class ApiActivity : AppCompatActivity() {
                         updateToolbarTitle(incomingCategory)
                         displayedCategory = incomingCategory
                     }
-                    else -> {
+                    Status.ERROR -> {
                         showToast(resource.message!!)
                     }
                 }

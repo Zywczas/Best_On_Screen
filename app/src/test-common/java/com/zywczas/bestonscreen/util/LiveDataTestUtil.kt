@@ -32,7 +32,6 @@ object LiveDataTestUtil {
 
     fun <T> getValue(livedata: LiveData<T>) : T? {
         val data = mutableListOf<T>()
-//        var data : T? = null
         val latch = CountDownLatch(1)
         val observer = object : Observer<T> {
             override fun onChanged(t: T) {
@@ -49,16 +48,10 @@ object LiveDataTestUtil {
             throw InterruptedException("Latch failure.")
         }
 
-//        if (!latch.await(2, TimeUnit.SECONDS)){
-//            livedata.removeObserver(observer)
-//            throw TimeoutException("LiveData value was never set.")
-//        }
-
         if (data.size > 0) {
             return data[0]
         }
-//        @Suppress("UNCHECKED_CAST")
-//        return data as T
+
         return null
     }
 

@@ -10,6 +10,8 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import io.reactivex.Flowable
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
+import org.mockito.Mockito.*
 
 
 internal class DBRepositoryTest {
@@ -32,13 +34,13 @@ internal class DBRepositoryTest {
         val movies = TestUtil.movies
         val moviesFromDB = TestUtil.moviesFromDb
         val returnedData = Flowable.just(moviesFromDB)
-        Mockito.`when`(movieDao.getMovies()).thenReturn(returnedData)
+        `when`(movieDao.getMovies()).thenReturn(returnedData)
         //act
         val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
         //assert
-        Mockito.verify(movieDao).getMovies()
-        Mockito.verifyNoMoreInteractions(movieDao)
-        Assertions.assertEquals(movies, returnedValue)
+        verify(movieDao).getMovies()
+        verifyNoMoreInteractions(movieDao)
+        assertEquals(movies, returnedValue)
 
     }
 
@@ -47,11 +49,11 @@ internal class DBRepositoryTest {
         //arrange
         val moviesFromDB = listOf<MovieFromDB>()
         val returnedData = Flowable.just(moviesFromDB)
-        Mockito.`when`(movieDao.getMovies()).thenReturn(returnedData)
+        `when`(movieDao.getMovies()).thenReturn(returnedData)
         //act
         val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
         //assert
-        Assertions.assertEquals(listOf<Movie>(), returnedValue)
+        assertEquals(listOf<Movie>(), returnedValue)
     }
 
 
