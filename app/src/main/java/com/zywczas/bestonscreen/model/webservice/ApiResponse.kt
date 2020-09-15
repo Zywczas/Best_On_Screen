@@ -8,6 +8,7 @@ class ApiResponse(
     @SerializedName("results")
     @Expose
     var movies: List<MovieFromApi>? = null
+
 )
 
 

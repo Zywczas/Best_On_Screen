@@ -1,4 +1,4 @@
-package com.zywczas.bestonscreen
+package com.zywczas.bestonscreen.utilities
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor

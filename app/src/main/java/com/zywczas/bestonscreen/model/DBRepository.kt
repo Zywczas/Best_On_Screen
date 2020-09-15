@@ -7,11 +7,11 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class DBRepository @Inject constructor(private val movieDao: MovieDao) {
+open class DBRepository @Inject constructor(private val movieDao: MovieDao) {
 
     private val movies = mutableListOf<Movie>()
 
-    fun getMoviesFromDB(): Flowable<List<Movie>> {
+    open fun getMoviesFromDB(): Flowable<List<Movie>> {
         val databaseFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())
         return databaseFlowable
             .subscribeOn(Schedulers.io())

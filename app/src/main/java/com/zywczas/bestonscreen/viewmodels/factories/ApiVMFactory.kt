@@ -12,14 +12,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApiVMFactory @Inject constructor(
-    private val repo: ApiRepository,
-    private val moviesMLD: MediatorLiveData<Resource<Pair<List<Movie>, Category>>>
-) : ViewModelProvider.NewInstanceFactory() {
+class ApiVMFactory @Inject constructor( private val repo: ApiRepository ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ApiVM(repo, moviesMLD) as T
+        return ApiVM(repo) as T
     }
 
 }

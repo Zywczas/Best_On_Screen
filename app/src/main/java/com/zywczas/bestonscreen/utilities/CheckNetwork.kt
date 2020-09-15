@@ -4,9 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 
-class CheckNetwork(private val context: Context) {
+open class CheckNetwork(private val context: Context) {
 
-    fun registerNetworkCallback() {
+    open fun registerNetworkCallback() {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

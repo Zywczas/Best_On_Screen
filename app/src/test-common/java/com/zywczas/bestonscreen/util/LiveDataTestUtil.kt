@@ -8,25 +8,58 @@ import java.util.concurrent.TimeoutException
 
 object LiveDataTestUtil {
 
-    fun <T> getValue(livedata: LiveData<T>) : T {
-        var data : T? = null
+//    fun <T> getValue(livedata: LiveData<T>) : T {
+//        var data : T? = null
+//        val latch = CountDownLatch(1)
+//        val observer = object : Observer<T> {
+//            override fun onChanged(t: T) {
+//                data = t
+//                latch.countDown()
+//                livedata.removeObserver(this)
+//            }
+//        }
+//        livedata.observeForever(observer)
+//
+//        if (!latch.await(2, TimeUnit.SECONDS)){
+//            livedata.removeObserver(observer)
+//            throw TimeoutException("LiveData value was never set.")
+//        }
+//
+//        @Suppress("UNCHECKED_CAST")
+//        return data as T
+//    }
+    //todo poprawic albo wycziscic
+
+    fun <T> getValue(livedata: LiveData<T>) : T? {
+        val data = mutableListOf<T>()
+//        var data : T? = null
         val latch = CountDownLatch(1)
         val observer = object : Observer<T> {
             override fun onChanged(t: T) {
-                data = t
+                data.add(t)
                 latch.countDown()
                 livedata.removeObserver(this)
             }
         }
         livedata.observeForever(observer)
 
-        if (!latch.await(2, TimeUnit.SECONDS)){
-            livedata.removeObserver(observer)
-            throw TimeoutException("LiveData value was never set.")
+        try {
+            latch.await(2, TimeUnit.SECONDS)
+        } catch (e: InterruptedException){
+            throw InterruptedException("Latch failure.")
         }
 
-        @Suppress("UNCHECKED_CAST")
-        return data as T
+//        if (!latch.await(2, TimeUnit.SECONDS)){
+//            livedata.removeObserver(observer)
+//            throw TimeoutException("LiveData value was never set.")
+//        }
+
+        if (data.size > 0) {
+            return data[0]
+        }
+//        @Suppress("UNCHECKED_CAST")
+//        return data as T
+        return null
     }
 
 }

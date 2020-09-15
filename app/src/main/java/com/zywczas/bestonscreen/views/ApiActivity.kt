@@ -100,7 +100,7 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.moviesLD.observe(this,
+        viewModel.moviesAndCategoryLD.observe(this,
             Observer { resource ->
                 hideProgressBar()
                 when (resource.status) {

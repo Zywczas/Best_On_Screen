@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
+open class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
 
     val checkError = "Cannot check the data base. Close the app and try again."
     val addSuccess = "Movie added to your list."
@@ -18,7 +18,7 @@ class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
     val deleteSuccess = "Movie removed from your list."
     val deleteError = "Cannot remove the movie. Close the app. Try again."
 
-    fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Resource<Boolean>>> {
+    open fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Resource<Boolean>>> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
         return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
@@ -33,7 +33,7 @@ class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
         }
     }
 
-    fun addMovieToDB(movie: Movie): Flowable<Event<String>> {
+    open fun addMovieToDB(movie: Movie): Flowable<Event<String>> {
         val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toMovieFromDB(movie)))
         return single
             .subscribeOn(Schedulers.io())
@@ -47,7 +47,7 @@ class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
             .onErrorReturn { Event(addError) }
     }
 
-    fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> {
+    open fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> {
         val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toMovieFromDB(movie)))
         return single
             .subscribeOn(Schedulers.io())
