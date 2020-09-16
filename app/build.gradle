@@ -14,11 +14,16 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
-        // 1) Make sure to use the AndroidJUnitRunner, of a subclass of it. This requires a dependency on androidx.test:runner, too!
+        //Make sure to use the AndroidJUnitRunner, of a subclass of it. This requires a dependency on androidx.test:runner, too!
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // 2) Connect JUnit 5 to the runner
+        //Connect JUnit 5 to the runner
         testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     compileOptions {
@@ -45,6 +50,7 @@ android {
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
         test.java.srcDirs += "src/test-common/java"
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
 }
