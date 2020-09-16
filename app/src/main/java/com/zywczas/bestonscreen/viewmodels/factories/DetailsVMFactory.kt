@@ -11,15 +11,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DetailsVMFactory @Inject constructor(
-    private val repo: DetailsRepository,
-    private val isMovieInDbMLD: MediatorLiveData<Event<Resource<Boolean>>>,
-    private val messageEventMLD: MediatorLiveData<Event<String>>
-) :
-    ViewModelProvider.NewInstanceFactory() {
+class DetailsVMFactory @Inject constructor( private val repo: DetailsRepository) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DetailsVM(repo, isMovieInDbMLD, messageEventMLD) as T
+        return DetailsVM(repo) as T
     }
 }
+
+//todo pousuwac importy

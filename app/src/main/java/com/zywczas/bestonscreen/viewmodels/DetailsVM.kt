@@ -9,12 +9,10 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.Resource
 
-class DetailsVM(
-    private val repo: DetailsRepository,
-    private val isMovieInDbMLD: MediatorLiveData<Event<Resource<Boolean>>>,
-    private val messageMLD: MediatorLiveData<Event<String>>
-) : ViewModel() {
+class DetailsVM ( private val repo: DetailsRepository ) : ViewModel() {
 
+    private val isMovieInDbMLD = MediatorLiveData<Event<Resource<Boolean>>>()
+    private val messageMLD = MediatorLiveData<Event<String>>()
     val isMovieInDbLD = isMovieInDbMLD as LiveData<Event<Resource<Boolean>>>
     val messageLD = messageMLD as LiveData<Event<String>>
 

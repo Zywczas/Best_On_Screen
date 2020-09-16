@@ -25,7 +25,7 @@ internal class ApiVMTest{
     private lateinit var viewModel : ApiVM
 
     @Mock
-    lateinit var repo : ApiRepository
+    private lateinit var repo : ApiRepository
 
     @BeforeEach
     private fun init(){

@@ -24,7 +24,7 @@ internal class ApiRepositoryTest {
     private lateinit var apiRepository: ApiRepository
 
     @Mock
-    lateinit var apiService: ApiService
+    private lateinit var apiService: ApiService
     private lateinit var expectedMovies : List<Movie>
     private lateinit var apiResponse : ApiResponse
     private lateinit var returnedData : Single<ApiResponse>

@@ -17,19 +17,17 @@ import org.mockito.junit.MockitoJUnitRunner
 internal class DetailsRepositoryTest{
 
     //system under test
-    lateinit var detailsRepo : DetailsRepository
+    private lateinit var detailsRepo : DetailsRepository
 
     @Mock
-    lateinit var movieDao: MovieDao
-    lateinit var movie: Movie
-    lateinit var movieFromDB: MovieFromDB
+    private lateinit var movieDao: MovieDao
+    private val movie = TestUtil.movie1
+    private val movieFromDB = TestUtil.movieFromDB1
 
     @BeforeEach
     private fun init(){
         MockitoAnnotations.openMocks(this)
         detailsRepo = DetailsRepository(movieDao)
-        movie = TestUtil.movie1
-        movieFromDB = TestUtil.movieFromDB1
     }
 
     @Test

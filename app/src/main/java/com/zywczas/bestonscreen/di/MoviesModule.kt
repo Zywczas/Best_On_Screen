@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 class MoviesModule(private val application: Application) {
-
+//todo pousuac chyba wszystkie live data
     @Provides
     fun provideStringEventMediatorLiveData() = MediatorLiveData<Event<String>>()
 
