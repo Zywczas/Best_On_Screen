@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
+import androidx.lifecycle.LiveData
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.DBRepository
 import com.zywczas.bestonscreen.model.Movie
@@ -10,6 +11,7 @@ import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.internal.operators.single.SingleToFlowable
 import io.reactivex.rxjava3.kotlin.Flowables
+import io.reactivex.rxjava3.observers.TestObserver
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,29 +24,23 @@ import org.mockito.MockitoAnnotations
 @ExtendWith(InstantExecutorExtension::class)
 internal class DBVMTest {
 
-    //system under test
-    private lateinit var viewModel : DBVM
-
-    @Mock
-    lateinit var repo : DBRepository
-
-    @BeforeEach
-    private fun init(){
-        MockitoAnnotations.openMocks(this)
-        viewModel = DBVM(repo)
+    //todo przeniesc na zewnatrz
+    fun <T> LiveData<T>.test() : TestObserver<T> {
+        return TestObserver.create()
     }
 
-    @Test //todo livedatatestutil chyba nie wzbudza livedaty, moze zamienic na ta druga funkcje i sprawdzic
+    @Test
     fun observeMoviesWhenLiveDataSet(){
         //arrange
+        val repo = mock(DBRepository::class.java)
         val movies = TestUtil.movies
         val returnedData = Flowable.just(movies)
         `when`(repo.getMoviesFromDB()).thenReturn(returnedData)
+        val viewModel = DBVM(repo)
         //act
         val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesLD)
         //assert
-
-//        assertEquals(movies, data)
+        assertEquals(movies, returnedValue)
     }
 
 
