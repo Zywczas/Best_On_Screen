@@ -25,7 +25,7 @@ internal class DBVMTest {
 
     @BeforeEach
     private fun init() {
-        MockitoAnnotations.openMocks(this)
+        MockitoAnnotations.initMocks(this)
         val returnedData = Flowable.just(movies)
         `when`(repo.getMoviesFromDB()).thenReturn(returnedData)
         viewModel = DBVM(repo)

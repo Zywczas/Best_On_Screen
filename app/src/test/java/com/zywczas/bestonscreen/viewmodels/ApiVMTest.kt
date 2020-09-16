@@ -29,19 +29,11 @@ internal class ApiVMTest{
 
     @BeforeEach
     private fun init(){
-        MockitoAnnotations.openMocks(this)
+        MockitoAnnotations.initMocks(this)
         viewModel = ApiVM(repo)
     }
 
     private fun <Category> anyCategory(): Category = any<Category>()
-
-    @Test
-    fun observeEmptyMoviesAndCategoryWhenLiveDataSet(){
-        //act
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-        //assert
-        assertNull(returnedValue)
-    }
 
     @Test
     fun getNextMovies_observeChange(){

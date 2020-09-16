@@ -26,7 +26,7 @@ internal class DetailsRepositoryTest{
 
     @BeforeEach
     private fun init(){
-        MockitoAnnotations.openMocks(this)
+        MockitoAnnotations.initMocks(this)
         detailsRepo = DetailsRepository(movieDao)
     }
 
@@ -41,7 +41,7 @@ internal class DetailsRepositoryTest{
         //assert
         verify(movieDao).getIdCount(movieId)
         verifyNoMoreInteractions(movieDao)
-        assertEquals(Resource.success(true), returnedValue)
+        assertEquals(true, returnedValue)
     }
 
     @Test
@@ -53,20 +53,7 @@ internal class DetailsRepositoryTest{
         //act
         val returnedValue = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
         //assert
-        assertEquals(Resource.success(false), returnedValue)
-    }
-
-    @Test
-    fun checkIfMovieIsInDB_throwException_returnError(){
-        //arrange
-        val movieId = 43
-        val exception = Flowable.error<Int>(Exception())
-        val errorMessage = detailsRepo.checkError
-        `when`(movieDao.getIdCount(movieId)).thenReturn(exception)
-        //act
-        val returnedValue = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
-        //assert
-        assertEquals(Resource.error(errorMessage, null), returnedValue)
+        assertEquals(false, returnedValue)
     }
 
     @Test
