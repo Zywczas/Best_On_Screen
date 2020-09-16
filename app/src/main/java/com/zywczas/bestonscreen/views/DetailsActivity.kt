@@ -21,6 +21,7 @@ class DetailsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DetailsVMFactory
+
     @Inject
     lateinit var picasso: Picasso
     private lateinit var movie: Movie
@@ -79,7 +80,7 @@ class DetailsActivity : AppCompatActivity() {
         setupAddToListBtnStateObserver()
     }
 
-    private fun getGenresDescription() : String {
+    private fun getGenresDescription(): String {
         return when (movie.assignedGenresAmount) {
             1 -> "Genre: ${movie.genre1}"
             2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
@@ -93,17 +94,9 @@ class DetailsActivity : AppCompatActivity() {
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(this,
             Observer {
-                it.getContentIfNotHandled()?.let { resource ->
-                    when (resource.status) {
-                        Status.SUCCESS -> {
-                            val isInDb = resource.data!!
-                            addToListBtn.isChecked = isInDb
-                            addToListBtn.tag = isInDb
-                        }
-                        Status.ERROR -> {
-                            showToast(resource.message!!)
-                        }
-                    }
+                it.getContentIfNotHandled()?.let { isInDb ->
+                    addToListBtn.isChecked = isInDb
+                    addToListBtn.tag = isInDb
                 }
             })
         checkIfMovieIsInDb()
@@ -121,8 +114,8 @@ class DetailsActivity : AppCompatActivity() {
         })
     }
 
-    private fun checkInternetConnection(){
-        if (!Variables.isNetworkConnected){
+    private fun checkInternetConnection() {
+        if (!Variables.isNetworkConnected) {
             showToast(CONNECTION_PROBLEM)
         }
     }

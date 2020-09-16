@@ -17,13 +17,12 @@ open class DetailsRepository @Inject constructor( private val movieDao: MovieDao
     val addError = "Cannot add the movie. Close the app. Try again."
     val deleteSuccess = "Movie removed from your list."
     val deleteError = "Cannot remove the movie. Close the app. Try again."
-//todo tu chyba nie jest potrzebny on error
-    open fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Resource<Boolean>>> {
+
+    open fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Boolean>> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
         return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
-            .map { idCount -> Event(Resource.success(toBoolean(idCount))) }
-            .onErrorReturn { Event(Resource.error(checkError, null)) }
+            .map { idCount -> Event(toBoolean(idCount)) }
     }
 
     private fun toBoolean(idCount: Int): Boolean {
