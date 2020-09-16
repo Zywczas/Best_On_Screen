@@ -1,21 +1,18 @@
 package com.zywczas.bestonscreen.model.db
 
-
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
 import java.lang.Exception
 
-
 @Dao
 interface MovieDao {
 
-    //todo przy testowaniu dao trzeba rzucac exception
-    @Throws(Exception::class)
+    @Throws(SQLiteConstraintException::class)
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertMovie(movieFromDB: MovieFromDB) : Single<Long>
 
-    @Throws(Exception::class)
     @Delete
     fun deleteMovie(movieFromDB: MovieFromDB) : Single<Int>
 

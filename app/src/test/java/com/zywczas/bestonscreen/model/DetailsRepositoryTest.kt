@@ -1,9 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.MovieDao
-import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.util.TestUtil
-import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.jupiter.api.Assertions.*
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
 
 internal class DetailsRepositoryTest{
 

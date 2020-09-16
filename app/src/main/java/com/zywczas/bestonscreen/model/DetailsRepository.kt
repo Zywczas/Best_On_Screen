@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.utilities.Event
-import com.zywczas.bestonscreen.utilities.Resource
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -56,7 +55,6 @@ open class DetailsRepository @Inject constructor( private val movieDao: MovieDao
                     Flowable.just(Event(deleteError))
                 }
             }
-            .onErrorReturn { Event(deleteError) }
     }
 
 }

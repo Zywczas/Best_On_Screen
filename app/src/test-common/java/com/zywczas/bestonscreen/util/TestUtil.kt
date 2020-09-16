@@ -57,7 +57,7 @@ object TestUtil {
         "2020-08-28"
     )
 
-    val movie2 = Movie(
+    private val movie2 = Movie(
         438396,
         "/sMO1v5TUf8GOJHbJieDXsgWT2Ud.jpg",
         "Unknown Origins",
@@ -72,7 +72,7 @@ object TestUtil {
         2
     )
 
-    private val movieFromDB2 = MovieFromDB(
+    val movieFromDB2 = MovieFromDB(
         438396,
         "/sMO1v5TUf8GOJHbJieDXsgWT2Ud.jpg",
         "Unknown Origins",
