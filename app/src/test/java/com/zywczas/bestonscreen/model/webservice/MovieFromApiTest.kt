@@ -15,55 +15,46 @@ internal class MovieFromApiTest {
 
     @Test
     fun convertGenres_returnSuccess(){
-        val expectedValue28 = "Action"
-        val expectedValue14 = "Fantasy"
-        val expectedValue10751 = "Family"
-        val expectedValue10749 = "Romance"
-        val expectedValue37 = "Western"
         movieFromApi.genreIds = listOf(28, 14, 10751, 10749, 37)
 
         movieFromApi.convertGenreIdsToVariables()
 
-        assertEquals(expectedValue28, movieFromApi.genre1)
-        assertEquals(expectedValue14, movieFromApi.genre2)
-        assertEquals(expectedValue10751, movieFromApi.genre3)
-        assertEquals(expectedValue10749, movieFromApi.genre4)
-        assertEquals(expectedValue37, movieFromApi.genre5)
+        assertEquals(5, movieFromApi.assignedGenresAmount)
+        assertEquals("Action", movieFromApi.genre1)
+        assertEquals("Fantasy", movieFromApi.genre2)
+        assertEquals("Family", movieFromApi.genre3)
+        assertEquals("Romance", movieFromApi.genre4)
+        assertEquals("Western", movieFromApi.genre5)
     }
 
     @Test
     fun convertGenres_wrongID_returnMissingInfo(){
-        val wrongId = 0
-        val expectedValue123456 = "missing info"
-        val expectedValue14 = "Fantasy"
-        val expectedValueOfWrongId = "missing info"
-        movieFromApi.genreIds = listOf(123456, 14, wrongId)
+        val wrongId1 = 123456
+        val wrongId2 = 0
+        movieFromApi.genreIds = listOf(wrongId1, 14, wrongId2)
 
         movieFromApi.convertGenreIdsToVariables()
 
-        assertEquals(expectedValue123456, movieFromApi.genre1)
-        assertEquals(expectedValue14, movieFromApi.genre2)
-        assertEquals(expectedValueOfWrongId, movieFromApi.genre3)
+        assertEquals(3, movieFromApi.assignedGenresAmount)
+        assertEquals("missing info", movieFromApi.genre1)
+        assertEquals("Fantasy", movieFromApi.genre2)
+        assertEquals("missing info", movieFromApi.genre3)
         assertEquals("", movieFromApi.genre4)
         assertEquals("", movieFromApi.genre5)
     }
 
     @Test
     fun convertGenres_moreThan5GenresInList_returnSuccess_5genres(){
-        val expectedValue12 = "Adventure"
-        val expectedValue16 = "Animation"
-        val expectedValue80 = "Crime"
-        val expectedValue28 = "Action"
-        val expectedValue14 = "Fantasy"
         movieFromApi.genreIds = listOf(12, 16, 80 ,28, 14, 10751, 10749, 37)
 
         movieFromApi.convertGenreIdsToVariables()
 
-        assertEquals(expectedValue12, movieFromApi.genre1)
-        assertEquals(expectedValue16, movieFromApi.genre2)
-        assertEquals(expectedValue80, movieFromApi.genre3)
-        assertEquals(expectedValue28, movieFromApi.genre4)
-        assertEquals(expectedValue14, movieFromApi.genre5)
+        assertEquals(5, movieFromApi.assignedGenresAmount)
+        assertEquals("Adventure", movieFromApi.genre1)
+        assertEquals("Animation", movieFromApi.genre2)
+        assertEquals("Crime", movieFromApi.genre3)
+        assertEquals("Action", movieFromApi.genre4)
+        assertEquals("Fantasy", movieFromApi.genre5)
     }
 
     @Test

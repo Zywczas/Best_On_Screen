@@ -2,13 +2,11 @@ package com.zywczas.bestonscreen.model.webservice
 
 import com.zywczas.bestonscreen.util.MockedApiResponseBody
 import com.zywczas.bestonscreen.util.TestUtil
-import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import retrofit2.HttpException
@@ -44,14 +42,11 @@ internal class ApiServiceTest {
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(MockedApiResponseBody.body)
         mockWebServer.enqueue(response)
-        val expected3rdMovieId = 724989
 
-        val returnedMovies = apiService.getPopularMovies(anyString(), anyInt()).blockingGet().movies
-        val returnedMoviesCount = returnedMovies?.size
-        val returned3rdMovieId = returnedMovies?.get(2)?.id
+        val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
+        val actualMoviesCount = movies?.size
 
-        assertEquals(20, returnedMoviesCount)
-        assertEquals(expected3rdMovieId, returned3rdMovieId)
+        assertEquals(20, actualMoviesCount)
     }
 
     @Test
@@ -62,10 +57,10 @@ internal class ApiServiceTest {
         mockWebServer.enqueue(response)
         val expected3rdMovie = TestUtil.movieFromApi1
 
-        val returnedMovies = apiService.getPopularMovies(anyString(), anyInt()).blockingGet().movies
-        val returned3rdMovie = returnedMovies?.get(2)
+        val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
+        val actual3rdMovie = movies?.get(2)
 
-        assertEquals(expected3rdMovie, returned3rdMovie)
+        assertEquals(expected3rdMovie, actual3rdMovie)
     }
 
     @Test
@@ -76,7 +71,7 @@ internal class ApiServiceTest {
         mockWebServer.enqueue(response)
 
         assertThrows(HttpException::class.java) {
-            apiService.getPopularMovies(anyString(), anyInt()).blockingGet()
+            apiService.getPopularMovies("anyString", 777).blockingGet()
         }
     }
 
