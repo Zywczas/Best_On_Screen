@@ -32,11 +32,11 @@ internal class DetailsRepositoryTest{
         val returnedData = Flowable.just(1)
         `when`(movieDao.getIdCount(movieId)).thenReturn(returnedData)
 
-        val returnedValue = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+        val actual = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
 
         verify(movieDao).getIdCount(movieId)
         verifyNoMoreInteractions(movieDao)
-        assertEquals(true, returnedValue)
+        assertEquals(true, actual)
     }
 
     @Test
@@ -45,9 +45,9 @@ internal class DetailsRepositoryTest{
         val returnedData = Flowable.just(0)
         `when`(movieDao.getIdCount(movieId)).thenReturn(returnedData)
 
-        val returnedValue = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+        val actual = detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
 
-        assertEquals(false, returnedValue)
+        assertEquals(false, actual)
     }
 
     @Test
@@ -56,11 +56,11 @@ internal class DetailsRepositoryTest{
         val expectedMessage = detailsRepo.addSuccess
         `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedRowId)
 
-        val returnedValue = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+        val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
         verify(movieDao).insertMovie(movieFromDB)
         verifyNoMoreInteractions(movieDao)
-        assertEquals(expectedMessage, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
@@ -69,9 +69,9 @@ internal class DetailsRepositoryTest{
         val expectedMessage = detailsRepo.addError
         `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedRowId)
 
-        val returnedValue = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+        val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
-        assertEquals(expectedMessage, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
@@ -80,9 +80,9 @@ internal class DetailsRepositoryTest{
         val expectedMessage = detailsRepo.addError
         `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedData)
 
-        val returnedValue = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+        val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
-        assertEquals(expectedMessage, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
@@ -91,11 +91,11 @@ internal class DetailsRepositoryTest{
         val expectedMessage = detailsRepo.deleteSuccess
         `when`(movieDao.deleteMovie(movieFromDB)).thenReturn(numberOfRowsRemoved)
 
-        val returnedValue = detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+        val actualMessage = detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
         verify(movieDao).deleteMovie(movieFromDB)
         verifyNoMoreInteractions(movieDao)
-        assertEquals(expectedMessage, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
@@ -104,9 +104,9 @@ internal class DetailsRepositoryTest{
         val expectedMessage = detailsRepo.deleteError
         `when`(movieDao.deleteMovie(movieFromDB)).thenReturn(numberOfRowsRemoved)
 
-        val returnedValue = detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+        val actualMessage = detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
-        assertEquals(expectedMessage, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
 
