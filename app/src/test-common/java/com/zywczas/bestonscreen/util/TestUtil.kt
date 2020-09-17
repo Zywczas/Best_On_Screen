@@ -13,7 +13,7 @@ object TestUtil {
         listOf(28, 53),
         "Hard Kill",
         5.5,
-        "The work of billionaire tech CEO Donovan Chalmers is so valuable...",
+        "The work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
         "2020-08-25"
     )
 
@@ -22,7 +22,7 @@ object TestUtil {
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         "Hard Kill",
         5.5,
-        "The work of billionaire tech CEO Donovan Chalmers is so valuable...",
+        "The work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
         "2020-08-25",
         "Action",
         "Thriller",
@@ -37,7 +37,7 @@ object TestUtil {
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         "Hard Kill",
         5.5,
-        "The work of billionaire tech CEO Donovan Chalmers is so valuable...",
+        "The work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
         "2020-08-25",
         "Action",
         "Thriller",
@@ -87,13 +87,12 @@ object TestUtil {
         2
     )
 
-    val moviesFromApi = listOf(movieFromApi1, movieFromApi2)
     val movies = listOf(movie1, movie2)
     val moviesFromDb = listOf(movieFromDB1, movieFromDB2)
-    const val totalPagesInCategory = 20
+    private val moviesFromApi = listOf(movieFromApi1, movieFromApi2)
     val apiResponse = ApiResponse(moviesFromApi)
 
-    val restApiResponseBody = "{\n" +
+    const val restApiResponseBody = "{\n" +
             "  \"page\": 1,\n" +
             "  \"total_results\": 10000,\n" +
             "  \"total_pages\": 500,\n" +

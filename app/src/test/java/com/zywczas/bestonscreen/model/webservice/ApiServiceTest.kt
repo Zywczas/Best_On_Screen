@@ -5,14 +5,12 @@ import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.HttpURLConnection
@@ -47,16 +45,44 @@ internal class ApiServiceTest {
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(TestUtil.restApiResponseBody)
         mockWebServer.enqueue(response)
-        val expectedMovie3Id = 724989
+        val expected3rdMovieId = 724989
         //act
-        val moviesFromApi = apiService.getPopularMovies(anyString(), anyInt()).blockingGet().movies
-        val returnedMovie3Id = moviesFromApi?.get(2)?.id
+        val returnedMovies = apiService.getPopularMovies(anyString(), anyInt()).blockingGet().movies
+        val returnedMoviesCount = returnedMovies?.size
+        val returned3rdMovieId = returnedMovies?.get(2)?.id
         //assert
-        assertEquals(20, moviesFromApi?.size)
-        assertEquals(expectedMovie3Id, returnedMovie3Id)
+        assertEquals(20, returnedMoviesCount)
+        assertEquals(expected3rdMovieId, returned3rdMovieId)
     }
 
-//todo stworzyc nowy film z danymi z listy i porownac z tym otrzymanym przez api service
+    @Test
+    fun getMovies_gsonConverter(){
+        //arrange
+        val response = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_OK)
+            .setBody(TestUtil.restApiResponseBody)
+        mockWebServer.enqueue(response)
+        val expected3rdMovie = TestUtil.movieFromApi1
+        //act
+        val returnedMovies = apiService.getPopularMovies(anyString(), anyInt()).blockingGet().movies
+        val returned3rdMovie = returnedMovies?.get(2)
+        //assert
+        assertEquals(expected3rdMovie, returned3rdMovie)
+    }
+
+    @Test
+    fun getMovies_throwException(){
+        //arrange
+        val response = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
+            .setBody(TestUtil.restApiResponseBody)
+        mockWebServer.enqueue(response)
+        //assert
+        assertThrows(HttpException::class.java) {
+            apiService.getPopularMovies(anyString(), anyInt()).blockingGet()
+        }
+    }
+
 
 }
 
