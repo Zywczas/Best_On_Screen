@@ -5,6 +5,7 @@ import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Single
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.mockito.ArgumentMatchers.anyInt
