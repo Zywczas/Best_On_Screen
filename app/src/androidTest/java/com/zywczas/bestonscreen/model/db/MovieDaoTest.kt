@@ -20,43 +20,43 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     @Test
     fun insert(){
         dao.insertMovie(movieFromDb1).blockingGet()
-        val movieIdCount = dao.getIdCount(movieFromDb1.id).blockingFirst()
+        val actual = dao.getIdCount(movieFromDb1.id).blockingFirst()
 
-        assertEquals(1, movieIdCount)
+        assertEquals(1, actual)
     }
 
     @Test
     fun insert_delete(){
         dao.insertMovie(movieFromDb1).blockingGet()
-        val moviesDeleted = dao.deleteMovie(movieFromDb1).blockingGet()
-        val movieIdCount = dao.getIdCount(movieFromDb1.id).blockingFirst()
+        val actualDeletedMoviesCount = dao.deleteMovie(movieFromDb1).blockingGet()
+        val actualMovieIdCount = dao.getIdCount(movieFromDb1.id).blockingFirst()
 
-        assertEquals(1, moviesDeleted)
-        assertEquals(0, movieIdCount)
+        assertEquals(1, actualDeletedMoviesCount)
+        assertEquals(0, actualMovieIdCount)
     }
 
     @Test
     fun insert2Movies_getList(){
-        val expectedValue = TestUtil.moviesFromDb
+        val expectedMoviesFromDB = TestUtil.moviesFromDb
 
         dao.insertMovie(movieFromDb1).blockingGet()
         dao.insertMovie(movieFromDb2).blockingGet()
-        val returnedValue = dao.getMovies().blockingFirst()
+        val actualMoviesFromDB = dao.getMovies().blockingFirst()
 
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(expectedMoviesFromDB, actualMoviesFromDB)
     }
 
     @Test
     fun insert2Movies_deleteThem_getEmptyList(){
-        val expectedValue = emptyList<MovieFromDB>()
+        val expectedMoviesFromDB = emptyList<MovieFromDB>()
 
         dao.insertMovie(movieFromDb1).blockingGet()
         dao.insertMovie(movieFromDb2).blockingGet()
         dao.deleteMovie(movieFromDb1).blockingGet()
         dao.deleteMovie(movieFromDb2).blockingGet()
-        val returnedValue = dao.getMovies().blockingFirst()
+        val actualMoviesFromDB = dao.getMovies().blockingFirst()
 
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(expectedMoviesFromDB, actualMoviesFromDB)
     }
 
     @Test
@@ -70,9 +70,9 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
 
     @Test
     fun delete_movieNotInDb(){
-        val moviesRemoved = dao.deleteMovie(movieFromDb1).blockingGet()
+        val actualMoviesRemoved = dao.deleteMovie(movieFromDb1).blockingGet()
 
-        assertEquals(0, moviesRemoved)
+        assertEquals(0, actualMoviesRemoved)
     }
 
 }

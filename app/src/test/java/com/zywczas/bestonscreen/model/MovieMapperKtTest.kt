@@ -8,31 +8,31 @@ internal class MovieMapperKtTest {
 
     @Test
     fun toMovie_movieFromApi(){
-        val expectedValue = TestUtil.movie1
+        val expectedMovie = TestUtil.movie1
         val movieFromApi = TestUtil.movieFromApi1
 
-        val returnedValue = toMovie(movieFromApi)
+        val actualMovie = toMovie(movieFromApi)
 
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(expectedMovie, actualMovie)
     }
 
     @Test
     fun toMovie_movieFromDb(){
-        val expectedValue = TestUtil.movie1
+        val expectedMovie = TestUtil.movie1
         val movieFromDb = TestUtil.movieFromDB1
 
-        val returnedValue = toMovie(movieFromDb)
+        val actualMovie = toMovie(movieFromDb)
 
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(expectedMovie, actualMovie)
     }
 
     @Test
     fun toMovieFromDb_movie(){
-        val expectedValue = TestUtil.movieFromDB1
+        val expectedMovieFromDB = TestUtil.movieFromDB1
         val movie = TestUtil.movie1
 
-        val returnedValue = toMovieFromDB(movie)
+        val actualMovieFromDB = toMovieFromDB(movie)
 
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(expectedMovieFromDB, actualMovieFromDB)
     }
 }

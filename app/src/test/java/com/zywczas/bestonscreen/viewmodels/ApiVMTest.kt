@@ -41,25 +41,24 @@ internal class ApiVMTest{
         `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
 
         viewModel.getNextMovies(category)
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+        val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
-        assertEquals(Resource.success(Pair(movies, category)), returnedValue)
+        assertEquals(Resource.success(Pair(movies, category)), actual)
     }
 
     @Test
     fun getNextMovies_getError_observeError(){
         val category = Category.UPCOMING
         val message = "some error"
-        val expectedValue = Resource.error(message, Pair(emptyList<Movie>(), category))
         val returnedData : Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
         `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
 
         viewModel.getNextMovies(category)
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+        val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
         verify(repo).getApiMovies(anyCategory(), anyInt())
         verifyNoMoreInteractions(repo)
-        assertEquals(expectedValue, returnedValue)
+        assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
     }
 
 

@@ -31,55 +31,55 @@ internal class DetailsVMTest {
     }
 
     @Test
-    fun checkIfIsInDb_returnTrue(){
+    fun checkIfIsInDb_observeTrue(){
         val returnedData = Flowable.just(Event(true))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
 
         viewModel.checkIfIsInDb(anyInt())
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+        val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
 
-        assertEquals(true, returnedValue)
+        assertEquals(true, actual)
     }
 
     @Test
-    fun checkIfIsInDb_returnFalse(){
+    fun checkIfIsInDb_observeFalse(){
         val returnedData = Flowable.just(Event(false))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
 
         viewModel.checkIfIsInDb(anyInt())
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+        val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
 
-        assertEquals(false, returnedValue)
+        assertEquals(false, actual)
     }
 
     @Test
-    fun addMovie_returnMessage(){
+    fun addOrDeleteMovie_add_observeMessage(){
         val isInDb = false
-        val message = "some add outcome"
-        val returnedData = Flowable.just(Event(message))
+        val expectedMessage = "some add outcome"
+        val returnedData = Flowable.just(Event(expectedMessage))
         `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
         viewModel.addOrDeleteMovie(movie, isInDb)
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
+        val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
         verify(repo).addMovieToDB(movie)
         verifyNoMoreInteractions(repo)
-        assertEquals(message, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
-    fun deleteMovie_returnMessage(){
+    fun addOrDeleteMovie_delete_observeMessage(){
         val isInDb = true
-        val message = "some delete outcome"
-        val returnedData = Flowable.just(Event(message))
+        val expectedMessage = "some delete outcome"
+        val returnedData = Flowable.just(Event(expectedMessage))
         `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 
         viewModel.addOrDeleteMovie(movie, isInDb)
-        val returnedValue = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
+        val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
         verify(repo).deleteMovieFromDB(movie)
         verifyNoMoreInteractions(repo)
-        assertEquals(message, returnedValue)
+        assertEquals(expectedMessage, actualMessage)
     }
 
 }

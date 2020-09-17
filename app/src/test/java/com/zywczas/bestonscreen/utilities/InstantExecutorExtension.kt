@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-
+//todo pousuwac niepotrzebne importy z calego projektu
 
 class InstantExecutorExtension : AfterEachCallback, BeforeEachCallback {
 
