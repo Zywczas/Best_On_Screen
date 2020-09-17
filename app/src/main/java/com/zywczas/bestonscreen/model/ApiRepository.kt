@@ -25,7 +25,6 @@ open class ApiRepository @Inject constructor( private val apiService: ApiService
         return apiSingle
             .subscribeOn(Schedulers.io())
             .map { apiResponse ->
-                //todo sprawdzic jak otrzymac http status z retrofit i rxjava
                 val movies = apiResponse.movies?.let { convertToMovies(it) }
                 if (movies != null) {
                     Resource.success(movies)

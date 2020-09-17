@@ -16,7 +16,6 @@ import org.mockito.Mockito.*
 
 internal class DBRepositoryTest {
 
-    //system under test
     private lateinit var dbRepo : DBRepository
 
     @Mock
@@ -30,14 +29,13 @@ internal class DBRepositoryTest {
 
     @Test
     fun getMoviesFromDb_returnMovieList(){
-        //arrange
         val movies = TestUtil.movies
         val moviesFromDB = TestUtil.moviesFromDb
         val returnedData = Flowable.just(moviesFromDB)
         `when`(movieDao.getMovies()).thenReturn(returnedData)
-        //act
+
         val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
-        //assert
+
         verify(movieDao).getMovies()
         verifyNoMoreInteractions(movieDao)
         assertEquals(movies, returnedValue)
@@ -46,13 +44,12 @@ internal class DBRepositoryTest {
 
     @Test
     fun getMoviesFromDB_emptyDB_returnEmptyList(){
-        //arrange
         val moviesFromDB = listOf<MovieFromDB>()
         val returnedData = Flowable.just(moviesFromDB)
         `when`(movieDao.getMovies()).thenReturn(returnedData)
-        //act
+
         val returnedValue = dbRepo.getMoviesFromDB().blockingFirst()
-        //assert
+
         assertEquals(listOf<Movie>(), returnedValue)
     }
 

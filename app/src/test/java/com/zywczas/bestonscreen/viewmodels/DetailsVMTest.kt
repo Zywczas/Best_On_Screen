@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations
 @ExtendWith(InstantExecutorExtension::class)
 internal class DetailsVMTest {
 
-    //system under test
     private lateinit var viewModel : DetailsVM
 
     @Mock
@@ -33,39 +32,36 @@ internal class DetailsVMTest {
 
     @Test
     fun checkIfIsInDb_returnTrue(){
-        //arrange
         val returnedData = Flowable.just(Event(true))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
-        //act
+
         viewModel.checkIfIsInDb(anyInt())
         val returnedValue = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
-        //assert
+
         assertEquals(true, returnedValue)
     }
 
     @Test
     fun checkIfIsInDb_returnFalse(){
-        //arrange
         val returnedData = Flowable.just(Event(false))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
-        //act
+
         viewModel.checkIfIsInDb(anyInt())
         val returnedValue = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
-        //assert
+
         assertEquals(false, returnedValue)
     }
 
     @Test
     fun addMovie_returnMessage(){
-        //arrange
         val isInDb = false
         val message = "some add outcome"
         val returnedData = Flowable.just(Event(message))
         `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
-        //act
+
         viewModel.addOrDeleteMovie(movie, isInDb)
         val returnedValue = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
-        //assert
+
         verify(repo).addMovieToDB(movie)
         verifyNoMoreInteractions(repo)
         assertEquals(message, returnedValue)
@@ -73,15 +69,14 @@ internal class DetailsVMTest {
 
     @Test
     fun deleteMovie_returnMessage(){
-        //arrange
         val isInDb = true
         val message = "some delete outcome"
         val returnedData = Flowable.just(Event(message))
         `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
-        //act
+
         viewModel.addOrDeleteMovie(movie, isInDb)
         val returnedValue = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
-        //assert
+
         verify(repo).deleteMovieFromDB(movie)
         verifyNoMoreInteractions(repo)
         assertEquals(message, returnedValue)

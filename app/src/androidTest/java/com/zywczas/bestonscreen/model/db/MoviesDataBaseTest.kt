@@ -7,7 +7,6 @@ import org.junit.Before
 
 internal abstract class MoviesDataBaseTest {
 
-    //system under test
     private lateinit var dataBase: MoviesDataBase
     lateinit var dao: MovieDao
 

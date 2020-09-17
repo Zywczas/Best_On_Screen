@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations
 @ExtendWith(InstantExecutorExtension::class)
 internal class DBVMTest {
 
-    //system under test
     private lateinit var viewModel: DBVM
 
     @Mock
@@ -31,16 +30,10 @@ internal class DBVMTest {
         viewModel = DBVM(repo)
     }
 
-    //todo przeniesc na zewnatrz
-//    fun <T> LiveData<T>.test() : TestObserver<T> {
-//        return TestObserver.create()
-//    }
-
     @Test
     fun observeMoviesWhenLiveDataSet() {
-        //act
         val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesLD)
-        //assert
+
         assertEquals(movies, returnedValue)
     }
 

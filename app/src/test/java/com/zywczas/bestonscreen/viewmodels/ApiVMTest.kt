@@ -19,9 +19,7 @@ import org.mockito.MockitoAnnotations
 
 @ExtendWith(InstantExecutorExtension::class)
 internal class ApiVMTest{
-    //todo do testowania wszystkie lasy i funkcje testowane musza byc open
 
-    //system under test
     private lateinit var viewModel : ApiVM
 
     @Mock
@@ -33,34 +31,32 @@ internal class ApiVMTest{
         viewModel = ApiVM(repo)
     }
 
-    private fun <Category> anyCategory(): Category = any<Category>()
+    private fun <Category> anyCategory(): Category = any()
 
     @Test
     fun getNextMovies_observeChange(){
-        //arrange
         val category = Category.POPULAR
         val movies = TestUtil.movies
         val returnedData = Flowable.just(Resource.success(movies))
         `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
-        //act
+
         viewModel.getNextMovies(category)
         val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-        //assert
+
         assertEquals(Resource.success(Pair(movies, category)), returnedValue)
     }
 
     @Test
     fun getNextMovies_getError_observeError(){
-        //arrange
         val category = Category.UPCOMING
         val message = "some error"
         val expectedValue = Resource.error(message, Pair(emptyList<Movie>(), category))
         val returnedData : Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
         `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
-        //act
+
         viewModel.getNextMovies(category)
         val returnedValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-        //assert
+
         verify(repo).getApiMovies(anyCategory(), anyInt())
         verifyNoMoreInteractions(repo)
         assertEquals(expectedValue, returnedValue)
