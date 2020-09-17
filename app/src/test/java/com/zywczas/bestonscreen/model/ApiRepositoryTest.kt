@@ -34,7 +34,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_returnListOfMovies_categoryPopular(){
+    fun getApiMovies_categoryPopular_returnListOfMovies(){
         val category = Category.POPULAR
         `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedData)
 
@@ -46,7 +46,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_returnListOfMovies_categoryTopRated(){
+    fun getApiMovies_categoryTopRated_returnListOfMovies(){
         val category = Category.TOP_RATED
         `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedData)
 
@@ -58,7 +58,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_returnListOfMovies_categoryUpcoming(){
+    fun getApiMovies_categoryUpcoming_returnListOfMovies(){
         val category = Category.UPCOMING
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedData)
 

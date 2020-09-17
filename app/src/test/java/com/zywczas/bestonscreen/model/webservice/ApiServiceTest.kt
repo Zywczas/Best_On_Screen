@@ -50,7 +50,7 @@ internal class ApiServiceTest {
     }
 
     @Test
-    fun getMovies_gsonConverter(){
+    fun getMovies_testGsonConverter(){
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(MockedApiResponseBody.body)
@@ -64,7 +64,7 @@ internal class ApiServiceTest {
     }
 
     @Test
-    fun getMovies_throwException(){
+    fun getMovies_getHttpError_throwException(){
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
             .setBody(MockedApiResponseBody.body)
