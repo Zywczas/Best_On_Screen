@@ -9,6 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 
 internal class MovieDaoTest : MoviesDataBaseTest() {
+    //todo dac 1 suite na wszystkie testy inst
 
     private val movieFromDb1 = TestUtil.movieFromDB1
     private val movieFromDb2 = TestUtil.movieFromDB2
