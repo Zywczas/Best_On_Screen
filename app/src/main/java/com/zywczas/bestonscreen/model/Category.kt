@@ -6,11 +6,13 @@ enum class Category {
         override fun toString(): String {
             return "Popular"
         }
-    }, TOP_RATED{
+    },
+    TOP_RATED {
         override fun toString(): String {
             return "Top Rated"
         }
-    }, UPCOMING{
+    },
+    UPCOMING {
         override fun toString(): String {
             return "Upcoming"
         }

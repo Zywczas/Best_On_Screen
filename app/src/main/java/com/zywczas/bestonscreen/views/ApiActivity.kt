@@ -30,12 +30,13 @@ class ApiActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ApiVMFactory
+
     @Inject
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: ApiVM
     private lateinit var adapter: MovieAdapter
     private var wasConfigurationChanged: Boolean? = null
-    private var displayedCategory : Category? = null
+    private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -214,8 +215,8 @@ class ApiActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadNewCategoryIfConnected(category: Category){
-        if (Variables.isNetworkConnected){
+    private fun downloadNewCategoryIfConnected(category: Category) {
+        if (Variables.isNetworkConnected) {
             showProgressBar()
             viewModel.getNextMovies(category)
             moviesRecyclerView.scrollToPosition(0)

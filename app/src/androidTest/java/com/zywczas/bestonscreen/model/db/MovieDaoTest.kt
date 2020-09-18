@@ -3,22 +3,23 @@ package com.zywczas.bestonscreen.model.db
 import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.zywczas.bestonscreen.util.TestUtil
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
 
 internal class MovieDaoTest : MoviesDataBaseTest() {
-    //todo dac 1 test suite dla wszystkich instrumentation tests
 
     private val movieFromDb1 = TestUtil.movieFromDB1
     private val movieFromDb2 = TestUtil.movieFromDB2
 
     //it has to have @JvmField annotation to 'make this rule public' - otherwise gives an error in Kotlin
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val rule = InstantTaskExecutorRule()
 
     @Test
-    fun insert(){
+    fun insert() {
         dao.insertMovie(movieFromDb1).blockingGet()
         val actual = dao.getIdCount(movieFromDb1.id).blockingFirst()
 
@@ -26,7 +27,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert_delete(){
+    fun insert_delete() {
         dao.insertMovie(movieFromDb1).blockingGet()
         val actualDeletedMoviesCount = dao.deleteMovie(movieFromDb1).blockingGet()
         val actualMovieIdCount = dao.getIdCount(movieFromDb1.id).blockingFirst()
@@ -36,7 +37,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert2Movies_getList(){
+    fun insert2Movies_getList() {
         val expectedMoviesFromDB = TestUtil.moviesFromDb
 
         dao.insertMovie(movieFromDb1).blockingGet()
@@ -47,7 +48,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert2Movies_deleteThem_getEmptyList(){
+    fun insert2Movies_deleteThem_getEmptyList() {
         val expectedMoviesFromDB = emptyList<MovieFromDB>()
 
         dao.insertMovie(movieFromDb1).blockingGet()
@@ -60,7 +61,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert_insertAgain_getException(){
+    fun insert_insertAgain_getException() {
         dao.insertMovie(movieFromDb1).blockingGet()
 
         assertThrows(SQLiteConstraintException::class.java) {
@@ -69,7 +70,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun delete_movieNotInDb(){
+    fun delete_movieNotInDb() {
         val actualMoviesRemoved = dao.deleteMovie(movieFromDb1).blockingGet()
 
         assertEquals(0, actualMoviesRemoved)

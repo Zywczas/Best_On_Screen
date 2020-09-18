@@ -30,7 +30,7 @@ object TestUtil {
         "",
         "",
         2
-        )
+    )
 
     val movieFromDB1 = MovieFromDB(
         724989,

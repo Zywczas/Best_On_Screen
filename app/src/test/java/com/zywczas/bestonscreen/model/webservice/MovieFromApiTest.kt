@@ -9,12 +9,12 @@ internal class MovieFromApiTest {
     private lateinit var movieFromApi: MovieFromApi
 
     @BeforeEach
-    private fun init(){
+    private fun init() {
         movieFromApi = MovieFromApi()
     }
 
     @Test
-    fun convertGenres_returnSuccess(){
+    fun convertGenres_returnSuccess() {
         movieFromApi.genreIds = listOf(28, 14, 10751, 10749, 37)
 
         movieFromApi.convertGenreIdsToVariables()
@@ -28,7 +28,7 @@ internal class MovieFromApiTest {
     }
 
     @Test
-    fun convertGenres_wrongID_returnMissingInfo(){
+    fun convertGenres_wrongID_returnMissingInfo() {
         val wrongId1 = 123456
         val wrongId2 = 0
         movieFromApi.genreIds = listOf(wrongId1, 14, wrongId2)
@@ -44,8 +44,8 @@ internal class MovieFromApiTest {
     }
 
     @Test
-    fun convertGenres_moreThan5GenresInList_returnSuccess_5genres(){
-        movieFromApi.genreIds = listOf(12, 16, 80 ,28, 14, 10751, 10749, 37)
+    fun convertGenres_moreThan5GenresInList_returnSuccess_5genres() {
+        movieFromApi.genreIds = listOf(12, 16, 80, 28, 14, 10751, 10749, 37)
 
         movieFromApi.convertGenreIdsToVariables()
 
@@ -58,7 +58,7 @@ internal class MovieFromApiTest {
     }
 
     @Test
-    fun convertGenres_noIds_returnEmptyGenres(){
+    fun convertGenres_noIds_returnEmptyGenres() {
         movieFromApi.genreIds = null
 
         movieFromApi.convertGenreIdsToVariables()

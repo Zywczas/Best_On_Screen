@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
-import com.zywczas.bestonscreen.utilities.Resource
 
-class DetailsVM ( private val repo: DetailsRepository ) : ViewModel() {
+class DetailsVM(private val repo: DetailsRepository) : ViewModel() {
 
     private val isMovieInDbMLD = MediatorLiveData<Event<Boolean>>()
     private val messageMLD = MediatorLiveData<Event<String>>()
@@ -33,7 +32,8 @@ class DetailsVM ( private val repo: DetailsRepository ) : ViewModel() {
 
     private fun addMovieToDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
-            repo.addMovieToDB(movie))
+            repo.addMovieToDB(movie)
+        )
         messageMLD.addSource(source) { event ->
             messageMLD.postValue(event)
             messageMLD.removeSource(source)
@@ -42,7 +42,8 @@ class DetailsVM ( private val repo: DetailsRepository ) : ViewModel() {
 
     private fun deleteMovieFromDB(movie: Movie) {
         val source = LiveDataReactiveStreams.fromPublisher(
-            repo.deleteMovieFromDB(movie))
+            repo.deleteMovieFromDB(movie)
+        )
         messageMLD.addSource(source) { event ->
             messageMLD.postValue(event)
             messageMLD.removeSource(source)

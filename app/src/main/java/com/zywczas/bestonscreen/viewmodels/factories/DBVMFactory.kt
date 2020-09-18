@@ -8,7 +8,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DBVMFactory @Inject constructor( private val repo: DBRepository) : ViewModelProvider.NewInstanceFactory() {
+class DBVMFactory @Inject constructor(private val repo: DBRepository) :
+    ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

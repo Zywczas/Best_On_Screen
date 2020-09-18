@@ -7,10 +7,10 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component (modules = [MoviesModule::class])
+@Component(modules = [MoviesModule::class])
 interface MoviesComponent {
 
-    fun inject (app: DBActivity)
-    fun inject (app: ApiActivity)
-    fun inject (app: DetailsActivity)
+    fun inject(app: DBActivity)
+    fun inject(app: ApiActivity)
+    fun inject(app: DetailsActivity)
 }

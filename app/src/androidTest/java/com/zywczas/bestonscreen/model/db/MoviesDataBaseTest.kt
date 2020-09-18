@@ -11,7 +11,7 @@ internal abstract class MoviesDataBaseTest {
     lateinit var dao: MovieDao
 
     @Before
-    fun init(){
+    fun init() {
         dataBase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             MoviesDataBase::class.java
@@ -20,7 +20,7 @@ internal abstract class MoviesDataBaseTest {
     }
 
     @After
-    fun finish(){
+    fun finish() {
         dataBase.close()
     }
 

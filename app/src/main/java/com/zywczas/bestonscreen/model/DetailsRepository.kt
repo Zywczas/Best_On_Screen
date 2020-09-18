@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class DetailsRepository @Inject constructor( private val movieDao: MovieDao ) {
+open class DetailsRepository @Inject constructor(private val movieDao: MovieDao) {
 
     val addSuccess = "Movie added to your list."
     val addError = "Cannot add the movie. Close the app. Try again."

@@ -18,20 +18,20 @@ import org.mockito.MockitoAnnotations
 @ExtendWith(InstantExecutorExtension::class)
 internal class DetailsVMTest {
 
-    private lateinit var viewModel : DetailsVM
+    private lateinit var viewModel: DetailsVM
 
     @Mock
-    private lateinit var repo : DetailsRepository
+    private lateinit var repo: DetailsRepository
     private val movie = TestUtil.movie1
 
     @BeforeEach
-    private fun init(){
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         viewModel = DetailsVM(repo)
     }
 
     @Test
-    fun checkIfIsInDb_observeTrue(){
+    fun checkIfIsInDb_observeTrue() {
         val returnedData = Flowable.just(Event(true))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
 
@@ -42,7 +42,7 @@ internal class DetailsVMTest {
     }
 
     @Test
-    fun checkIfIsInDb_observeFalse(){
+    fun checkIfIsInDb_observeFalse() {
         val returnedData = Flowable.just(Event(false))
         `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
 
@@ -53,7 +53,7 @@ internal class DetailsVMTest {
     }
 
     @Test
-    fun addOrDeleteMovie_add_observeMessage(){
+    fun addOrDeleteMovie_add_observeMessage() {
         val isInDb = false
         val expectedMessage = "some add outcome"
         val returnedData = Flowable.just(Event(expectedMessage))
@@ -68,7 +68,7 @@ internal class DetailsVMTest {
     }
 
     @Test
-    fun addOrDeleteMovie_delete_observeMessage(){
+    fun addOrDeleteMovie_delete_observeMessage() {
         val isInDb = true
         val expectedMessage = "some delete outcome"
         val returnedData = Flowable.just(Event(expectedMessage))

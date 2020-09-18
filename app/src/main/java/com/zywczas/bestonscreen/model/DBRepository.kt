@@ -16,8 +16,9 @@ open class DBRepository @Inject constructor(private val movieDao: MovieDao) {
         return databaseFlowable
             .subscribeOn(Schedulers.io())
             .onBackpressureBuffer()
-            .map { moviesFromDB -> convertToMovies(moviesFromDB)
-               movies
+            .map { moviesFromDB ->
+                convertToMovies(moviesFromDB)
+                movies
             }
     }
 

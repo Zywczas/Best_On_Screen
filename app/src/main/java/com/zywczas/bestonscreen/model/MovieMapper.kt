@@ -3,7 +3,7 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
-fun toMovie(movieFromApi: MovieFromApi) : Movie {
+fun toMovie(movieFromApi: MovieFromApi): Movie {
     movieFromApi.convertGenreIdsToVariables()
     return Movie(
         movieFromApi.id ?: 0,

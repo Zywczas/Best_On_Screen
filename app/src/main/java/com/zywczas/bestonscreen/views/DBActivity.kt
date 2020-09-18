@@ -92,10 +92,10 @@ class DBActivity : AppCompatActivity() {
         moviesRecyclerView.setHasFixedSize(true)
     }
 
-    private fun setupMoviesObserver(){
+    private fun setupMoviesObserver() {
         viewModel.moviesLD.observe(this, Observer { movies ->
             updateDisplayedMovies(movies)
-            if (movies.isEmpty()){
+            if (movies.isEmpty()) {
                 showMessageAboutEmptyDB()
             }
         })

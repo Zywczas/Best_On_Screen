@@ -51,7 +51,7 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.bindMovie(getItem(position))
+        holder.bindMovie(getItem(position))
     }
 
 }

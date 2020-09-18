@@ -1,13 +1,13 @@
 package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.util.TestUtil
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class MovieMapperKtTest {
 
     @Test
-    fun toMovie_movieFromApi(){
+    fun toMovie_movieFromApi() {
         val expectedMovie = TestUtil.movie1
         val movieFromApi = TestUtil.movieFromApi1
 
@@ -17,7 +17,7 @@ internal class MovieMapperKtTest {
     }
 
     @Test
-    fun toMovie_movieFromDb(){
+    fun toMovie_movieFromDb() {
         val expectedMovie = TestUtil.movie1
         val movieFromDb = TestUtil.movieFromDB1
 
@@ -27,7 +27,7 @@ internal class MovieMapperKtTest {
     }
 
     @Test
-    fun toMovieFromDb_movie(){
+    fun toMovieFromDb_movie() {
         val expectedMovieFromDB = TestUtil.movieFromDB1
         val movie = TestUtil.movie1
 

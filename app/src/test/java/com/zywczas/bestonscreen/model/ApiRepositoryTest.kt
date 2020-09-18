@@ -5,8 +5,9 @@ import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
@@ -20,12 +21,12 @@ internal class ApiRepositoryTest {
 
     @Mock
     private lateinit var apiService: ApiService
-    private lateinit var expectedMovies : List<Movie>
-    private lateinit var apiResponse : ApiResponse
-    private lateinit var returnedData : Single<ApiResponse>
+    private lateinit var expectedMovies: List<Movie>
+    private lateinit var apiResponse: ApiResponse
+    private lateinit var returnedData: Single<ApiResponse>
 
     @BeforeEach
-    private fun init(){
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         apiRepository = ApiRepository(apiService)
         expectedMovies = TestUtil.movies
@@ -34,7 +35,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_categoryPopular_returnListOfMovies(){
+    fun getApiMovies_categoryPopular_returnListOfMovies() {
         val category = Category.POPULAR
         `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedData)
 
@@ -46,7 +47,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_categoryTopRated_returnListOfMovies(){
+    fun getApiMovies_categoryTopRated_returnListOfMovies() {
         val category = Category.TOP_RATED
         `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedData)
 
@@ -58,7 +59,7 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_categoryUpcoming_returnListOfMovies(){
+    fun getApiMovies_categoryUpcoming_returnListOfMovies() {
         val category = Category.UPCOMING
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedData)
 
@@ -70,9 +71,9 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_noMovies_returnError(){
+    fun getApiMovies_noMovies_returnError() {
         val category = Category.UPCOMING
-        val emptyApiResponse= ApiResponse()
+        val emptyApiResponse = ApiResponse()
         val returnedEmptyData = Single.just(emptyApiResponse)
         val expectedMessage = apiRepository.noMoviesError
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
@@ -83,12 +84,16 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_noMorePagesException_returnError(){
+    fun getApiMovies_noMorePagesException_returnError() {
         val category = Category.UPCOMING
         val apiServiceCallStatus = apiRepository.noMorePagesStatus
         val exception = Exception(apiServiceCallStatus)
         val expectedMessage = apiRepository.noMorePagesError
-        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(Single.error(exception))
+        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(
+            Single.error(
+                exception
+            )
+        )
 
         val actual = apiRepository.getApiMovies(category, 5).blockingFirst()
 
@@ -96,12 +101,16 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_invalidApiKeyException_returnError(){
+    fun getApiMovies_invalidApiKeyException_returnError() {
         val category = Category.UPCOMING
         val apiServiceCallStatus = apiRepository.invalidApiKeyStatus
         val exception = Exception(apiServiceCallStatus)
         val expectedMessage = apiRepository.invalidApiKeyError
-        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(Single.error(exception))
+        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(
+            Single.error(
+                exception
+            )
+        )
 
         val actual = apiRepository.getApiMovies(category, 5).blockingFirst()
 
@@ -109,11 +118,15 @@ internal class ApiRepositoryTest {
     }
 
     @Test
-    fun getApiMovies_otherException_returnError(){
+    fun getApiMovies_otherException_returnError() {
         val category = Category.UPCOMING
         val exception = Exception()
         val expectedMessage = apiRepository.generalApiError
-        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(Single.error(exception))
+        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(
+            Single.error(
+                exception
+            )
+        )
 
         val actual = apiRepository.getApiMovies(category, 5).blockingFirst()
 

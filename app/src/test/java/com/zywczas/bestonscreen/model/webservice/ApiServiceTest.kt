@@ -5,10 +5,12 @@ import com.zywczas.bestonscreen.util.TestUtil
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.anyString
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,7 +23,7 @@ internal class ApiServiceTest {
     private lateinit var apiService: ApiService
 
     @BeforeAll
-    private fun init(){
+    private fun init() {
         mockWebServer.start()
         apiService = Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
@@ -32,12 +34,12 @@ internal class ApiServiceTest {
     }
 
     @AfterAll
-    private fun close(){
+    private fun close() {
         mockWebServer.shutdown()
     }
 
     @Test
-    fun getMovies(){
+    fun getMovies() {
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(MockedApiResponseBody.body)
@@ -50,7 +52,7 @@ internal class ApiServiceTest {
     }
 
     @Test
-    fun getMovies_testGsonConverter(){
+    fun getMovies_testGsonConverter() {
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(MockedApiResponseBody.body)
@@ -64,7 +66,7 @@ internal class ApiServiceTest {
     }
 
     @Test
-    fun getMovies_getHttpError_throwException(){
+    fun getMovies_getHttpError_throwException() {
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
             .setBody(MockedApiResponseBody.body)

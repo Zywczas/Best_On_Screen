@@ -10,7 +10,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
 
-class ApiVM ( private val repo: ApiRepository ) : ViewModel() {
+class ApiVM(private val repo: ApiRepository) : ViewModel() {
 
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
@@ -18,9 +18,9 @@ class ApiVM ( private val repo: ApiRepository ) : ViewModel() {
     private var category = anyCategoryOnInit
     private val movies = mutableListOf<Movie>()
 
-    //todo sprawdzic czy nie pousuwac tego z konstuktora i DI
     private val moviesAndCategoryMLD = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
-    val moviesAndCategoryLD = moviesAndCategoryMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
+    val moviesAndCategoryLD =
+        moviesAndCategoryMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
 
     fun getNextMovies(nextCategory: Category = category) {
         val isNewCategory = nextCategory != category
@@ -59,10 +59,8 @@ class ApiVM ( private val repo: ApiRepository ) : ViewModel() {
         page++
     }
 
-    private fun sendError(message: String){
+    private fun sendError(message: String) {
         moviesAndCategoryMLD.postValue(Resource.error(message, Pair(emptyList(), category)))
     }
-
-    //todo pomylec nad przeniesiemiec network handle do view models
 
 }
