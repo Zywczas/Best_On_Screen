@@ -106,7 +106,7 @@ class ApiActivity : AppCompatActivity() {
                 Status.SUCCESS -> { updateContent(resource.data!!) }
                 Status.ERROR -> {
                     showToast(resource.message!!)
-                    resource.data?.also { updateContent(it) }
+                    resource.data?.let { updateContent(it) }
                 }
             }
         }

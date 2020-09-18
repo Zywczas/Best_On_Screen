@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
@@ -53,7 +51,7 @@ internal class ApiVMTest {
         }
 
         @Test
-        fun getError_observeError() {
+        fun error_observeError() {
             val category = Category.UPCOMING
             val message = "some error"
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
@@ -65,6 +63,26 @@ internal class ApiVMTest {
             verify(repo).getApiMovies(anyCategory(), anyInt())
             verifyNoMoreInteractions(repo)
             assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
+        }
+
+        @Test
+        fun `1st call OK, 2nd error, observe error with data`() {
+            val category = Category.UPCOMING
+            val message = "some error message from ApiRepository"
+            val movies = TestUtil.movies
+            val returnedMovies = Flowable.just(Resource.success(movies))
+            `when`(repo.getApiMovies(category, 1)).thenReturn(returnedMovies)
+            val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
+            `when`(repo.getApiMovies(category, 2)).thenReturn(returnedError)
+
+            viewModel.getNextMovies(category)
+            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            viewModel.getNextMovies(category)
+            val actualSecondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            verify(repo, atLeast(2)).getApiMovies(anyCategory(), anyInt())
+            verifyNoMoreInteractions(repo)
+            assertEquals(Resource.error(message, Pair(movies, category)), actualSecondValue)
         }
 
     }
