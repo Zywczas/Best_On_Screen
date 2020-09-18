@@ -22,10 +22,6 @@ internal class ApiRepositoryTest {
     @Mock
     private lateinit var apiService: ApiService
 
-    private val expectedMovies = TestUtil.movies
-    private val apiResponse = TestUtil.apiResponse
-    private val returnedData = Single.just(apiResponse)
-
     @BeforeEach
     private fun init() {
         MockitoAnnotations.initMocks(this)
@@ -34,7 +30,10 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_categoryPopular_returnListOfMovies() {
-        `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedData)
+        val expectedMovies = TestUtil.movies
+        val apiResponse = TestUtil.apiResponse
+        val returnedApiResponse = Single.just(apiResponse)
+        `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
         val actual = apiRepository.getApiMovies(Category.POPULAR, 4).blockingFirst()
 
@@ -45,7 +44,10 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_categoryTopRated_returnListOfMovies() {
-        `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedData)
+        val expectedMovies = TestUtil.movies
+        val apiResponse = TestUtil.apiResponse
+        val returnedApiResponse = Single.just(apiResponse)
+        `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
         val actual = apiRepository.getApiMovies(Category.TOP_RATED, 6).blockingFirst()
 
@@ -56,7 +58,10 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_categoryUpcoming_returnListOfMovies() {
-        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedData)
+        val expectedMovies = TestUtil.movies
+        val apiResponse = TestUtil.apiResponse
+        val returnedApiResponse = Single.just(apiResponse)
+        `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
         val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
 
