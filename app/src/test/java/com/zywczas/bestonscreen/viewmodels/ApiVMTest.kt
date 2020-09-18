@@ -15,16 +15,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
 @ExtendWith(InstantExecutorExtension::class)
 internal class ApiVMTest {
 
-    private lateinit var viewModel: ApiVM
+    private lateinit var viewModel : ApiVM
 
     @Mock
-    private lateinit var repo: ApiRepository
+    private lateinit var repo : ApiRepository
 
     @BeforeEach
     private fun init() {
@@ -35,7 +36,7 @@ internal class ApiVMTest {
     private fun <Category> anyCategory(): Category = any()
 
     @Nested
-    inner class GetNextMovies(){
+    inner class GetNextMovies {
 
         @Test
         fun observeChange() {

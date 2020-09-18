@@ -8,22 +8,17 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
-
 internal class DBRepositoryTest {
 
-    private lateinit var dbRepo: DBRepository
-
-    @Mock
-    private lateinit var movieDao: MovieDao
+    private val movieDao = mock(MovieDao::class.java)
+    private val repo = DBRepository(movieDao)
 
     @BeforeEach
     private fun init() {
-        MockitoAnnotations.initMocks(this)
-        dbRepo = DBRepository(movieDao)
+        reset(movieDao)
     }
 
     @Nested
@@ -36,7 +31,7 @@ internal class DBRepositoryTest {
             val returnedMoviesFromDb = Flowable.just(moviesFromDB)
             `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
-            val actualMovies = dbRepo.getMoviesFromDB().blockingFirst()
+            val actualMovies = repo.getMoviesFromDB().blockingFirst()
 
             verify(movieDao).getMovies()
             verifyNoMoreInteractions(movieDao)
@@ -49,7 +44,7 @@ internal class DBRepositoryTest {
             val returnedMoviesFromDb = Flowable.just(emptyList<MovieFromDB>())
             `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
-            val actual = dbRepo.getMoviesFromDB().blockingFirst()
+            val actual = repo.getMoviesFromDB().blockingFirst()
 
             assertEquals(emptyList<Movie>(), actual)
         }

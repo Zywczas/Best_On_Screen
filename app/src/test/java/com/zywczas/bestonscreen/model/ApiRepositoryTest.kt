@@ -18,15 +18,12 @@ import org.mockito.MockitoAnnotations
 
 internal class ApiRepositoryTest {
 
-    private lateinit var apiRepository: ApiRepository
-
-    @Mock
-    private lateinit var apiService: ApiService
+    private val apiService = mock(ApiService::class.java)
+    private val apiRepository = ApiRepository(apiService)
 
     @BeforeEach
     private fun init() {
-        MockitoAnnotations.initMocks(this)
-        apiRepository = ApiRepository(apiService)
+        reset(apiService)
     }
 
     @Nested
