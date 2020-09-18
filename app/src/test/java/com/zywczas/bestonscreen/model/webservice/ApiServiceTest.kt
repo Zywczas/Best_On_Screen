@@ -5,12 +5,9 @@ import com.zywczas.bestonscreen.util.TestUtil
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,43 +35,48 @@ internal class ApiServiceTest {
         mockWebServer.shutdown()
     }
 
-    @Test
-    fun getMovies() {
-        val response = MockResponse()
-            .setResponseCode(HttpURLConnection.HTTP_OK)
-            .setBody(MockedApiResponseBody.body)
-        mockWebServer.enqueue(response)
+    @Nested
+    inner class GetMovies {
 
-        val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
-        val actualMoviesCount = movies?.size
+        @Test
+        fun returnList() {
+            val response = MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_OK)
+                .setBody(MockedApiResponseBody.body)
+            mockWebServer.enqueue(response)
 
-        assertEquals(20, actualMoviesCount)
-    }
+            val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
+            val actualMoviesCount = movies?.size
 
-    @Test
-    fun getMovies_testGsonConverter() {
-        val expected3rdMovie = TestUtil.movieFromApi1
-        val response = MockResponse()
-            .setResponseCode(HttpURLConnection.HTTP_OK)
-            .setBody(MockedApiResponseBody.body)
-        mockWebServer.enqueue(response)
-
-        val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
-        val actual3rdMovie = movies?.get(2)
-
-        assertEquals(expected3rdMovie, actual3rdMovie)
-    }
-
-    @Test
-    fun getMovies_getHttpError_throwException() {
-        val response = MockResponse()
-            .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
-            .setBody(MockedApiResponseBody.body)
-        mockWebServer.enqueue(response)
-
-        assertThrows(HttpException::class.java) {
-            apiService.getPopularMovies("anyString", 777).blockingGet()
+            assertEquals(20, actualMoviesCount)
         }
+
+        @Test
+        fun testGsonConverter() {
+            val expected3rdMovie = TestUtil.movieFromApi1
+            val response = MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_OK)
+                .setBody(MockedApiResponseBody.body)
+            mockWebServer.enqueue(response)
+
+            val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
+            val actual3rdMovie = movies?.get(2)
+
+            assertEquals(expected3rdMovie, actual3rdMovie)
+        }
+
+        @Test
+        fun getHttpError_throwException() {
+            val response = MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
+                .setBody(MockedApiResponseBody.body)
+            mockWebServer.enqueue(response)
+
+            assertThrows(HttpException::class.java) {
+                apiService.getPopularMovies("anyString", 777).blockingGet()
+            }
+        }
+
     }
 
 

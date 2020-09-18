@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.model.webservice
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 internal class MovieFromApiTest {
@@ -13,62 +14,67 @@ internal class MovieFromApiTest {
         movieFromApi = MovieFromApi()
     }
 
-    @Test
-    fun convertGenres_returnSuccess() {
-        movieFromApi.genreIds = listOf(28, 14, 10751, 10749, 37)
+    @Nested
+    inner class ConvertGenres {
 
-        movieFromApi.convertGenreIdsToVariables()
+        @Test
+        fun returnSuccess() {
+            movieFromApi.genreIds = listOf(28, 14, 10751, 10749, 37)
 
-        assertEquals(5, movieFromApi.assignedGenresAmount)
-        assertEquals("Action", movieFromApi.genre1)
-        assertEquals("Fantasy", movieFromApi.genre2)
-        assertEquals("Family", movieFromApi.genre3)
-        assertEquals("Romance", movieFromApi.genre4)
-        assertEquals("Western", movieFromApi.genre5)
-    }
+            movieFromApi.convertGenreIdsToVariables()
 
-    @Test
-    fun convertGenres_wrongID_returnMissingInfo() {
-        val wrongId1 = 123456
-        val wrongId2 = 0
-        movieFromApi.genreIds = listOf(wrongId1, 14, wrongId2)
+            assertEquals(5, movieFromApi.assignedGenresAmount)
+            assertEquals("Action", movieFromApi.genre1)
+            assertEquals("Fantasy", movieFromApi.genre2)
+            assertEquals("Family", movieFromApi.genre3)
+            assertEquals("Romance", movieFromApi.genre4)
+            assertEquals("Western", movieFromApi.genre5)
+        }
 
-        movieFromApi.convertGenreIdsToVariables()
+        @Test
+        fun wrongID_returnMissingInfo() {
+            val wrongId1 = 123456
+            val wrongId2 = 0
+            movieFromApi.genreIds = listOf(wrongId1, 14, wrongId2)
 
-        assertEquals(3, movieFromApi.assignedGenresAmount)
-        assertEquals("missing info", movieFromApi.genre1)
-        assertEquals("Fantasy", movieFromApi.genre2)
-        assertEquals("missing info", movieFromApi.genre3)
-        assertEquals("", movieFromApi.genre4)
-        assertEquals("", movieFromApi.genre5)
-    }
+            movieFromApi.convertGenreIdsToVariables()
 
-    @Test
-    fun convertGenres_moreThan5GenresInList_returnSuccess_5genres() {
-        movieFromApi.genreIds = listOf(12, 16, 80, 28, 14, 10751, 10749, 37)
+            assertEquals(3, movieFromApi.assignedGenresAmount)
+            assertEquals("missing info", movieFromApi.genre1)
+            assertEquals("Fantasy", movieFromApi.genre2)
+            assertEquals("missing info", movieFromApi.genre3)
+            assertEquals("", movieFromApi.genre4)
+            assertEquals("", movieFromApi.genre5)
+        }
 
-        movieFromApi.convertGenreIdsToVariables()
+        @Test
+        fun moreThan5GenresInList_return5genres() {
+            movieFromApi.genreIds = listOf(12, 16, 80, 28, 14, 10751, 10749, 37)
 
-        assertEquals(5, movieFromApi.assignedGenresAmount)
-        assertEquals("Adventure", movieFromApi.genre1)
-        assertEquals("Animation", movieFromApi.genre2)
-        assertEquals("Crime", movieFromApi.genre3)
-        assertEquals("Action", movieFromApi.genre4)
-        assertEquals("Fantasy", movieFromApi.genre5)
-    }
+            movieFromApi.convertGenreIdsToVariables()
 
-    @Test
-    fun convertGenres_noIds_returnEmptyGenres() {
-        movieFromApi.genreIds = null
+            assertEquals(5, movieFromApi.assignedGenresAmount)
+            assertEquals("Adventure", movieFromApi.genre1)
+            assertEquals("Animation", movieFromApi.genre2)
+            assertEquals("Crime", movieFromApi.genre3)
+            assertEquals("Action", movieFromApi.genre4)
+            assertEquals("Fantasy", movieFromApi.genre5)
+        }
 
-        movieFromApi.convertGenreIdsToVariables()
+        @Test
+        fun noIds_returnEmptyGenres() {
+            movieFromApi.genreIds = null
 
-        assertEquals(0, movieFromApi.assignedGenresAmount)
-        assertEquals("", movieFromApi.genre1)
-        assertEquals("", movieFromApi.genre2)
-        assertEquals("", movieFromApi.genre3)
-        assertEquals("", movieFromApi.genre4)
-        assertEquals("", movieFromApi.genre5)
+            movieFromApi.convertGenreIdsToVariables()
+
+            assertEquals(0, movieFromApi.assignedGenresAmount)
+            assertEquals("", movieFromApi.genre1)
+            assertEquals("", movieFromApi.genre2)
+            assertEquals("", movieFromApi.genre3)
+            assertEquals("", movieFromApi.genre4)
+            assertEquals("", movieFromApi.genre5)
+        }
+
     }
 
 }

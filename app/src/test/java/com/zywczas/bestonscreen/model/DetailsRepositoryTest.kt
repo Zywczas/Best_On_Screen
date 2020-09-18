@@ -33,7 +33,7 @@ internal class DetailsRepositoryTest {
     inner class CheckIfMovieIsInDb {
 
         @Test
-        fun checkIfMovieIsInDB_returnTrue() {
+        fun returnTrue() {
             val movieId = 777
             val returnedIdCount = Flowable.just(1)
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
@@ -47,7 +47,7 @@ internal class DetailsRepositoryTest {
         }
 
         @Test
-        fun checkIfMovieIsInDB_returnFalse() {
+        fun returnFalse() {
             val movieId = 777
             val returnedIdCount = Flowable.just(0)
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
@@ -64,7 +64,7 @@ internal class DetailsRepositoryTest {
     inner class AddMovieToDb {
 
         @Test
-        fun addMovieToDB_returnSuccess() {
+        fun returnSuccess() {
             val expectedMessage = "Movie added to your list."
             val returnedRowId = Single.just(1L)
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
@@ -77,7 +77,7 @@ internal class DetailsRepositoryTest {
         }
 
         @Test
-        fun addMovieToDB_returnFailure() {
+        fun getError_returnFailure() {
             val expectedMessage = "Cannot add the movie. Close the app. Try again."
             val returnedRowId = Single.just(0L)
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
@@ -88,7 +88,7 @@ internal class DetailsRepositoryTest {
         }
 
         @Test
-        fun addMovieToDB_throwException_returnFailure() {
+        fun throwException_returnFailure() {
             val expectedMessage = "Cannot add the movie. Close the app. Try again."
             val returnedException = Single.error<Long>(Exception())
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedException)
@@ -104,7 +104,7 @@ internal class DetailsRepositoryTest {
     inner class DeleteMovieFromDb {
 
         @Test
-        fun deleteMovieFromDB_returnSuccess() {
+        fun returnSuccess() {
             val expectedMessage = "Movie removed from your list."
             val numberOfRowsRemoved = Single.just(1)
             `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
@@ -118,7 +118,7 @@ internal class DetailsRepositoryTest {
         }
 
         @Test
-        fun deleteMovieFromDB_returnFailure() {
+        fun returnFailure() {
             val expectedMessage = "Cannot remove the movie. Close the app. Try again."
             val numberOfRowsRemoved = Single.just(0)
             `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)

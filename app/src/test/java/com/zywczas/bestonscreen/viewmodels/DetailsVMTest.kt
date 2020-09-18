@@ -9,6 +9,7 @@ import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
 import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -31,56 +32,66 @@ internal class DetailsVMTest {
         viewModel = DetailsVM(repo)
     }
 
-    @Test
-    fun checkIfIsInDb_observeTrue() {
-        val returnedTrue = Flowable.just(Event(true))
-        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
+    @Nested
+    inner class CheckIfIsInDb {
 
-        viewModel.checkIfIsInDb(777)
-        val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+        @Test
+        fun observeTrue() {
+            val returnedTrue = Flowable.just(Event(true))
+            `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
 
-        assertEquals(true, actual)
+            viewModel.checkIfIsInDb(777)
+            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+
+            assertEquals(true, actual)
+        }
+
+        @Test
+        fun observeFalse() {
+            val returnedFalse = Flowable.just(Event(false))
+            `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
+
+            viewModel.checkIfIsInDb(777)
+            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+
+            assertEquals(false, actual)
+        }
+
     }
 
-    @Test
-    fun checkIfIsInDb_observeFalse() {
-        val returnedFalse = Flowable.just(Event(false))
-        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
+    @Nested
+    inner class AddOrDeleteMovie {
 
-        viewModel.checkIfIsInDb(777)
-        val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+        @Test
+        fun add_observeMessage() {
+            val expectedMessage = "some add outcome"
+            val isInDb = false
+            val returnedData = Flowable.just(Event(expectedMessage))
+            `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
-        assertEquals(false, actual)
-    }
+            viewModel.addOrDeleteMovie(movie, isInDb)
+            val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
-    @Test
-    fun addOrDeleteMovie_add_observeMessage() {
-        val expectedMessage = "some add outcome"
-        val isInDb = false
-        val returnedData = Flowable.just(Event(expectedMessage))
-        `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
+            verify(repo).addMovieToDB(movie)
+            verifyNoMoreInteractions(repo)
+            assertEquals(expectedMessage, actualMessage)
+        }
 
-        viewModel.addOrDeleteMovie(movie, isInDb)
-        val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
+        @Test
+        fun delete_observeMessage() {
+            val expectedMessage = "some delete outcome"
+            val isInDb = true
+            val returnedData = Flowable.just(Event(expectedMessage))
+            `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 
-        verify(repo).addMovieToDB(movie)
-        verifyNoMoreInteractions(repo)
-        assertEquals(expectedMessage, actualMessage)
-    }
+            viewModel.addOrDeleteMovie(movie, isInDb)
+            val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
-    @Test
-    fun addOrDeleteMovie_delete_observeMessage() {
-        val expectedMessage = "some delete outcome"
-        val isInDb = true
-        val returnedData = Flowable.just(Event(expectedMessage))
-        `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
+            verify(repo).deleteMovieFromDB(movie)
+            verifyNoMoreInteractions(repo)
+            assertEquals(expectedMessage, actualMessage)
+        }
 
-        viewModel.addOrDeleteMovie(movie, isInDb)
-        val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
-
-        verify(repo).deleteMovieFromDB(movie)
-        verifyNoMoreInteractions(repo)
-        assertEquals(expectedMessage, actualMessage)
     }
 
 }

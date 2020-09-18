@@ -10,6 +10,7 @@ import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyInt
@@ -33,33 +34,37 @@ internal class ApiVMTest {
 
     private fun <Category> anyCategory(): Category = any()
 
-    @Test
-    fun getNextMovies_observeChange() {
-        val category = Category.POPULAR
-        val movies = TestUtil.movies
-        val returnedMovies = Flowable.just(Resource.success(movies))
-        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedMovies)
+    @Nested
+    inner class GetNextMovies(){
 
-        viewModel.getNextMovies(category)
-        val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+        @Test
+        fun observeChange() {
+            val category = Category.POPULAR
+            val movies = TestUtil.movies
+            val returnedMovies = Flowable.just(Resource.success(movies))
+            `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedMovies)
 
-        assertEquals(Resource.success(Pair(movies, category)), actual)
+            viewModel.getNextMovies(category)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            assertEquals(Resource.success(Pair(movies, category)), actual)
+        }
+
+        @Test
+        fun getError_observeError() {
+            val category = Category.UPCOMING
+            val message = "some error"
+            val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
+            `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedError)
+
+            viewModel.getNextMovies(category)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            verify(repo).getApiMovies(anyCategory(), anyInt())
+            verifyNoMoreInteractions(repo)
+            assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
+        }
+
     }
-
-    @Test
-    fun getNextMovies_getError_observeError() {
-        val category = Category.UPCOMING
-        val message = "some error"
-        val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
-        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedError)
-
-        viewModel.getNextMovies(category)
-        val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-
-        verify(repo).getApiMovies(anyCategory(), anyInt())
-        verifyNoMoreInteractions(repo)
-        assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
-    }
-
 
 }

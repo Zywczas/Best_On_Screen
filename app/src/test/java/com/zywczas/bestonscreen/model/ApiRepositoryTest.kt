@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-
 
 internal class ApiRepositoryTest {
 
@@ -33,7 +33,7 @@ internal class ApiRepositoryTest {
     inner class GetApiMoviesReturnMovies {
 
         @Test
-        fun getApiMovies_categoryPopular_returnListOfMovies() {
+        fun categoryPopular() {
             val expectedMovies = TestUtil.movies
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
@@ -47,7 +47,7 @@ internal class ApiRepositoryTest {
         }
 
         @Test
-        fun getApiMovies_categoryTopRated_returnListOfMovies() {
+        fun categoryTopRated() {
             val expectedMovies = TestUtil.movies
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
@@ -61,7 +61,7 @@ internal class ApiRepositoryTest {
         }
 
         @Test
-        fun getApiMovies_categoryUpcoming_returnListOfMovies() {
+        fun categoryUpcoming() {
             val expectedMovies = TestUtil.movies
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
@@ -80,7 +80,7 @@ internal class ApiRepositoryTest {
     inner class GetApiMoviesReturnError {
 
         @Test
-        fun getApiMovies_noMoviesReturned_returnError() {
+        fun noMoviesReturned() {
             val expectedMessage = "Couldn't download more movies. Try again."
             val returnedEmptyData = Single.just(ApiResponse())
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
@@ -91,7 +91,7 @@ internal class ApiRepositoryTest {
         }
 
         @Test
-        fun getApiMovies_noMorePagesException_returnError() {
+        fun noMorePagesException() {
             val expectedMessage = "No more pages in this category."
             val networkCallStatus = "HTTP 422"
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
@@ -103,7 +103,7 @@ internal class ApiRepositoryTest {
         }
 
         @Test
-        fun getApiMovies_invalidApiKeyException_returnError() {
+        fun invalidApiKeyException() {
             val expectedMessage = "Invalid API key. Contact technical support."
             val networkCallStatus = "HTTP 401"
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
@@ -115,7 +115,7 @@ internal class ApiRepositoryTest {
         }
 
         @Test
-        fun getApiMovies_otherException_returnError() {
+        fun otherException() {
             val expectedMessage = "Problem with downloading movies. Close app and try again."
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception()))
