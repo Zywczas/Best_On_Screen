@@ -29,8 +29,8 @@ internal class DBRepositoryTest {
     fun getMoviesFromDb_returnMovieList() {
         val expectedMovies = TestUtil.movies
         val moviesFromDB = TestUtil.moviesFromDb
-        val returnedData = Flowable.just(moviesFromDB)
-        `when`(movieDao.getMovies()).thenReturn(returnedData)
+        val returnedMoviesFromDb = Flowable.just(moviesFromDB)
+        `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
         val actualMovies = dbRepo.getMoviesFromDB().blockingFirst()
 
@@ -42,13 +42,12 @@ internal class DBRepositoryTest {
 
     @Test
     fun getMoviesFromDB_emptyDB_returnEmptyList() {
-        val moviesFromDB = listOf<MovieFromDB>()
-        val returnedData = Flowable.just(moviesFromDB)
-        `when`(movieDao.getMovies()).thenReturn(returnedData)
+        val returnedMoviesFromDb = Flowable.just(emptyList<MovieFromDB>())
+        `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
         val actual = dbRepo.getMoviesFromDB().blockingFirst()
 
-        assertEquals(listOf<Movie>(), actual)
+        assertEquals(emptyList<Movie>(), actual)
     }
 
 

@@ -22,6 +22,7 @@ internal class DetailsVMTest {
 
     @Mock
     private lateinit var repo: DetailsRepository
+
     private val movie = TestUtil.movie1
 
     @BeforeEach
@@ -32,10 +33,10 @@ internal class DetailsVMTest {
 
     @Test
     fun checkIfIsInDb_observeTrue() {
-        val returnedData = Flowable.just(Event(true))
-        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
+        val returnedTrue = Flowable.just(Event(true))
+        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
 
-        viewModel.checkIfIsInDb(anyInt())
+        viewModel.checkIfIsInDb(777)
         val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
 
         assertEquals(true, actual)
@@ -43,10 +44,10 @@ internal class DetailsVMTest {
 
     @Test
     fun checkIfIsInDb_observeFalse() {
-        val returnedData = Flowable.just(Event(false))
-        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedData)
+        val returnedFalse = Flowable.just(Event(false))
+        `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
 
-        viewModel.checkIfIsInDb(anyInt())
+        viewModel.checkIfIsInDb(777)
         val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
 
         assertEquals(false, actual)
@@ -54,8 +55,8 @@ internal class DetailsVMTest {
 
     @Test
     fun addOrDeleteMovie_add_observeMessage() {
-        val isInDb = false
         val expectedMessage = "some add outcome"
+        val isInDb = false
         val returnedData = Flowable.just(Event(expectedMessage))
         `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
@@ -69,8 +70,8 @@ internal class DetailsVMTest {
 
     @Test
     fun addOrDeleteMovie_delete_observeMessage() {
-        val isInDb = true
         val expectedMessage = "some delete outcome"
+        val isInDb = true
         val returnedData = Flowable.just(Event(expectedMessage))
         `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 

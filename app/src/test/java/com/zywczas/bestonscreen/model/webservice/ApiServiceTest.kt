@@ -53,11 +53,11 @@ internal class ApiServiceTest {
 
     @Test
     fun getMovies_testGsonConverter() {
+        val expected3rdMovie = TestUtil.movieFromApi1
         val response = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_OK)
             .setBody(MockedApiResponseBody.body)
         mockWebServer.enqueue(response)
-        val expected3rdMovie = TestUtil.movieFromApi1
 
         val movies = apiService.getPopularMovies("anyString", 777).blockingGet().movies
         val actual3rdMovie = movies?.get(2)

@@ -17,8 +17,8 @@ internal class DetailsRepositoryTest {
 
     @Mock
     private lateinit var movieDao: MovieDao
+
     private val movie = TestUtil.movie1
-    private val movieFromDB = TestUtil.movieFromDB1
 
     @BeforeEach
     private fun init() {
@@ -26,11 +26,13 @@ internal class DetailsRepositoryTest {
         detailsRepo = DetailsRepository(movieDao)
     }
 
+    private fun <MovieFromDB> anyMovieFromDB() : MovieFromDB = any()
+
     @Test
     fun checkIfMovieIsInDB_returnTrue() {
-        val movieId = 43
-        val returnedData = Flowable.just(1)
-        `when`(movieDao.getIdCount(movieId)).thenReturn(returnedData)
+        val movieId = 777
+        val returnedIdCount = Flowable.just(1)
+        `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
         val actual =
             detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
@@ -42,9 +44,9 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun checkIfMovieIsInDB_returnFalse() {
-        val movieId = 43
-        val returnedData = Flowable.just(0)
-        `when`(movieDao.getIdCount(movieId)).thenReturn(returnedData)
+        val movieId = 777
+        val returnedIdCount = Flowable.just(0)
+        `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
         val actual =
             detailsRepo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
@@ -54,22 +56,22 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun addMovieToDB_returnSuccess() {
-        val returnedRowId = Single.just(1L)
         val expectedMessage = detailsRepo.addSuccess
-        `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedRowId)
+        val returnedRowId = Single.just(1L)
+        `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
         val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
-        verify(movieDao).insertMovie(movieFromDB)
+        verify(movieDao).insertMovie(anyMovieFromDB())
         verifyNoMoreInteractions(movieDao)
         assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
     fun addMovieToDB_returnFailure() {
-        val returnedRowId = Single.just(0L)
         val expectedMessage = detailsRepo.addError
-        `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedRowId)
+        val returnedRowId = Single.just(0L)
+        `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
         val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
@@ -78,9 +80,9 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun addMovieToDB_throwException_returnFailure() {
-        val returnedData = Single.error<Long>(Exception())
         val expectedMessage = detailsRepo.addError
-        `when`(movieDao.insertMovie(movieFromDB)).thenReturn(returnedData)
+        val returnedException = Single.error<Long>(Exception())
+        `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedException)
 
         val actualMessage = detailsRepo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
@@ -89,23 +91,23 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun deleteMovieFromDB_returnSuccess() {
-        val numberOfRowsRemoved = Single.just(1)
         val expectedMessage = detailsRepo.deleteSuccess
-        `when`(movieDao.deleteMovie(movieFromDB)).thenReturn(numberOfRowsRemoved)
+        val numberOfRowsRemoved = Single.just(1)
+        `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
         val actualMessage =
             detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
-        verify(movieDao).deleteMovie(movieFromDB)
+        verify(movieDao).deleteMovie(anyMovieFromDB())
         verifyNoMoreInteractions(movieDao)
         assertEquals(expectedMessage, actualMessage)
     }
 
     @Test
     fun deleteMovieFromDB_returnFailure() {
-        val numberOfRowsRemoved = Single.just(0)
         val expectedMessage = detailsRepo.deleteError
-        `when`(movieDao.deleteMovie(movieFromDB)).thenReturn(numberOfRowsRemoved)
+        val numberOfRowsRemoved = Single.just(0)
+        `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
         val actualMessage =
             detailsRepo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()

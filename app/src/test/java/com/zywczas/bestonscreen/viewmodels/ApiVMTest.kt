@@ -37,8 +37,8 @@ internal class ApiVMTest {
     fun getNextMovies_observeChange() {
         val category = Category.POPULAR
         val movies = TestUtil.movies
-        val returnedData = Flowable.just(Resource.success(movies))
-        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
+        val returnedMovies = Flowable.just(Resource.success(movies))
+        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedMovies)
 
         viewModel.getNextMovies(category)
         val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
@@ -50,9 +50,8 @@ internal class ApiVMTest {
     fun getNextMovies_getError_observeError() {
         val category = Category.UPCOMING
         val message = "some error"
-        val returnedData: Flowable<Resource<List<Movie>>> =
-            Flowable.just(Resource.error(message, null))
-        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedData)
+        val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
+        `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedError)
 
         viewModel.getNextMovies(category)
         val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)

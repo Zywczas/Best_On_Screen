@@ -38,7 +38,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert2Movies_getList() {
+    fun insertMovies_getList() {
         val expectedMoviesFromDB = TestUtil.moviesFromDb
 
         dao.insertMovie(movieFromDb1).blockingGet()
@@ -49,7 +49,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     }
 
     @Test
-    fun insert2Movies_deleteThem_getEmptyList() {
+    fun insertMovies_deleteThem_getEmptyList() {
         val expectedMoviesFromDB = emptyList<MovieFromDB>()
 
         dao.insertMovie(movieFromDb1).blockingGet()

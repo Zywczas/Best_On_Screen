@@ -20,13 +20,14 @@ internal class DBVMTest {
 
     @Mock
     private lateinit var repo: DBRepository
+
     private val expectedMovies = TestUtil.movies
 
     @BeforeEach
     private fun init() {
         MockitoAnnotations.initMocks(this)
-        val returnedData = Flowable.just(expectedMovies)
-        `when`(repo.getMoviesFromDB()).thenReturn(returnedData)
+        val returnedMovies = Flowable.just(expectedMovies)
+        `when`(repo.getMoviesFromDB()).thenReturn(returnedMovies)
         viewModel = DBVM(repo)
     }
 
