@@ -11,13 +11,12 @@ import javax.inject.Singleton
 @Singleton
 open class ApiRepository @Inject constructor(private val apiService: ApiService) {
 
-    private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
-    private val invalidApiKeyStatus = "HTTP 401"
-    private val noMorePagesStatus = "HTTP 422"
-    private val invalidApiKeyError = "Invalid API key. Contact technical support."
-    private val noMorePagesError = "No more pages in this category."
-    private val generalApiError = "Problem with downloading movies. Close app and try again."
-    private val noMoviesError = "Couldn't download more movies. Try again."
+    private val apiKey by lazy { "43a74b6228b35b23e401df1c6a464af1" }
+    private val invalidApiKeyStatus by lazy { "HTTP 401" }
+    private val noMorePagesStatus by lazy { "HTTP 422" }
+    private val invalidApiKeyError by lazy { "Invalid API key. Contact technical support." }
+    private val noMorePagesError by lazy { "No more pages in this category." }
+    private val generalApiError by lazy { "Problem with downloading movies. Close app and try again." }
 
     open fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
         val apiSingle = getApiSingle(category, page)
@@ -25,10 +24,10 @@ open class ApiRepository @Inject constructor(private val apiService: ApiService)
             .subscribeOn(Schedulers.io())
             .map { apiResponse ->
                 val movies = apiResponse.movies?.let { convertToMovies(it) }
-                if (movies != null) {
-                    Resource.success(movies)
+                if (movies.isNullOrEmpty()) {
+                    Resource.error(noMorePagesError, null)
                 } else {
-                    Resource.error(noMoviesError, null)
+                    Resource.success(movies)
                 }
             }
             .onErrorReturn { e -> getError(e) }

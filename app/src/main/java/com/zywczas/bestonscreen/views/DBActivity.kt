@@ -29,7 +29,6 @@ class DBActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DBVMFactory
-
     @Inject
     lateinit var picassoForAdapter: Picasso
     private lateinit var viewModel: DBVM

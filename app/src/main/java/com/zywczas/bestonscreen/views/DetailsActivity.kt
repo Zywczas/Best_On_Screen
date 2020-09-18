@@ -24,7 +24,6 @@ class DetailsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: DetailsVMFactory
-
     @Inject
     lateinit var picasso: Picasso
     private lateinit var movie: Movie

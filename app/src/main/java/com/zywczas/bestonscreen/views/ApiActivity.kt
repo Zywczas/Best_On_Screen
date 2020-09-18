@@ -8,7 +8,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -101,28 +100,27 @@ class ApiActivity : AppCompatActivity() {
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.moviesAndCategoryLD.observe(this,
-            Observer { resource ->
-                hideProgressBar()
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        val incomingMovies = resource.data!!.first
-                        val incomingCategory = resource.data.second
-                        updateDisplayedMovies(incomingMovies)
-                        updateToolbarTitle(incomingCategory)
-                        displayedCategory = incomingCategory
-                    }
-                    Status.ERROR -> {
-                        showToast(resource.message!!)
-                    }
+        viewModel.moviesAndCategoryLD.observe(this) { resource ->
+            hideProgressBar()
+            when (resource.status) {
+                Status.SUCCESS -> { updateContent(resource.data!!) }
+                Status.ERROR -> {
+                    showToast(resource.message!!)
+                    resource.data?.also { updateContent(it) }
                 }
             }
-        )
+        }
         complete(true)
     }
 
     private fun hideProgressBar() {
         progressBar.isVisible = false
+    }
+
+    private fun updateContent(data: Pair<List<Movie>, Category>) {
+        updateDisplayedMovies(data.first)
+        updateToolbarTitle(data.second)
+        displayedCategory = data.second
     }
 
     private fun updateDisplayedMovies(movies: List<Movie>) {

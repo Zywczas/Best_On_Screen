@@ -11,7 +11,7 @@ import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
 
 class ApiVM(private val repo: ApiRepository) : ViewModel() {
-//todo dac internet check tutaj
+
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var page = firstPageOfNewCategory
@@ -60,7 +60,7 @@ class ApiVM(private val repo: ApiRepository) : ViewModel() {
     }
 
     private fun sendError(message: String) {
-        moviesAndCategoryMLD.postValue(Resource.error(message, Pair(emptyList(), category)))
+        moviesAndCategoryMLD.postValue(Resource.error(message, Pair(movies.toList(), category)))
     }
 
 }

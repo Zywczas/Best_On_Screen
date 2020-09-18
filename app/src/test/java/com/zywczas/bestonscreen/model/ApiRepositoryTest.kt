@@ -9,12 +9,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.MockitoAnnotations
 
 
 internal class ApiRepositoryTest {
@@ -79,8 +76,19 @@ internal class ApiRepositoryTest {
 
         @Test
         fun noMoviesReturned() {
-            val expectedMessage = "Couldn't download more movies. Try again."
-            val returnedEmptyData = Single.just(ApiResponse())
+            val expectedMessage = "No more pages in this category."
+            val returnedEmptyApiResponse = Single.just(ApiResponse())
+            `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyApiResponse)
+
+            val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+
+            assertEquals(Resource.error(expectedMessage, null), actual)
+        }
+
+        @Test
+        fun emptyListReturned() {
+            val expectedMessage = "No more pages in this category."
+            val returnedEmptyData = Single.just(ApiResponse(emptyList()))
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
 
             val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
