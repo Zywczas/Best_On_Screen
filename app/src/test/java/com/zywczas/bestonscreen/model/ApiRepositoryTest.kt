@@ -72,7 +72,7 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_noMoviesReturned_returnError() {
-        val expectedMessage = apiRepository.noMoviesError
+        val expectedMessage = "Couldn't download more movies. Try again."
         val returnedEmptyData = Single.just(ApiResponse())
         `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
 
@@ -83,8 +83,8 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_noMorePagesException_returnError() {
-        val expectedMessage = apiRepository.noMorePagesError
-        val networkCallStatus = apiRepository.noMorePagesStatus
+        val expectedMessage = "No more pages in this category."
+        val networkCallStatus = "HTTP 422"
         `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
             .thenReturn(Single.error(Exception(networkCallStatus)))
 
@@ -95,8 +95,8 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_invalidApiKeyException_returnError() {
-        val expectedMessage = apiRepository.invalidApiKeyError
-        val networkCallStatus = apiRepository.invalidApiKeyStatus
+        val expectedMessage = "Invalid API key. Contact technical support."
+        val networkCallStatus = "HTTP 401"
         `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
             .thenReturn(Single.error(Exception(networkCallStatus)))
 
@@ -107,7 +107,7 @@ internal class ApiRepositoryTest {
 
     @Test
     fun getApiMovies_otherException_returnError() {
-        val expectedMessage = apiRepository.generalApiError
+        val expectedMessage = "Problem with downloading movies. Close app and try again."
         `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
             .thenReturn(Single.error(Exception()))
 

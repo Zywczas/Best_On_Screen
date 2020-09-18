@@ -12,12 +12,12 @@ import javax.inject.Singleton
 open class ApiRepository @Inject constructor(private val apiService: ApiService) {
 
     private val apiKey = "43a74b6228b35b23e401df1c6a464af1"
-    val invalidApiKeyStatus = "HTTP 401"
-    val noMorePagesStatus = "HTTP 422"
-    val invalidApiKeyError = "Invalid API key. Contact technical support."
-    val noMorePagesError = "No more pages in this category."
-    val generalApiError = "Problem with downloading movies. Close app and try again."
-    val noMoviesError = "Couldn't download more movies. Try again."
+    private val invalidApiKeyStatus = "HTTP 401"
+    private val noMorePagesStatus = "HTTP 422"
+    private val invalidApiKeyError = "Invalid API key. Contact technical support."
+    private val noMorePagesError = "No more pages in this category."
+    private val generalApiError = "Problem with downloading movies. Close app and try again."
+    private val noMoviesError = "Couldn't download more movies. Try again."
 
     open fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
         val apiSingle = getApiSingle(category, page)

@@ -56,7 +56,7 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun addMovieToDB_returnSuccess() {
-        val expectedMessage = detailsRepo.addSuccess
+        val expectedMessage = "Movie added to your list."
         val returnedRowId = Single.just(1L)
         `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
@@ -69,7 +69,7 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun addMovieToDB_returnFailure() {
-        val expectedMessage = detailsRepo.addError
+        val expectedMessage = "Cannot add the movie. Close the app. Try again."
         val returnedRowId = Single.just(0L)
         `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
@@ -80,7 +80,7 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun addMovieToDB_throwException_returnFailure() {
-        val expectedMessage = detailsRepo.addError
+        val expectedMessage = "Cannot add the movie. Close the app. Try again."
         val returnedException = Single.error<Long>(Exception())
         `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedException)
 
@@ -91,7 +91,7 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun deleteMovieFromDB_returnSuccess() {
-        val expectedMessage = detailsRepo.deleteSuccess
+        val expectedMessage = "Movie removed from your list."
         val numberOfRowsRemoved = Single.just(1)
         `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
@@ -105,7 +105,7 @@ internal class DetailsRepositoryTest {
 
     @Test
     fun deleteMovieFromDB_returnFailure() {
-        val expectedMessage = detailsRepo.deleteError
+        val expectedMessage = "Cannot remove the movie. Close the app. Try again."
         val numberOfRowsRemoved = Single.just(0)
         `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
