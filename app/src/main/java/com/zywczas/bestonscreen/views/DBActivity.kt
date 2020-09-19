@@ -92,12 +92,12 @@ class DBActivity : AppCompatActivity() {
     }
 
     private fun setupMoviesObserver() {
-        viewModel.moviesLD.observe(this, Observer { movies ->
+        viewModel.moviesLD.observe(this) { movies ->
             updateDisplayedMovies(movies)
             if (movies.isEmpty()) {
                 showMessageAboutEmptyDB()
             }
-        })
+        }
     }
 
     private fun updateDisplayedMovies(movies: List<Movie>) {

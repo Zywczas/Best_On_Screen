@@ -74,6 +74,11 @@ dependencies {
     androidTestImplementation "io.mockk:mockk-android:1.10.0"
     //espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+    //todo usunac jak nie uzywane
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
+    androidTestImplementation 'com.android.support.test.espresso.idling:idling-concurrent:3.0.2'
     //androidx.test
     androidTestImplementation "androidx.test:runner:1.3.0"
     androidTestImplementation "androidx.test:core:1.3.0"
