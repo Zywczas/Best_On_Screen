@@ -21,10 +21,6 @@ class DBActivityTest {
     @JvmField
     val activityScenarioRule = ActivityScenarioRule(DBActivity::class.java)
 
-//    @Rule
-//    @JvmField
-//    val espressoIdlingResourceRule = EspressoIdlingResourceRule()
-
     @Test
     fun isActivityInView(){
         onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()))
