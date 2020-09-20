@@ -5,18 +5,21 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.runner.RunWith
+import org.robolectric.annotation.LooperMode
 
 @RunWith(AndroidJUnit4::class)
+@LooperMode(LooperMode.Mode.PAUSED)
 internal class DBActivityTest {
 
     private lateinit var app : App
@@ -37,18 +40,20 @@ internal class DBActivityTest {
     @Test
     fun isActivityInView(){
         val scenario = ActivityScenario.launch(DBActivity::class.java)
-        scenario.moveToState(Lifecycle.State.CREATED)
+        scenario.moveToState(Lifecycle.State.RESUMED)
         onView(withId(R.id.drawer_layout))
             .check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun visibility_toolbar_RecyclerView_progressbar_textView(){
-//        onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
-//        onView(withId(R.id.moviesRecyclerView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        onView(withId(R.id.progressBar)).check(matches(CoreMatchers.not(isDisplayed())))
-//        onView(withId(R.id.emptyListTextView)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun visibility_toolbar_RecyclerView_progressbar_textView(){
+        val scenario = ActivityScenario.launch(DBActivity::class.java)
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
+        onView(withId(R.id.moviesRecyclerView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        onView(withId(R.id.progressBar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.emptyListTextView)).check(matches(not(isDisplayed())))
+    }
 //
 //    @Test
 //    fun isContentDisplayed(){
