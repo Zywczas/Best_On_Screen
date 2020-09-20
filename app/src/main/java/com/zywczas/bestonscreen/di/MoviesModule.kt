@@ -27,7 +27,7 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun providePicasso(): Picasso = Picasso.get()
+    fun providePicasso(): Picasso = Picasso.Builder(application.applicationContext).build()
 
     @Provides
     @Singleton
