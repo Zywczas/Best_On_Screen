@@ -7,7 +7,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Named
 
 internal class MovieDaoTest : MoviesDataBaseTest() {
 

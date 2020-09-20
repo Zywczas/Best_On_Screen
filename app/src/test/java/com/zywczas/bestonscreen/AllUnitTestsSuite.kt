@@ -5,5 +5,9 @@ import org.junit.platform.suite.api.SelectPackages
 import org.junit.runner.RunWith
 
 @RunWith(JUnitPlatform::class)
-@SelectPackages("com.zywczas.bestonscreen.model", "com.zywczas.bestonscreen.viewmodels")
+@SelectPackages(
+    "com.zywczas.bestonscreen.model",
+    "com.zywczas.bestonscreen.viewmodels",
+    "com.zywczas.bestonscreen.views"
+)
 class AllUnitTestsSuite
