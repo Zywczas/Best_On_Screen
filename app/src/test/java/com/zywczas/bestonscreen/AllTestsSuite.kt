@@ -10,4 +10,4 @@ import org.junit.runner.RunWith
     "com.zywczas.bestonscreen.viewmodels",
     "com.zywczas.bestonscreen.views"
 )
-class AllUnitTestsSuite
+class AllTestsSuite
