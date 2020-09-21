@@ -124,6 +124,19 @@ internal class DetailsRepositoryTest {
             assertEquals(expectedMessage, actualMessage)
         }
 
+        @Test
+        fun unexpectedException_returnFailure(){
+            val expectedMessage = "Cannot remove the movie. Close the app. Try again."
+            val returnedError = Single.error<Int>(Exception())
+            `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(returnedError)
+
+            val actualMessage =
+                repo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+
+            assertEquals(expectedMessage, actualMessage)
+        }
+
+
     }
 
 }

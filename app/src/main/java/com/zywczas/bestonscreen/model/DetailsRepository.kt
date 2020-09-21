@@ -55,6 +55,7 @@ open class DetailsRepository @Inject constructor(private val movieDao: MovieDao)
                     Flowable.just(Event(deleteError))
                 }
             }
+            .onErrorReturn { Event(deleteError) }
     }
 
 }

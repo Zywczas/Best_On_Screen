@@ -4,7 +4,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import org.junit.After
 import org.junit.Before
-
+//todo przeniesc do test
 internal abstract class MoviesDataBaseTest {
 
     private lateinit var dataBase: MoviesDataBase
