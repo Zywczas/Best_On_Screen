@@ -31,6 +31,9 @@ internal class DBActivityTest {
         onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
         onView(withId(R.id.moviesRecyclerView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         onView(withId(R.id.progressBar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.emptyListTextView)).check(matches(isDisplayed()))
     }
+
+
 
 }
