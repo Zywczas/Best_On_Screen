@@ -2,18 +2,21 @@ package com.zywczas.bestonscreen.model.db
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zywczas.bestonscreen.util.TestUtil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 internal class MovieDaoTest : MoviesDataBaseTest() {
 
     private val movieFromDb1 = TestUtil.movieFromDB1
     private val movieFromDb2 = TestUtil.movieFromDB2
 
-    //it has to have @JvmField annotation to 'make this rule public' - otherwise gives an error in Kotlin
+//    it has to have @JvmField annotation to 'make this rule public' - otherwise gives an error in Kotlin
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
