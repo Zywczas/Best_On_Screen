@@ -21,7 +21,7 @@ import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
-import kotlinx.android.synthetic.main.navigation.*
+import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
 class DBActivity : AppCompatActivity() {

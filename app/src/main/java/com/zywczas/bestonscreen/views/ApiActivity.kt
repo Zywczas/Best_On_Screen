@@ -22,10 +22,11 @@ import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
-import kotlinx.android.synthetic.main.navigation.*
+import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
 class ApiActivity : AppCompatActivity() {
+    //todo przeniesc wysztko do fragment
 
     @Inject
     lateinit var factory: ApiVMFactory
