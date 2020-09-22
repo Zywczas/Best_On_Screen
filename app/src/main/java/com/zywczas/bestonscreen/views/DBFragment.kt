@@ -24,17 +24,13 @@ import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 
-class DBFragment(
+class DBFragment constructor(
     private val viewModelFactory : DBVMFactory,
     private val picasso : Picasso
 ) : Fragment() {
 
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -145,7 +141,7 @@ class DBFragment(
             drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
-
+//todo te dwie metody nie dzialaja z layoutem
     fun categoryClicked(view: View) {
         closeDrawer()
         if (Variables.isNetworkConnected) {
