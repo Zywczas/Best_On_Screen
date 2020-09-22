@@ -23,10 +23,9 @@ class MovieFragmentFactory @Inject constructor(
         return when(className) {
             ApiFragment::class.java.name -> ApiFragment(apiVMFactory, picasso)
             DBFragment::class.java.name -> DBFragment(dbVMFactory, picasso)
-
+            DetailsFragment::class.java.name -> DetailsFragment(detailsVMFactory, picasso)
+            else -> super.instantiate(classLoader, className)
         }
     }
-
-
 
 }

@@ -7,17 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
-
-//todo pousuwac niepotrzebne layouty
+import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
+import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class ApiFragment (
-    private val viewModelFactory : ApiVMFactory,
+class DetailsFragment(
+    private val viewModelFactory : DetailsVMFactory,
     private val picasso : Picasso
 ) : Fragment() {
 
@@ -27,19 +26,18 @@ class ApiFragment (
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //todo zamiast intent chyba mamy arguments
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_api_and_db, container, false)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_details, container, false)
     }
 
 

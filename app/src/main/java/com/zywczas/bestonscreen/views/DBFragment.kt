@@ -18,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
 
 class DBFragment(
     private val viewModelFactory : DBVMFactory,
-    private val picassoForAdapter : Picasso
+    private val picasso : Picasso
 ) : Fragment() {
 
     private var param1: String? = null
