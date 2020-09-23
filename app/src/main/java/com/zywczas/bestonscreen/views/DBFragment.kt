@@ -32,6 +32,7 @@ class DBFragment constructor(
 
     private val viewModel: DBVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
+    private val dispatcher by lazy {requireActivity().onBackPressed()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
