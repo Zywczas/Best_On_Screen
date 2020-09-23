@@ -1,47 +1,230 @@
 package com.zywczas.bestonscreen.views
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.adapter.MovieAdapter
+import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
+import kotlinx.android.synthetic.main.activity_api_and_db.*
+import kotlinx.android.synthetic.main.content_movies.*
+import kotlinx.android.synthetic.main.navigation_drawer.*
 
 //todo pousuwac niepotrzebne layouty
 
 //todo ogarnac back stack, sprawdzic czy jak jest sie w Api i zminimaluzuje to po czasie wraca do tego czy od nowa wlacza aktivity i DB
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class ApiFragment (
     private val viewModelFactory : ApiVMFactory,
     private val picasso : Picasso
 ) : Fragment() {
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //todo zamiast intent chyba mamy arguments
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-
-    }
+    private val viewModel : ApiVM by viewModels { viewModelFactory }
+    private lateinit var adapter: MovieAdapter
+    private var wasConfigurationChanged: Boolean? = null
+    private var displayedCategory: Category? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_api_and_db, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //todo sprawdzic czy to ma byc czy w OnCreate - dac log i porownac
+        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+        //todo zmienic nazwe
+        startApiUISetupChain()
+        setupDrawer()
+        setupDrawerNavButtons()
+    }
+
+    private fun startApiUISetupChain() {
+        setupRecyclerView { recyclerViewSetupFinished ->
+            if (recyclerViewSetupFinished) {
+                setupMoviesObserver { observerSetupFinished ->
+                    if (observerSetupFinished) {
+                        getMoviesOnViewModelInitIfConnected()
+                        setupOnScrollListener()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupRecyclerView(complete: (Boolean) -> Unit) {
+        setupAdapter()
+        setupLayoutManager()
+        complete(true)
+    }
+
+    private fun setupAdapter() {
+        adapter = MovieAdapter(requireActivity(), picasso) { movie ->
+            goToDetailsFragment(movie)
+        }
+        moviesRecyclerView.adapter = adapter
+    }
+
+    private fun goToDetailsFragment(movie: Movie){
+        activity?.run {
+            val bundle = Bundle()
+            bundle.putParcelable(EXTRA_MOVIE, movie)
+            //todo tutaj dac inne factory
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
+                .addToBackStack("DetailsFragment")
+                .commit()
+        }
+    }
+
+    private fun setupLayoutManager() {
+        var spanCount = 2
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            spanCount = 4
+        }
+        val layoutManager = GridLayoutManager(activity, spanCount)
+        moviesRecyclerView.layoutManager = layoutManager
+        moviesRecyclerView.setHasFixedSize(true)
+    }
+
+    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
+        viewModel.moviesAndCategoryLD.observe(viewLifecycleOwner) { resource ->
+            hideProgressBar()
+            when (resource.status) {
+                Status.SUCCESS -> { updateContent(resource.data!!) }
+                Status.ERROR -> {
+                    showToast(resource.message!!)
+                    resource.data?.let { updateContent(it) }
+                }
+            }
+        }
+        complete(true)
+    }
+
+    private fun hideProgressBar() {
+        progressBar.isVisible = false
+    }
+
+    private fun updateContent(data: Pair<List<Movie>, Category>) {
+        updateDisplayedMovies(data.first)
+        updateToolbarTitle(data.second)
+        displayedCategory = data.second
+    }
+
+    private fun updateDisplayedMovies(movies: List<Movie>) {
+        adapter.submitList(movies.toMutableList())
+    }
+
+    private fun updateToolbarTitle(category: Category) {
+        toolbar.title = "Movies: $category"
+    }
+
+    private fun getMoviesOnViewModelInitIfConnected() {
+        if (wasConfigurationChanged == null) {
+            if (Variables.isNetworkConnected) {
+                showProgressBar()
+                val categoryFromBundle = arguments.let {
+                    it?.getSerializable(EXTRA_CATEGORY) as Category
+                }
+                viewModel.getNextMovies(categoryFromBundle)
+            } else {
+                showToast(CONNECTION_PROBLEM)
+            }
+        }
+    }
+
+    private fun showProgressBar() {
+        progressBar.isVisible = true
+    }
+
+    private fun setupOnScrollListener() {
+        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
+                        newState == RecyclerView.SCROLL_STATE_IDLE
+                if (isRecyclerViewBottom) {
+                    downloadNextPageIfConnected()
+                }
+            }
+        })
+    }
+
+    private fun downloadNextPageIfConnected() {
+        if (Variables.isNetworkConnected) {
+            showProgressBar()
+            viewModel.getNextMovies()
+        } else {
+            showToast(CONNECTION_PROBLEM)
+        }
+    }
+
+    private fun setupDrawer() {
+        val toggle = ActionBarDrawerToggle(
+            activity, drawer_layout, toolbar,
+            R.string.nav_drawer_open, R.string.nav_drawer_closed
+        )
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    private fun setupDrawerNavButtons() {
+        setupTags { isFinished ->
+            if (isFinished) {
+                setupOnClickListeners()
+            }
+        }
+    }
+
+    private fun setupTags(complete: (Boolean) -> Unit) {
+        upcomingTextView.tag = Category.UPCOMING
+        topRatedTextView.tag = Category.TOP_RATED
+        popularTextView.tag = Category.POPULAR
+        complete(true)
+    }
+
+    private fun setupOnClickListeners() {
+        myToWatchListTextView.setOnClickListener(onClickListener)
+        popularTextView.setOnClickListener(onClickListener)
+        upcomingTextView.setOnClickListener(onClickListener)
+        topRatedTextView.setOnClickListener(onClickListener)
+    }
+
+    private val onClickListener = View.OnClickListener { view ->
+        if (view.id == R.id.myToWatchListTextView) {
+            myToWatchListClicked()
+        } else {
+            val category = view.tag as Category
+            categoryClicked(category)
+        }
+    }
+
+    private fun myToWatchListClicked() {
+        closeDrawer()
+        switchToDBActivity()
+    }
+
+    private fun closeDrawer() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }
     }
 
 

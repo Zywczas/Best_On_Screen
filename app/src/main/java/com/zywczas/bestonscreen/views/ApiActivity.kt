@@ -26,164 +26,163 @@ import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
 class ApiActivity : AppCompatActivity() {
-    //todo przeniesc wysztko do fragment
 
-    @Inject
-    lateinit var factory: ApiVMFactory
-
-    @Inject
-    lateinit var picassoForAdapter: Picasso
-    private lateinit var viewModel: ApiVM
-    private lateinit var adapter: MovieAdapter
-    private var wasConfigurationChanged: Boolean? = null
-    private var displayedCategory: Category? = null
+//    @Inject
+//    lateinit var factory: ApiVMFactory
+//
+//    @Inject
+//    lateinit var picassoForAdapter: Picasso
+//    private lateinit var viewModel: ApiVM
+//    private lateinit var adapter: MovieAdapter
+//    private var wasConfigurationChanged: Boolean? = null
+//    private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_and_db)
-        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+//        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         startApiActivitySetupChain()
         setupDrawer()
         setupTags()
     }
 
-    private fun startApiActivitySetupChain() {
-        injectDependencies { injectionFinished ->
-            if (injectionFinished) {
-                initViewModel()
-                setupRecyclerView { recyclerViewSetupFinished ->
-                    if (recyclerViewSetupFinished) {
-                        setupMoviesObserver { observerSetupFinished ->
-                            if (observerSetupFinished) {
-                                getMoviesOnViewModelInitIfConnected()
-                                setupOnScrollListener()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private fun startApiActivitySetupChain() {
+//        injectDependencies { injectionFinished ->
+//            if (injectionFinished) {
+//                initViewModel()
+//                setupRecyclerView { recyclerViewSetupFinished ->
+//                    if (recyclerViewSetupFinished) {
+//                        setupMoviesObserver { observerSetupFinished ->
+//                            if (observerSetupFinished) {
+//                                getMoviesOnViewModelInitIfConnected()
+//                                setupOnScrollListener()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    private fun injectDependencies(complete: (Boolean) -> Unit) {
-        App.moviesComponent.inject(this)
-        complete(true)
-    }
+//    private fun injectDependencies(complete: (Boolean) -> Unit) {
+//        App.moviesComponent.inject(this)
+//        complete(true)
+//    }
+//
+//    private fun initViewModel() {
+//        viewModel = ViewModelProvider(this, factory).get(ApiVM::class.java)
+//    }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, factory).get(ApiVM::class.java)
-    }
+//    private fun setupRecyclerView(complete: (Boolean) -> Unit) {
+//        setupAdapter()
+//        setupLayoutManager()
+//        complete(true)
+//    }
 
-    private fun setupRecyclerView(complete: (Boolean) -> Unit) {
-        setupAdapter()
-        setupLayoutManager()
-        complete(true)
-    }
+//    private fun setupAdapter() {
+//        adapter = MovieAdapter(this, picassoForAdapter) { movie ->
+//            val detailsActivity = Intent(this, DetailsActivity::class.java)
+//            detailsActivity.putExtra(EXTRA_MOVIE, movie)
+//            startActivity(detailsActivity)
+//        }
+//        moviesRecyclerView.adapter = adapter
+//    }
+//
+//    private fun setupLayoutManager() {
+//        var spanCount = 2
+//        val orientation = resources.configuration.orientation
+//        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            spanCount = 4
+//        }
+//        val layoutManager = GridLayoutManager(this, spanCount)
+//        moviesRecyclerView.layoutManager = layoutManager
+//        moviesRecyclerView.setHasFixedSize(true)
+//    }
 
-    private fun setupAdapter() {
-        adapter = MovieAdapter(this, picassoForAdapter) { movie ->
-            val detailsActivity = Intent(this, DetailsActivity::class.java)
-            detailsActivity.putExtra(EXTRA_MOVIE, movie)
-            startActivity(detailsActivity)
-        }
-        moviesRecyclerView.adapter = adapter
-    }
+//    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
+//        viewModel.moviesAndCategoryLD.observe(this) { resource ->
+//            hideProgressBar()
+//            when (resource.status) {
+//                Status.SUCCESS -> { updateContent(resource.data!!) }
+//                Status.ERROR -> {
+//                    showToast(resource.message!!)
+//                    resource.data?.let { updateContent(it) }
+//                }
+//            }
+//        }
+//        complete(true)
+//    }
 
-    private fun setupLayoutManager() {
-        var spanCount = 2
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 4
-        }
-        val layoutManager = GridLayoutManager(this, spanCount)
-        moviesRecyclerView.layoutManager = layoutManager
-        moviesRecyclerView.setHasFixedSize(true)
-    }
+//    private fun hideProgressBar() {
+//        progressBar.isVisible = false
+//    }
+//
+//    private fun updateContent(data: Pair<List<Movie>, Category>) {
+//        updateDisplayedMovies(data.first)
+//        updateToolbarTitle(data.second)
+//        displayedCategory = data.second
+//    }
+//
+//    private fun updateDisplayedMovies(movies: List<Movie>) {
+//        adapter.submitList(movies.toMutableList())
+//    }
+//
+//    private fun updateToolbarTitle(category: Category) {
+//        toolbar.title = "Movies: $category"
+//    }
 
-    private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.moviesAndCategoryLD.observe(this) { resource ->
-            hideProgressBar()
-            when (resource.status) {
-                Status.SUCCESS -> { updateContent(resource.data!!) }
-                Status.ERROR -> {
-                    showToast(resource.message!!)
-                    resource.data?.let { updateContent(it) }
-                }
-            }
-        }
-        complete(true)
-    }
+//    private fun getMoviesOnViewModelInitIfConnected() {
+//        if (wasConfigurationChanged == null) {
+//            if (Variables.isNetworkConnected) {
+//                val categoryFromIntent = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
+//                showProgressBar()
+//                viewModel.getNextMovies(categoryFromIntent)
+//            } else {
+//                showToast(CONNECTION_PROBLEM)
+//            }
+//        }
+//    }
+//
+//    private fun showProgressBar() {
+//        progressBar.isVisible = true
+//    }
 
-    private fun hideProgressBar() {
-        progressBar.isVisible = false
-    }
+//    private fun setupOnScrollListener() {
+////        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+////            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+////                super.onScrollStateChanged(recyclerView, newState)
+////                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
+////                        newState == RecyclerView.SCROLL_STATE_IDLE
+////                if (isRecyclerViewBottom) {
+////                    downloadNextPageIfConnected()
+////                }
+////            }
+////        })
+////    }
+////
+////    private fun downloadNextPageIfConnected() {
+////        if (Variables.isNetworkConnected) {
+////            showProgressBar()
+////            viewModel.getNextMovies()
+////        } else {
+////            showToast(CONNECTION_PROBLEM)
+////        }
+////    }
 
-    private fun updateContent(data: Pair<List<Movie>, Category>) {
-        updateDisplayedMovies(data.first)
-        updateToolbarTitle(data.second)
-        displayedCategory = data.second
-    }
-
-    private fun updateDisplayedMovies(movies: List<Movie>) {
-        adapter.submitList(movies.toMutableList())
-    }
-
-    private fun updateToolbarTitle(category: Category) {
-        toolbar.title = "Movies: $category"
-    }
-
-    private fun getMoviesOnViewModelInitIfConnected() {
-        if (wasConfigurationChanged == null) {
-            if (Variables.isNetworkConnected) {
-                val categoryFromIntent = intent.getSerializableExtra(EXTRA_CATEGORY) as Category
-                showProgressBar()
-                viewModel.getNextMovies(categoryFromIntent)
-            } else {
-                showToast(CONNECTION_PROBLEM)
-            }
-        }
-    }
-
-    private fun showProgressBar() {
-        progressBar.isVisible = true
-    }
-
-    private fun setupOnScrollListener() {
-        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
-                        newState == RecyclerView.SCROLL_STATE_IDLE
-                if (isRecyclerViewBottom) {
-                    downloadNextPageIfConnected()
-                }
-            }
-        })
-    }
-
-    private fun downloadNextPageIfConnected() {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            viewModel.getNextMovies()
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
-    }
-
-    private fun setupDrawer() {
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar,
-            R.string.nav_drawer_open, R.string.nav_drawer_closed
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-    }
-
-    private fun setupTags() {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
-    }
+//    private fun setupDrawer() {
+//        val toggle = ActionBarDrawerToggle(
+//            this, drawer_layout, toolbar,
+//            R.string.nav_drawer_open, R.string.nav_drawer_closed
+//        )
+//        drawer_layout.addDrawerListener(toggle)
+//        toggle.syncState()
+//    }
+//
+//    private fun setupTags() {
+//        upcomingTextView.tag = Category.UPCOMING
+//        topRatedTextView.tag = Category.TOP_RATED
+//        popularTextView.tag = Category.POPULAR
+//    }
 
     fun myToWatchListClicked(view: View) {
         closeDrawerOrMinimizeApp()
