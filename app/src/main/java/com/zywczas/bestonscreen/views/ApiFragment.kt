@@ -11,6 +11,8 @@ import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 
 //todo pousuwac niepotrzebne layouty
 
+//todo ogarnac back stack, sprawdzic czy jak jest sie w Api i zminimaluzuje to po czasie wraca do tego czy od nowa wlacza aktivity i DB
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"

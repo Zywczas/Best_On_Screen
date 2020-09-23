@@ -11,6 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 //todo porozdzielac pozniej na pojedyncze fabryki, zeby Dagger nie musial od razu tworzyc wszystkich View Models na raz
+//todo dc pozniej chyba navhost fragment factory
 @Singleton
 class MovieFragmentFactory @Inject constructor(
     private val apiVMFactory: ApiVMFactory?,

@@ -1,7 +1,6 @@
 package com.zywczas.bestonscreen.views
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +24,7 @@ import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.activity_api_and_db.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import kotlin.Exception
 
 class DBFragment constructor(
     private val viewModelFactory : DBVMFactory,
@@ -50,6 +50,7 @@ class DBFragment constructor(
         setupDrawer()
         setupTags()
         checkInternetConnection()
+        setupOnClickListeners()
     }
 
     private fun startUISetupChain() {
@@ -83,7 +84,7 @@ class DBFragment constructor(
             //todo tutaj dac inne factory
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
-                .addToBackStack("DBFragment")
+                .addToBackStack("DetailsFragment")
                 .commit()
         }
     }
@@ -138,7 +139,29 @@ class DBFragment constructor(
         }
     }
 
-    fun myToWatchListClicked(view: View) {
+    private fun setupOnClickListeners(){
+        myToWatchListTextView.setOnClickListener(onClickListener)
+        popularTextView.setOnClickListener(onClickListener)
+        upcomingTextView.setOnClickListener(onClickListener)
+        topRatedTextView.setOnClickListener(onClickListener)
+
+    }
+
+    private val onClickListener = View.OnClickListener { view ->
+        if (view.id == R.id.myToWatchListTextView) {
+            myToWatchListClicked()
+        } else {
+            try {
+                val category = view.tag as Category
+                categoryClicked(category)
+            } catch (e: Exception) {
+                //todo  dac tutaj jakies lepsze rozwiazanie
+                showToast("Incorrect tags for buttons. Contact service team.")
+            }
+        }
+    }
+
+    private fun myToWatchListClicked() {
         closeDrawer()
         showToast("This is your list.")
     }
@@ -148,18 +171,17 @@ class DBFragment constructor(
             drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
-//todo te dwie metody nie dzialaja z layoutem
-    fun categoryClicked(view: View) {
+
+    private fun categoryClicked(category: Category) {
         closeDrawer()
         if (Variables.isNetworkConnected) {
-            val category = view.tag as Category
-            switchToApiActivity(category)
+            switchToApiFragment(category)
         } else {
             showToast(CONNECTION_PROBLEM)
         }
     }
 
-    private fun switchToApiActivity(category: Category) {
+    private fun switchToApiFragment(category: Category) {
         activity?.run {
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_CATEGORY, category)
@@ -169,5 +191,7 @@ class DBFragment constructor(
                 .commit()
         }
     }
+
+    //todo dodac onBack pressed bo nie zamyka szuflady tylko minimalizuje cala apke
 
 }
