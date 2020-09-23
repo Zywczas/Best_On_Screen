@@ -28,14 +28,14 @@ class DBActivity : AppCompatActivity() {
 
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_api_and_db)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_api_and_db)
 //        startDBActivitySetupChain()
 //        setupDrawer()
 //        setupTags()
 //        checkInternetConnection()
-    }
+//    }
 
 //    private fun startDBActivitySetupChain() {
 //        injectDependencies { injectionFinished ->

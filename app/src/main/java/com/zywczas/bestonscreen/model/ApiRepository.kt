@@ -16,7 +16,7 @@ open class ApiRepository @Inject constructor(private val apiService: ApiService)
     private val noMorePagesStatus by lazy { "HTTP 422" }
     private val invalidApiKeyError by lazy { "Invalid API key. Contact technical support." }
     private val noMorePagesError by lazy { "No more pages in this category." }
-    private val generalApiError by lazy { "Problem with downloading movies. Close app and try again." }
+    private val generalApiError by lazy { "Problem with downloading movies. Check connection and try again." }
 
     open fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
         val apiSingle = getApiSingle(category, page)

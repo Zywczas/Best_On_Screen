@@ -122,7 +122,7 @@ internal class ApiRepositoryTest {
 
         @Test
         fun otherException() {
-            val expectedMessage = "Problem with downloading movies. Close app and try again."
+            val expectedMessage = "Problem with downloading movies. Check connection and try again."
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception()))
 
