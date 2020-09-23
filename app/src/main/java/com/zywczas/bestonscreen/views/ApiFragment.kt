@@ -208,17 +208,13 @@ class ApiFragment (
     }
 
     private val onClickListener = View.OnClickListener { view ->
+        closeDrawer()
         if (view.id == R.id.myToWatchListTextView) {
-            myToWatchListClicked()
+            switchToDBFragment()
         } else {
             val category = view.tag as Category
             categoryClicked(category)
         }
-    }
-
-    private fun myToWatchListClicked() {
-        closeDrawer()
-        switchToDBActivity()
     }
 
     private fun closeDrawer() {
@@ -227,5 +223,35 @@ class ApiFragment (
         }
     }
 
+    private fun switchToDBFragment() {
+        activity?.run {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, DBFragment::class.java, null)
+                .commit()
+        }
+    }
+
+    private fun categoryClicked(category: Category) {
+        if (category == displayedCategory) {
+            showToast("This is category $category.")
+        } else {
+            downloadNewCategoryIfConnected(category)
+        }
+    }
+
+    private fun downloadNewCategoryIfConnected(category: Category) {
+        if (Variables.isNetworkConnected) {
+            showProgressBar()
+            viewModel.getNextMovies(category)
+            moviesRecyclerView.scrollToPosition(0)
+        } else {
+            showToast(CONNECTION_PROBLEM)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CONFIGURATION_CHANGE, true)
+    }
 
 }

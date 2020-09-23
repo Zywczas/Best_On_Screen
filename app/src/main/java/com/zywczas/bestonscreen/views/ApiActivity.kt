@@ -37,14 +37,14 @@ class ApiActivity : AppCompatActivity() {
 //    private var wasConfigurationChanged: Boolean? = null
 //    private var displayedCategory: Category? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_api_and_db)
-//        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
-        startApiActivitySetupChain()
-        setupDrawer()
-        setupTags()
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_api_and_db)
+////        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+//        startApiActivitySetupChain()
+//        setupDrawer()
+//        setupTags()
+//    }
 
 //    private fun startApiActivitySetupChain() {
 //        injectDependencies { injectionFinished ->
@@ -184,53 +184,53 @@ class ApiActivity : AppCompatActivity() {
 //        popularTextView.tag = Category.POPULAR
 //    }
 
-    fun myToWatchListClicked(view: View) {
-        closeDrawerOrMinimizeApp()
-        switchToDBActivity()
-    }
+//    fun myToWatchListClicked(view: View) {
+//        closeDrawerOrMinimizeApp()
+//        switchToDBActivity()
+//    }
+//
+//    private fun closeDrawerOrMinimizeApp() {
+//        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+//            drawer_layout.closeDrawer(GravityCompat.START)
+//        } else {
+//            this.moveTaskToBack(true)
+//        }
+//    }
 
-    private fun closeDrawerOrMinimizeApp() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            this.moveTaskToBack(true)
-        }
-    }
+//    private fun switchToDBActivity() {
+//        val databaseActivityIntent = Intent(this, DBActivity::class.java)
+//        startActivity(databaseActivityIntent)
+//        finish()
+//    }
 
-    private fun switchToDBActivity() {
-        val databaseActivityIntent = Intent(this, DBActivity::class.java)
-        startActivity(databaseActivityIntent)
-        finish()
-    }
+//    fun categoryClicked(view: View) {
+//        closeDrawerOrMinimizeApp()
+//        val clickedCategory = view.tag as Category
+//        if (clickedCategory == displayedCategory) {
+//            showToast("This is $clickedCategory.")
+//        } else {
+//            downloadNewCategoryIfConnected(clickedCategory)
+//        }
+//    }
 
-    fun categoryClicked(view: View) {
-        closeDrawerOrMinimizeApp()
-        val clickedCategory = view.tag as Category
-        if (clickedCategory == displayedCategory) {
-            showToast("This is $clickedCategory.")
-        } else {
-            downloadNewCategoryIfConnected(clickedCategory)
-        }
-    }
+//    private fun downloadNewCategoryIfConnected(category: Category) {
+//        if (Variables.isNetworkConnected) {
+//            showProgressBar()
+//            viewModel.getNextMovies(category)
+//            moviesRecyclerView.scrollToPosition(0)
+//        } else {
+//            showToast(CONNECTION_PROBLEM)
+//        }
+//    }
 
-    private fun downloadNewCategoryIfConnected(category: Category) {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            viewModel.getNextMovies(category)
-            moviesRecyclerView.scrollToPosition(0)
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
-    }
+//    override fun onBackPressed() {
+//        closeDrawerOrMinimizeApp()
+//    }
 
-    override fun onBackPressed() {
-        closeDrawerOrMinimizeApp()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(CONFIGURATION_CHANGE, true)
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putBoolean(CONFIGURATION_CHANGE, true)
+//    }
 
 
 }
