@@ -140,9 +140,7 @@ class ApiFragment (
         if (wasConfigurationChanged == null) {
             if (Variables.isNetworkConnected) {
                 showProgressBar()
-                val categoryFromBundle = arguments.let {
-                    it?.getSerializable(EXTRA_CATEGORY) as Category
-                }
+                val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
                 viewModel.getNextMovies(categoryFromBundle)
             } else {
                 showToast(CONNECTION_PROBLEM)
