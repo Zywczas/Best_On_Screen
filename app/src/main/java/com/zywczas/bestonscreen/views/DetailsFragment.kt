@@ -17,13 +17,7 @@ import com.zywczas.bestonscreen.utilities.Variables
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
-import kotlinx.android.synthetic.main.activity_details.addToListBtn
-import kotlinx.android.synthetic.main.activity_details.genresTextViewDetails
-import kotlinx.android.synthetic.main.activity_details.overviewTextViewDetails
-import kotlinx.android.synthetic.main.activity_details.posterImageViewDetails
-import kotlinx.android.synthetic.main.activity_details.rateTextViewDetails
-import kotlinx.android.synthetic.main.activity_details.releaseDateTextViewDetails
-import kotlinx.android.synthetic.main.activity_details.titleTextViewDetails
+import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment(
     private val viewModelFactory: DetailsVMFactory,
@@ -97,6 +91,7 @@ class DetailsFragment(
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isInDb ->
+                //todo tagi nie sa ustawiane, chyba odwoluje sie nie do tego layoutu
                 addToListBtn.isChecked = isInDb
                 addToListBtn.tag = isInDb
             }
@@ -122,9 +117,9 @@ class DetailsFragment(
         }
     }
 
-    private fun setupOnClickListener(){
+    private fun setupOnClickListener() {
         addToListBtn.setOnClickListener {
-            val isButtonChecked = view?.tag as Boolean
+            val isButtonChecked = addToListBtn.tag as Boolean
             viewModel.addOrDeleteMovie(movie, isButtonChecked)
             updateAddToListBtnState()
         }

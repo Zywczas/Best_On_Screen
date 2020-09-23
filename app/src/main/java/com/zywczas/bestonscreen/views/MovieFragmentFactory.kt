@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.views
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory

@@ -1,11 +1,9 @@
 package com.zywczas.bestonscreen.views
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.zywczas.bestonscreen.App
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.utilities.showToast
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
