@@ -22,10 +22,6 @@ import javax.inject.Singleton
 class BestOnScreenModule {
 
     @Provides
-    @AppContext
-    fun provideAppContext() : Context = BestOnScreenApp()
-
-    @Provides
     @Singleton
     fun provideTMDBService(): ApiService = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")
@@ -36,12 +32,12 @@ class BestOnScreenModule {
 
     @Provides
     @Singleton
-    fun providePicasso(): Picasso = Picasso.Builder(provideAppContext()).build()
+    fun providePicasso(app: Application): Picasso = Picasso.Builder(app.applicationContext).build()
 
     @Provides
     @Singleton
-    fun provideMovieDao(): MovieDao =
-        Room.databaseBuilder(provideAppContext(), MoviesDataBase::class.java, "MoviesDB")
+    fun provideMovieDao(app: Application): MovieDao =
+        Room.databaseBuilder(app.applicationContext, MoviesDataBase::class.java, "MoviesDB")
             .build()
             .getMovieDao()
 

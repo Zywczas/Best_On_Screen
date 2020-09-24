@@ -3,10 +3,9 @@
     xmlns:bestOnScreenApp="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".views.MainActivity">
+    android:layout_height="match_parent" >
 
-    <androidx.fragment.bestOnScreenApp.FragmentContainerView
+    <androidx.fragment.app.FragmentContainerView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         bestOnScreenApp:layout_constraintTop_toTopOf="parent"

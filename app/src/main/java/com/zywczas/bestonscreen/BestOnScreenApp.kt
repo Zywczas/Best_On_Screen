@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen
 
-import com.zywczas.bestonscreen.di.BestOnScreenComponent
+
 import com.zywczas.bestonscreen.di.DaggerBestOnScreenComponent
 import com.zywczas.bestonscreen.utilities.CheckNetwork
 import dagger.android.AndroidInjector
