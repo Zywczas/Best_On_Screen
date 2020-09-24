@@ -9,12 +9,12 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var fragmentFactory: FragmentFactory
+    lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.moviesComponent.inject(this)
         //it has to be before super.onCreate
-        supportFragmentManager.fragmentFactory = fragmentFactory
+        supportFragmentManager.fragmentFactory = moviesFragmentsFactory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initDBFragment()

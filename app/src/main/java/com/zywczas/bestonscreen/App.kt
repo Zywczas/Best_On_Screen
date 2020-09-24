@@ -14,6 +14,7 @@ class App : Application() {
         lateinit var moviesComponent: MoviesComponent
     }
 
+
     override fun onCreate() {
         super.onCreate()
         moviesComponent = DaggerMoviesComponent.builder()
@@ -21,5 +22,16 @@ class App : Application() {
             .build()
         network.registerNetworkCallback()
     }
+//todo usunac
+//    override fun onCreate() {
+//        super.onCreate()
+//        moviesComponent = DaggerMoviesComponent.builder()
+//            .app
+//
+//            .moviesModule(MoviesModule(this))
+//
+//            .build()
+//        network.registerNetworkCallback()
+//    }
 
 }

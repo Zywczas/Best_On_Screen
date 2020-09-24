@@ -73,12 +73,14 @@ class DBFragment constructor(
         }
         moviesRecyclerView.adapter = adapter
     }
+    //todo sprawdzic o co chodzi z grafami dla daggera i navigation i moze dodac je tutaj
 
     private fun goToDetailsFragment(movie: Movie) {
         activity?.run {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
             //todo tutaj dac inne factory
+            //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
