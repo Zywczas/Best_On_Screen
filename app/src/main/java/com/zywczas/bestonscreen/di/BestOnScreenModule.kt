@@ -1,22 +1,29 @@
 package com.zywczas.bestonscreen.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.squareup.picasso.Picasso
-import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.BestOnScreenApp
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.ApiService
+import com.zywczas.bestonscreen.views.MainActivity
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.android.ContributesAndroidInjector
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
+//todo moze mozna usunac tutaj constructor, czy tak moze byc to application...
 @Module
-class MoviesModule(private val application: Application) {
+class BestOnScreenModule {
+
+    @Provides
+    @AppContext
+    fun provideAppContext() : Context = BestOnScreenApp()
 
     @Provides
     @Singleton
@@ -29,13 +36,14 @@ class MoviesModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun providePicasso(): Picasso = Picasso.Builder(application.applicationContext).build()
+    fun providePicasso(): Picasso = Picasso.Builder(provideAppContext()).build()
 
     @Provides
     @Singleton
     fun provideMovieDao(): MovieDao =
-        Room.databaseBuilder(application.applicationContext, MoviesDataBase::class.java, "MoviesDB")
+        Room.databaseBuilder(provideAppContext(), MoviesDataBase::class.java, "MoviesDB")
             .build()
             .getMovieDao()
+
 
 }

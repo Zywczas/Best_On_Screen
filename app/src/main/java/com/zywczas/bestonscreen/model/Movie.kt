@@ -2,7 +2,7 @@ package com.zywczas.bestonscreen.model
 
 import android.os.Parcel
 import android.os.Parcelable
-
+//todo sprawdzic czy jak dam @Parcelize to wystarczy zamiast dawanie ich metod
 data class Movie(
     var id: Int = 0,
     var posterPath: String = "",

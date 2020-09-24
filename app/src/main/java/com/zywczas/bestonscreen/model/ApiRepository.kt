@@ -8,7 +8,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 open class ApiRepository @Inject constructor(private val apiService: ApiService) {
 
     private val apiKey by lazy { "43a74b6228b35b23e401df1c6a464af1" }

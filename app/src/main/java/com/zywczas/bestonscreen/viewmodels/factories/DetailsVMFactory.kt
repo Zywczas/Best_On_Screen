@@ -7,7 +7,6 @@ import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class DetailsVMFactory @Inject constructor(private val repo: DetailsRepository) :
     ViewModelProvider.NewInstanceFactory() {
 

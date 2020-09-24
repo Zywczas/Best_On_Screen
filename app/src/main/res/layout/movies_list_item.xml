@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bestOnScreenApp="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
 
@@ -15,12 +15,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:scaleType="fitCenter"
-        app:layout_constraintDimensionRatio="1:1.5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/poster_example"
+        bestOnScreenApp:layout_constraintDimensionRatio="1:1.5"
+        bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+        bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+        bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+        bestOnScreenApp:layout_constraintTop_toTopOf="parent"
+        bestOnScreenApp:srcCompat="@drawable/poster_example"
         android:contentDescription="@string/movie_image" />
 
     <TextView
@@ -30,8 +30,8 @@
         android:layout_marginTop="8dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/posterImageViewMovies"
+        bestOnScreenApp:layout_constraintStart_toEndOf="@+id/imageView"
+        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/posterImageViewMovies"
         tools:text="7.7" />
 
     <TextView
@@ -42,10 +42,10 @@
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/posterImageViewMovies"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rateTextViewMovies"
+        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/posterImageViewMovies"
+        bestOnScreenApp:layout_constraintHorizontal_bias="1.0"
+        bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/rateTextViewMovies"
         tools:text="movie title" />
 
     <ImageView
@@ -53,9 +53,9 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rateTextViewMovies"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rateTextViewMovies"
-        app:srcCompat="@android:drawable/btn_star_big_on"
+        bestOnScreenApp:layout_constraintBottom_toBottomOf="@+id/rateTextViewMovies"
+        bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+        bestOnScreenApp:layout_constraintTop_toTopOf="@+id/rateTextViewMovies"
+        bestOnScreenApp:srcCompat="@android:drawable/btn_star_big_on"
         android:contentDescription="@string/star" />
 </androidx.constraintlayout.widget.ConstraintLayout>

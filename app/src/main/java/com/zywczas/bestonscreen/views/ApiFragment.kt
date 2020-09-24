@@ -23,11 +23,12 @@ import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import javax.inject.Inject
 
 //todo ogarnac back stack, sprawdzic czy jak jest sie w Api i zminimaluzuje to po czasie wraca do tego czy od nowa wlacza aktivity i DB
 //todo jak sie da Api i kliknie wstecz to monimalizuje aplikacje ale jak sie znowu wlaczy to od nowa wlacza Db, chyba trzeba dodawac do backstack jak sie przechodzi z Db do Api
 
-class ApiFragment (
+class ApiFragment @Inject constructor(
     private val viewModelFactory : ApiVMFactory,
     private val picasso : Picasso
 ) : Fragment() {

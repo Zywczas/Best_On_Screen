@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bestOnScreenApp="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movieDetailsLayout"
     android:layout_width="match_parent"
@@ -10,19 +10,19 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+        bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+        bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+        bestOnScreenApp:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            bestOnScreenApp:layout_constraintBottom_toBottomOf="parent"
+            bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+            bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+            bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+            bestOnScreenApp:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="50dp">
 
             <ImageView
@@ -33,11 +33,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:scaleType="fitCenter"
-                app:layout_constraintDimensionRatio="1:1.5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                bestOnScreenApp:layout_constraintDimensionRatio="1:1.5"
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+                bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+                bestOnScreenApp:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@drawable/poster_example"
                 android:contentDescription="@string/movie_image" />
 
@@ -49,11 +49,11 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toStartOf="@+id/releaseDateTextViewDetails"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextViewDetails"
+                bestOnScreenApp:layout_constraintEnd_toStartOf="@+id/releaseDateTextViewDetails"
+                bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+                bestOnScreenApp:layout_constraintHorizontal_chainStyle="spread_inside"
+                bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+                bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/titleTextViewDetails"
                 tools:text="Rate: " />
 
             <TextView
@@ -64,11 +64,11 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/rateTextViewDetails"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/rateTextViewDetails"
-                app:layout_constraintTop_toTopOf="@+id/rateTextViewDetails"
+                bestOnScreenApp:layout_constraintBottom_toBottomOf="@+id/rateTextViewDetails"
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
+                bestOnScreenApp:layout_constraintStart_toEndOf="@+id/rateTextViewDetails"
+                bestOnScreenApp:layout_constraintTop_toTopOf="@+id/rateTextViewDetails"
                 tools:text="Release date: " />
 
             <TextView
@@ -80,9 +80,9 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addToListBtn"
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+                bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/addToListBtn"
                 tools:text="Genres: " />
 
             <TextView
@@ -95,10 +95,10 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/genresTextViewDetails"
+                bestOnScreenApp:layout_constraintBottom_toBottomOf="parent"
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+                bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/genresTextViewDetails"
                 tools:text="overview... " />
 
             <TextView
@@ -110,9 +110,9 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/posterImageViewDetails"
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintStart_toStartOf="parent"
+                bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/posterImageViewDetails"
                 tools:text="title..." />
 
 
@@ -129,8 +129,8 @@
                 android:textColor="@android:color/white"
                 android:textOff="@string/add_to_my_list"
                 android:textOn="@string/remove_from_my_list"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/releaseDateTextViewDetails" />
+                bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
+                bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/releaseDateTextViewDetails" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

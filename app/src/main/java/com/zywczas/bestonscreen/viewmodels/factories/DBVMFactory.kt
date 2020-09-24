@@ -7,7 +7,6 @@ import com.zywczas.bestonscreen.viewmodels.DBVM
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class DBVMFactory @Inject constructor(private val repo: DBRepository) :
     ViewModelProvider.NewInstanceFactory() {
 

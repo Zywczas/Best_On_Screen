@@ -18,8 +18,9 @@ import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.fragment_details.*
+import javax.inject.Inject
 
-class DetailsFragment(
+class DetailsFragment @Inject constructor(
     private val viewModelFactory: DetailsVMFactory,
     private val picasso: Picasso
 ) : Fragment() {

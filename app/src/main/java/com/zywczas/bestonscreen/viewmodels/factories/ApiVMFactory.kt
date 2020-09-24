@@ -7,7 +7,6 @@ import com.zywczas.bestonscreen.viewmodels.ApiVM
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ApiVMFactory @Inject constructor(private val repo: ApiRepository) :
     ViewModelProvider.NewInstanceFactory() {
 

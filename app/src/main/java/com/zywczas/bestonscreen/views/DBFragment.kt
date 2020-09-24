@@ -22,10 +22,10 @@ import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import javax.inject.Inject
 
-//todo pousuwac importy
-//todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
-class DBFragment constructor(
+
+class DBFragment @Inject constructor(
     private val viewModelFactory: DBVMFactory,
     private val picasso: Picasso
 ) : Fragment() {
@@ -191,5 +191,7 @@ class DBFragment constructor(
     }
 
     //todo dodac onBack pressed bo nie zamyka szuflady tylko minimalizuje cala apke
+    //todo pousuwac importy
+//todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
 
 }

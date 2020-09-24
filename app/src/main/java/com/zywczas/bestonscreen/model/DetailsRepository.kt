@@ -8,7 +8,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 open class DetailsRepository @Inject constructor(private val movieDao: MovieDao) {
 
     private val addSuccess by lazy { "Movie added to your list." }
