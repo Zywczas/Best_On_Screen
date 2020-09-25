@@ -7,8 +7,10 @@ import dagger.android.*
 
 import javax.inject.Inject
 //todo chyba mozna usunac Has android injector
-class MainActivity : AppCompatActivity(), HasAndroidInjector {
-
+class MainActivity : AppCompatActivity()
+    , HasAndroidInjector
+{
+//cos
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
     @Inject
