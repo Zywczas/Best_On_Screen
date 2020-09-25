@@ -1,18 +1,10 @@
 package com.zywczas.bestonscreen.di.test
 
-import android.app.Application
-import androidx.fragment.app.FragmentFactory
-import com.zywczas.bestonscreen.di.ActivityModule
-import com.zywczas.bestonscreen.di.BestOnScreenModule
-import com.zywczas.bestonscreen.di.FragmentBindingModule
-import dagger.BindsInstance
-import dagger.Component
-
 ////todo mozliwe ze do usuniecie, sprawdzic przy testach
 //@Component(
 //    modules = [
 //        BestOnScreenModule::class,
-//        FragmentBindingModule::class,
+//        FragmentModule::class,
 //        //todo nie wiem czy to potrzebne
 //        ActivityModule::class
 //    ]

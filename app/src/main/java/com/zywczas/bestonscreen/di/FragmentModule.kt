@@ -9,9 +9,9 @@ import com.zywczas.bestonscreen.views.MoviesFragmentsFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-
+//todo zmienic nazwe na fragment factory module
 @Module
-abstract class FragmentBindingModule {
+abstract class FragmentModule {
 
     //todo podobno juz nie potrzebne
     @Binds

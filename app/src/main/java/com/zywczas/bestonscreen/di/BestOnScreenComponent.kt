@@ -11,17 +11,19 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     BestOnScreenModule::class,
+    //todo AndroidInjectionModule binds your app.Fragment to dagger. But If you want to use injection
+    // in v4.fragment then you should add AndroidSupportInjectionModule.class
     AndroidSupportInjectionModule::class,
-    FragmentBindingModule::class,
+    FragmentModule::class,
     ActivityModule::class
 ])
 interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
-
-    override fun inject(instance: BestOnScreenApp)
 
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
+//todo to chyba nie jest potrzebne
+    override fun inject(instance: BestOnScreenApp)
 
 }
