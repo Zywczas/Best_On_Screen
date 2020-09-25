@@ -1,11 +1,11 @@
 package com.zywczas.bestonscreen.di.test
 
-////todo mozliwe ze do usuniecie, sprawdzic przy testach
+////mozliwe ze do usuniecie, sprawdzic przy testach
 //@Component(
 //    modules = [
 //        BestOnScreenModule::class,
 //        FragmentFactoryModule::class,
-//        //todo nie wiem czy to potrzebne
+//        //nie wiem czy to potrzebne
 //        ActivityBuilder::class
 //    ]
 //)

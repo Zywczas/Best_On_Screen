@@ -32,6 +32,7 @@ class DBFragment @Inject constructor(
 
     private val viewModel: DBVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
+    //todo on back pressed
     private val dispatcher by lazy {requireActivity().onBackPressed()}
 
     override fun onCreateView(
@@ -43,7 +44,6 @@ class DBFragment @Inject constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //todo zmienic nazwe tego bo drawer to tez ui a tu nie wchodzi
         startDbUISetupChain()
         setupDrawer()
         checkInternetConnection()
@@ -67,19 +67,17 @@ class DBFragment @Inject constructor(
     }
 
     private fun setupAdapter() {
-        //todo sprawdzi czy ten kontekst moze byc
         adapter = MovieAdapter(requireActivity(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
         moviesRecyclerView.adapter = adapter
     }
-    //todo sprawdzic o co chodzi z grafami dla daggera i navigation i moze dodac je tutaj
+    //todo sprawdzic o co chodzi z grafami z navigation i moze dodac je tutaj
 
     private fun goToDetailsFragment(movie: Movie) {
         activity?.run {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
-            //todo tutaj dac inne factory
             //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
@@ -94,7 +92,6 @@ class DBFragment @Inject constructor(
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 4
         }
-        //todo sprawdzi czy ten kontekst moze byc
         val layoutManager = GridLayoutManager(activity, spanCount)
         moviesRecyclerView.layoutManager = layoutManager
         moviesRecyclerView.setHasFixedSize(true)
@@ -183,7 +180,6 @@ class DBFragment @Inject constructor(
         activity?.run {
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_CATEGORY, category)
-            //todo tutaj dac inne factory
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, ApiFragment::class.java, bundle)
                 .commit()
@@ -192,6 +188,7 @@ class DBFragment @Inject constructor(
 
     //todo dodac onBack pressed bo nie zamyka szuflady tylko minimalizuje cala apke
     //todo pousuwac importy
+
 //todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
 
 }

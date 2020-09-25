@@ -24,6 +24,7 @@ class DetailsFragment @Inject constructor(
     private val viewModelFactory: DetailsVMFactory,
     private val picasso: Picasso
 ) : Fragment() {
+    //todo dodac pasek ze strzalka wstecz i wtedy moze tytul filmu na pasku
 
     private lateinit var movie: Movie
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
@@ -34,16 +35,16 @@ class DetailsFragment @Inject constructor(
     ): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
+    //todo dac w kazdym fragmencie live data w oncreate a tylko UI w onViewCreated
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        startDetailsFragmentSetupChain()
+        startDetailsUISetupChain()
         checkInternetConnection()
         setupOnClickListener()
     }
 
-    //todo pomyslec nad inna nazwa, moze UI setup
-    private fun startDetailsFragmentSetupChain() {
+    private fun startDetailsUISetupChain() {
         getMovieFromBundle { success ->
             if (success) {
                 setupUIState()
@@ -92,7 +93,6 @@ class DetailsFragment @Inject constructor(
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isInDb ->
-                //todo tagi nie sa ustawiane, chyba odwoluje sie nie do tego layoutu
                 addToListBtn.isChecked = isInDb
                 addToListBtn.tag = isInDb
             }

@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity()
 //        return androidInjector
 //    }
 
+    //todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         supportFragmentManager.fragmentFactory = moviesFragmentsFactory

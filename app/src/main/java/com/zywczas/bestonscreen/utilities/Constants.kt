@@ -5,3 +5,4 @@ const val EXTRA_CATEGORY = "category"
 const val CONFIGURATION_CHANGE = "configuration change"
 const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and try again."
 
+//todo pousuwac wszystkie logi

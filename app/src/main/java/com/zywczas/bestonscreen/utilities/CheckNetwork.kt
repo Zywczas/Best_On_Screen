@@ -3,7 +3,7 @@ package com.zywczas.bestonscreen.utilities
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-
+//todo dac inject w main activity i variables w zwyklej klasie
 open class CheckNetwork(private val context: Context) {
 
     open fun registerNetworkCallback() {

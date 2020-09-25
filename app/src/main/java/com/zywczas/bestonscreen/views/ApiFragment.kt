@@ -2,9 +2,12 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -35,21 +38,42 @@ class ApiFragment @Inject constructor(
 
     private val viewModel : ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-    private var wasConfigurationChanged: Boolean? = null
+//    private var wasConfigurationChanged : Boolean? = null
+//    private var areFirstMoviesInitialized = false
     private var displayedCategory: Category? = null
+
+
+    //todo on back pressed
+    private val dispatcher by lazy {requireActivity().onBackPressedDispatcher}
+    private lateinit var callback: OnBackPressedCallback
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
+        callback = dispatcher.addCallback(this) {
+            closeDrawerOrGoBack()
+        }
+    }
+//todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
+    private fun closeDrawerOrGoBack() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        } else {
+            callback.isEnabled = false
+            dispatcher.onBackPressed()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_api_and_db, container, false)
+
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //todo sprawdzic czy to ma byc czy w OnCreate - dac log i porownac
-        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
-        //todo zmienic nazwe
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         startApiUISetupChain()
         setupDrawer()
         setupDrawerNavButtons()
@@ -85,7 +109,6 @@ class ApiFragment @Inject constructor(
         activity?.run {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
-            //todo tutaj dac inne factory
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
@@ -137,16 +160,20 @@ class ApiFragment @Inject constructor(
     }
 
     private fun getMoviesOnViewModelInitIfConnected() {
-        if (wasConfigurationChanged == null) {
-            if (Variables.isNetworkConnected) {
-                showProgressBar()
-                val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
-                viewModel.getNextMovies(categoryFromBundle)
-            } else {
-                showToast(CONNECTION_PROBLEM)
-            }
+//    @Suppress("SimplifyBooleanWithConstants")
+//    val shouldGetFirstMovies = wasConfigurationChanged != true && areFirstMoviesInitialized != true
+//    if (shouldGetFirstMovies) {
+//        areFirstMoviesInitialized = true
+        if (Variables.isNetworkConnected) {
+            showProgressBar()
+            val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
+            viewModel.getFirstMovies(categoryFromBundle)
+//            viewModel.getNextMovies(categoryFromBundle)
+        } else {
+            showToast(CONNECTION_PROBLEM)
         }
     }
+
 
     private fun showProgressBar() {
         progressBar.isVisible = true
@@ -206,18 +233,12 @@ class ApiFragment @Inject constructor(
     }
 
     private val onClickListener = View.OnClickListener { view ->
-        closeDrawer()
+        closeDrawerOrGoBack()
         if (view.id == R.id.myToWatchListTextView) {
             switchToDBFragment()
         } else {
             val category = view.tag as Category
             categoryClicked(category)
-        }
-    }
-
-    private fun closeDrawer() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
 
@@ -247,9 +268,9 @@ class ApiFragment @Inject constructor(
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(CONFIGURATION_CHANGE, true)
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putBoolean(CONFIGURATION_CHANGE, true)
+//    }
 
 }

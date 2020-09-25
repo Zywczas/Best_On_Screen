@@ -3,6 +3,7 @@ package com.zywczas.bestonscreen
 
 import com.zywczas.bestonscreen.di.DaggerBestOnScreenComponent
 import com.zywczas.bestonscreen.utilities.CheckNetwork
+import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 
