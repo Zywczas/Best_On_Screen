@@ -4,6 +4,7 @@ import android.app.Application
 import com.zywczas.bestonscreen.BestOnScreenApp
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
@@ -11,9 +12,9 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     BestOnScreenModule::class,
-    //todo AndroidInjectionModule binds your app.Fragment to dagger. But If you want to use injection
+    //AndroidInjectionModule binds your app.Fragment to dagger. But If you want to use injection
     // in v4.fragment then you should add AndroidSupportInjectionModule.class
-    AndroidSupportInjectionModule::class,
+    AndroidInjectionModule::class,
     FragmentModule::class,
     ActivityModule::class
 ])
@@ -24,7 +25,7 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
 
-//todo to chyba nie jest potrzebne
-    override fun inject(instance: BestOnScreenApp)
+//to chyba nie jest potrzebne
+//    override fun inject(instance: BestOnScreenApp)
 
 }
