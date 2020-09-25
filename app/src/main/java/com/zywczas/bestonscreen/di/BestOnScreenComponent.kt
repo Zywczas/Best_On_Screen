@@ -23,6 +23,7 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
     interface Factory {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
+
 //todo to chyba nie jest potrzebne
     override fun inject(instance: BestOnScreenApp)
 

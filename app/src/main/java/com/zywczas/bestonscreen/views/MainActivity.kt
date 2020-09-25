@@ -6,19 +6,19 @@ import com.zywczas.bestonscreen.R
 import dagger.android.*
 
 import javax.inject.Inject
-//todo chyba mozna usunac Has android injector
+//chyba mozna usunac Has android injector
 class MainActivity : AppCompatActivity()
-    , HasAndroidInjector
+//    , HasAndroidInjector
 {
-//cos
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+////cos
+//    @Inject
+//    lateinit var androidInjector: DispatchingAndroidInjector<Any>
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
-    }
+//    override fun androidInjector(): AndroidInjector<Any> {
+//        return androidInjector
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
