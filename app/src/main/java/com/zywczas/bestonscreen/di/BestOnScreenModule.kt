@@ -17,7 +17,7 @@ import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-//todo moze mozna usunac tutaj constructor, czy tak moze byc to application...
+
 @Module
 class BestOnScreenModule {
 

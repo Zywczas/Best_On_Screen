@@ -6,7 +6,7 @@ package com.zywczas.bestonscreen.di.test
 //        BestOnScreenModule::class,
 //        FragmentFactoryModule::class,
 //        //todo nie wiem czy to potrzebne
-//        ActivityModule::class
+//        ActivityBuilder::class
 //    ]
 //)
 //interface TestComponent {

@@ -15,7 +15,7 @@ import javax.inject.Singleton
     // in v4.fragment then you should add AndroidSupportInjectionModule.class
     AndroidInjectionModule::class,
     FragmentFactoryModule::class,
-    ActivityModule::class
+    ActivityBuilder::class
 ])
 interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
 
