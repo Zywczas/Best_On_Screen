@@ -6,7 +6,6 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
@@ -15,7 +14,7 @@ import javax.inject.Singleton
     //AndroidInjectionModule binds your app.Fragment to dagger. But If you want to use injection
     // in v4.fragment then you should add AndroidSupportInjectionModule.class
     AndroidInjectionModule::class,
-    FragmentModule::class,
+    FragmentFactoryModule::class,
     ActivityModule::class
 ])
 interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {

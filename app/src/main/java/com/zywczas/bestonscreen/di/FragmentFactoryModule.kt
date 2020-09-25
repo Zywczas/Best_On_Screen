@@ -9,15 +9,14 @@ import com.zywczas.bestonscreen.views.MoviesFragmentsFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-//todo zmienic nazwe na fragment factory module
+
 @Module
-abstract class FragmentModule {
+abstract class FragmentFactoryModule {
 
-    //todo podobno juz nie potrzebne
-    @Binds
-    abstract fun bindFragmentFactory(factory: MoviesFragmentsFactory) : FragmentFactory
+    //podobno juz nie potrzebne
+//    @Binds
+//    abstract fun bindFragmentFactory(factory: MoviesFragmentsFactory) : FragmentFactory
 
-//todo gdzies chyba trzeba dodac jeszcze main activity
     @Binds
     @IntoMap
     @FragmentKey(DBFragment::class)

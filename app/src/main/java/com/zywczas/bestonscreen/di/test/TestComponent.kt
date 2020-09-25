@@ -4,7 +4,7 @@ package com.zywczas.bestonscreen.di.test
 //@Component(
 //    modules = [
 //        BestOnScreenModule::class,
-//        FragmentModule::class,
+//        FragmentFactoryModule::class,
 //        //todo nie wiem czy to potrzebne
 //        ActivityModule::class
 //    ]
