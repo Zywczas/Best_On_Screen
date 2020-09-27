@@ -4,7 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Request
+import com.squareup.picasso.RequestCreator
+import com.squareup.picasso.RequestHandler
 import com.zywczas.bestonscreen.BestOnScreenApp
+import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
 import com.zywczas.bestonscreen.model.webservice.ApiService
@@ -21,25 +25,29 @@ import javax.inject.Singleton
 @Module
 class BestOnScreenModule {
 
-    @Provides
-    @Singleton
-    fun provideTMDBService(): ApiService = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(ApiService::class.java)
+    companion object {
 
-    @Provides
-    @Singleton
-    fun providePicasso(app: Application): Picasso = Picasso.Builder(app.applicationContext).build()
-
-    @Provides
-    @Singleton
-    fun provideMovieDao(app: Application): MovieDao =
-        Room.databaseBuilder(app.applicationContext, MoviesDataBase::class.java, "MoviesDB")
+        @Provides
+        @Singleton
+        fun provideTMDBService(): ApiService = Retrofit.Builder()
+            .baseUrl("https://api.themoviedb.org/3/")
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .getMovieDao()
+            .create(ApiService::class.java)
+
+        @Provides
+        @Singleton
+        fun providePicasso(app: Application): Picasso = Picasso.Builder(app.applicationContext).build()
+
+        @Provides
+        @Singleton
+        fun provideMovieDao(app: Application): MovieDao =
+            Room.databaseBuilder(app.applicationContext, MoviesDataBase::class.java, "MoviesDB")
+                .build()
+                .getMovieDao()
+
+    }
 
 
 }

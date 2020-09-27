@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity(){
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
 
-//    private val network = CheckNetwork(applicationContext)
+//    private val netwo rk = CheckNetwork(applicationContext)
 
 
     //todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
