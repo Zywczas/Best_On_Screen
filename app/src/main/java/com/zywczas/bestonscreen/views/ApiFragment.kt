@@ -3,9 +3,7 @@ package com.zywczas.bestonscreen.views
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -35,6 +33,14 @@ class ApiFragment @Inject constructor(
     private val viewModelFactory: ApiVMFactory,
     private val picasso: Picasso
 ) : Fragment() {
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
@@ -96,7 +102,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupAdapter() {
-        adapter = MovieAdapter(requireActivity(), picasso) { movie ->
+        adapter = MovieAdapter( requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
         moviesRecyclerView.adapter = adapter

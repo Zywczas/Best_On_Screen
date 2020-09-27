@@ -1,11 +1,13 @@
 package com.zywczas.bestonscreen.adapter
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,7 @@ import com.zywczas.bestonscreen.model.Movie
 import java.util.*
 
 class MovieAdapter(
-    private val activity: Activity,
+    private val context: Context,
     private val picasso: Picasso,
     private val itemClick: (Movie) -> Unit
 ) : ListAdapter<Movie, MovieAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
@@ -46,7 +48,7 @@ class MovieAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(activity).inflate(R.layout.movies_list_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.movies_list_item, parent, false)
         return ViewHolder(view)
     }
 

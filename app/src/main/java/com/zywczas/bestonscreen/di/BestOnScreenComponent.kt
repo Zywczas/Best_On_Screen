@@ -26,6 +26,6 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
     }
 
     //todo sprawdzic czy to potrzebne
-    abstract fun networkCheck() : NetworkCheck
+    fun networkCheck() : NetworkCheck
 
 }

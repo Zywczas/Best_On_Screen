@@ -7,7 +7,7 @@ import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import javax.inject.Inject
 import javax.inject.Singleton
-
+//todo sprobowac jeszcze raz dac fabryke z daggera ale tym razme bez inject constructor
 class ApiVMFactory @Inject constructor(
     private val repo: ApiRepository,
     private val networkCheck: NetworkCheck
