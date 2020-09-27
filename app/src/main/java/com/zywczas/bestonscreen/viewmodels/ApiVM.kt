@@ -22,6 +22,8 @@ class ApiVM(private val repo: ApiRepository) : ViewModel() {
 
 //todo przeniesc tutaj internet check
 
+    //todo przenisc tutaj status loading zeby kazalo wyswietlac progress bar w activity
+
 
     fun getFirstMovies(nextCategory: Category) {
         if (!haveFirstMoviesBeenDisplayed) {

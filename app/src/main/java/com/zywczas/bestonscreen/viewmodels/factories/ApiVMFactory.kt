@@ -16,5 +16,3 @@ class ApiVMFactory @Inject constructor(private val repo: ApiRepository) :
     }
 
 }
-
-//todo moze wrzucic VMfactory w fabryke i daggera

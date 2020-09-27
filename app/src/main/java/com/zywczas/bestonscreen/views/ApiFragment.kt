@@ -136,7 +136,7 @@ class ApiFragment @Inject constructor(
         }
         complete(true)
     }
-
+//todo dac 1 funkcje przyjmujaca true lub false
     private fun hideProgressBar() {
         progressBar.isVisible = false
     }
