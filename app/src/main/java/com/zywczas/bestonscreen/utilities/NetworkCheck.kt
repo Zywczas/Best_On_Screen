@@ -28,14 +28,11 @@ class NetworkCheck @Inject constructor(private val app: Application) {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 isNetworkConnected = true
-                //todo przetestowac jak przeniose do view model i wtedy usunac te logi
-                Log.d("networkcheck", "onAvailable: $isNetworkConnected")
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
                 isNetworkConnected = false
-                Log.d("networkcheck", "onLost: $isNetworkConnected")
             }
 
         })

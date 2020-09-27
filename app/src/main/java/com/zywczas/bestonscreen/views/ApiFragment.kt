@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +20,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.EXTRA_CATEGORY
-import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.Status
-import com.zywczas.bestonscreen.utilities.showToast
+import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import kotlinx.android.synthetic.main.content_movies.*
@@ -48,6 +46,7 @@ class ApiFragment @Inject constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
         callback = dispatcher.addCallback(this) {
             closeDrawerOrGoBack()
         }
@@ -76,8 +75,6 @@ class ApiFragment @Inject constructor(
         setupDrawer()
         setupDrawerNavButtons()
     }
-
-    //todo dalem nowa kateorie ale nie bylo neta wiec sie nie pobraly ale i tak mnie przesunalo na poczatek listy
 
     private fun startApiUISetupChain() {
         setupRecyclerView { recyclerViewSetupFinished ->
@@ -149,6 +146,10 @@ class ApiFragment @Inject constructor(
 
     private fun updateContent(data: Pair<List<Movie>, Category>) {
         updateDisplayedMovies(data.first)
+        val isNewCategoryLoaded = data.second != displayedCategory
+        if (isNewCategoryLoaded){
+            moviesRecyclerView.scrollToPosition(0)
+        }
         updateToolbarTitle(data.second)
         displayedCategory = data.second
     }
@@ -245,7 +246,11 @@ class ApiFragment @Inject constructor(
     private fun downloadNewCategory(category: Category) {
         showProgressBar(true)
         viewModel.getNextMoviesIfConnected(category)
-        moviesRecyclerView.scrollToPosition(0)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
     }
 
 }
