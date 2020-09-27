@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations
 internal class ApiVMTest {
 
     private lateinit var viewModel : ApiVM
-
+    //todo dac 2 testy nowe + internet check
     @Mock
     private lateinit var repo : ApiRepository
 

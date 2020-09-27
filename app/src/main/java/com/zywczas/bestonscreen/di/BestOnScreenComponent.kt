@@ -15,7 +15,7 @@ import javax.inject.Singleton
     // in v4.fragment then you should add AndroidSupportInjectionModule.class
     AndroidInjectionModule::class,
     FragmentFactoryModule::class,
-    ActivityBuilder::class
+    ActivityBuilderModule::class
 ])
 interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
 
@@ -23,8 +23,5 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
     interface Factory {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
-
-//to chyba nie jest potrzebne
-//    override fun inject(instance: BestOnScreenApp)
 
 }

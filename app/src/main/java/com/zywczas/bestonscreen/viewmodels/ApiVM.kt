@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
@@ -10,7 +9,7 @@ import com.zywczas.bestonscreen.utilities.Status
 
 class ApiVM(private val repo: ApiRepository) : ViewModel() {
 
-    private var areFirstMoviesRequested = false
+    private var haveFirstMoviesBeenDisplayed = false
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var page = firstPageOfNewCategory
@@ -20,19 +19,18 @@ class ApiVM(private val repo: ApiRepository) : ViewModel() {
     private val moviesAndCategoryMLD = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
     val moviesAndCategoryLD =
         moviesAndCategoryMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
+
 //todo przeniesc tutaj internet check
-//todo dac 2 testy tutaj nowe
+
+
     fun getFirstMovies(nextCategory: Category) {
-        if (!areFirstMoviesRequested) {
-            Log.d("film error", "pierwsze filmy w view model")
-            areFirstMoviesRequested = true
+        if (!haveFirstMoviesBeenDisplayed) {
+            haveFirstMoviesBeenDisplayed = true
             category = nextCategory
             getNextMovies()
         }
     }
 
-//todo dac internet check tutaj zeby sie nie powtarzac z tym IfConnected
-    //todo dodac test na internet
     fun getNextMovies(nextCategory: Category = category) {
         val isNewCategory = nextCategory != category
         if (isNewCategory) {

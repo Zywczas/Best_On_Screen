@@ -38,10 +38,7 @@ class ApiFragment @Inject constructor(
 
     private val viewModel : ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-//    private var wasConfigurationChanged : Boolean? = null
-//    private var areFirstMoviesInitialized = false
     private var displayedCategory: Category? = null
-
 
     //todo on back pressed
     private val dispatcher by lazy {requireActivity().onBackPressedDispatcher}
@@ -49,11 +46,11 @@ class ApiFragment @Inject constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        wasConfigurationChanged = savedInstanceState?.getBoolean(CONFIGURATION_CHANGE)
         callback = dispatcher.addCallback(this) {
             closeDrawerOrGoBack()
         }
     }
+
 //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
     private fun closeDrawerOrGoBack() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -69,7 +66,6 @@ class ApiFragment @Inject constructor(
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_api_and_db, container, false)
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -160,20 +156,14 @@ class ApiFragment @Inject constructor(
     }
 
     private fun getMoviesOnViewModelInitIfConnected() {
-//    @Suppress("SimplifyBooleanWithConstants")
-//    val shouldGetFirstMovies = wasConfigurationChanged != true && areFirstMoviesInitialized != true
-//    if (shouldGetFirstMovies) {
-//        areFirstMoviesInitialized = true
         if (Variables.isNetworkConnected) {
             showProgressBar()
             val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
             viewModel.getFirstMovies(categoryFromBundle)
-//            viewModel.getNextMovies(categoryFromBundle)
         } else {
             showToast(CONNECTION_PROBLEM)
         }
     }
-
 
     private fun showProgressBar() {
         progressBar.isVisible = true
@@ -267,10 +257,5 @@ class ApiFragment @Inject constructor(
             showToast(CONNECTION_PROBLEM)
         }
     }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putBoolean(CONFIGURATION_CHANGE, true)
-//    }
 
 }

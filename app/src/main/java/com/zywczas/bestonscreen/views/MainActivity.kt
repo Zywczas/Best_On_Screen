@@ -3,22 +3,18 @@ package com.zywczas.bestonscreen.views
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.utilities.CheckNetwork
 import dagger.android.*
 
 import javax.inject.Inject
-//chyba mozna usunac Has android injector
-class MainActivity : AppCompatActivity()
-//    , HasAndroidInjector
-{
-////cos
-//    @Inject
-//    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+class MainActivity : AppCompatActivity(){
+
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
 
-//    override fun androidInjector(): AndroidInjector<Any> {
-//        return androidInjector
-//    }
+//    private val network = CheckNetwork(applicationContext)
+
 
     //todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
 
