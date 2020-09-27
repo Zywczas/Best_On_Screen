@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations
 internal class ApiVMTest {
 
     private lateinit var viewModel : ApiVM
-    //todo dac 2 testy nowe + internet check
+    //todo dac 2 testy nowe na getFirstMovies + internet check
     @Mock
     private lateinit var repo : ApiRepository
 
@@ -44,7 +44,7 @@ internal class ApiVMTest {
             val returnedMovies = Flowable.just(Resource.success(movies))
             `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedMovies)
 
-            viewModel.getNextMovies(category)
+            viewModel.getNextMoviesIfConnected(category)
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
             assertEquals(Resource.success(Pair(movies, category)), actual)
@@ -57,7 +57,7 @@ internal class ApiVMTest {
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
             `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedError)
 
-            viewModel.getNextMovies(category)
+            viewModel.getNextMoviesIfConnected(category)
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
             verify(repo).getApiMovies(anyCategory(), anyInt())
@@ -75,9 +75,9 @@ internal class ApiVMTest {
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
             `when`(repo.getApiMovies(category, 2)).thenReturn(returnedError)
 
-            viewModel.getNextMovies(category)
+            viewModel.getNextMoviesIfConnected(category)
             val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-            viewModel.getNextMovies(category)
+            viewModel.getNextMoviesIfConnected(category)
             val actualSecondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
             verify(repo, atLeast(2)).getApiMovies(anyCategory(), anyInt())

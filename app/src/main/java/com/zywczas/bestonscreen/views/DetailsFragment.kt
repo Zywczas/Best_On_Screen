@@ -13,7 +13,7 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.Variables
+import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
@@ -22,7 +22,8 @@ import javax.inject.Inject
 
 class DetailsFragment @Inject constructor(
     private val viewModelFactory: DetailsVMFactory,
-    private val picasso: Picasso
+    private val picasso: Picasso,
+    private val networkCheck: NetworkCheck
 ) : Fragment() {
     //todo dodac pasek ze strzalka wstecz i wtedy moze tytul filmu na pasku
 
@@ -113,7 +114,7 @@ class DetailsFragment @Inject constructor(
     }
 
     private fun checkInternetConnection() {
-        if (!Variables.isNetworkConnected) {
+        if (!networkCheck.isNetworkConnected) {
             showToast(CONNECTION_PROBLEM)
         }
     }

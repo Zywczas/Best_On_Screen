@@ -8,13 +8,6 @@ import dagger.android.support.DaggerApplication
 
 class BestOnScreenApp : DaggerApplication() {
 
-    private val network = NetworkCheck(this)
-
-    override fun onCreate() {
-        super.onCreate()
-        network.registerNetworkCallback()
-    }
-
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerBestOnScreenComponent.factory().create(this)
     }

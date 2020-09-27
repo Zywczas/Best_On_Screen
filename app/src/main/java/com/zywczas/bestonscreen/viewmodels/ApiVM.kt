@@ -4,12 +4,17 @@ import androidx.lifecycle.*
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
+import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
 
-class ApiVM(private val repo: ApiRepository) : ViewModel() {
+class ApiVM(
+    private val repo: ApiRepository,
+    private val networkCheck: NetworkCheck
+) : ViewModel() {
 
-    private var haveFirstMoviesBeenDisplayed = false
+    private var firstMoviesRequested = false
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR
     private var page = firstPageOfNewCategory
@@ -20,20 +25,23 @@ class ApiVM(private val repo: ApiRepository) : ViewModel() {
     val moviesAndCategoryLD =
         moviesAndCategoryMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
 
-//todo przeniesc tutaj internet check
-
-    //todo przenisc tutaj status loading zeby kazalo wyswietlac progress bar w activity
-
-
     fun getFirstMovies(nextCategory: Category) {
-        if (!haveFirstMoviesBeenDisplayed) {
-            haveFirstMoviesBeenDisplayed = true
+        if (!firstMoviesRequested) {
+            firstMoviesRequested = true
             category = nextCategory
-            getNextMovies()
+            getNextMoviesIfConnected()
         }
     }
 
-    fun getNextMovies(nextCategory: Category = category) {
+    fun getNextMoviesIfConnected(nextCategory: Category = category) {
+        if (networkCheck.isNetworkConnected) {
+            getNextMovies(nextCategory)
+        } else {
+            sendError(CONNECTION_PROBLEM)
+        }
+    }
+
+    private fun getNextMovies(nextCategory: Category){
         val isNewCategory = nextCategory != category
         if (isNewCategory) {
             resetData()

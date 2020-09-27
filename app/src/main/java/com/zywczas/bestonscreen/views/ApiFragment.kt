@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,10 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.EXTRA_CATEGORY
+import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
+import com.zywczas.bestonscreen.utilities.Status
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
 import kotlinx.android.synthetic.main.content_movies.*
@@ -32,16 +34,16 @@ import javax.inject.Inject
 //todo jak sie da Api i kliknie wstecz to monimalizuje aplikacje ale jak sie znowu wlaczy to od nowa wlacza Db, chyba trzeba dodawac do backstack jak sie przechodzi z Db do Api
 
 class ApiFragment @Inject constructor(
-    private val viewModelFactory : ApiVMFactory,
-    private val picasso : Picasso
+    private val viewModelFactory: ApiVMFactory,
+    private val picasso: Picasso
 ) : Fragment() {
 
-    private val viewModel : ApiVM by viewModels { viewModelFactory }
+    private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
     private var displayedCategory: Category? = null
 
     //todo on back pressed
-    private val dispatcher by lazy {requireActivity().onBackPressedDispatcher}
+    private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
     private lateinit var callback: OnBackPressedCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +53,7 @@ class ApiFragment @Inject constructor(
         }
     }
 
-//todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
+    //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
     private fun closeDrawerOrGoBack() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -75,12 +77,14 @@ class ApiFragment @Inject constructor(
         setupDrawerNavButtons()
     }
 
+    //todo dalem nowa kateorie ale nie bylo neta wiec sie nie pobraly ale i tak mnie przesunalo na poczatek listy
+
     private fun startApiUISetupChain() {
         setupRecyclerView { recyclerViewSetupFinished ->
             if (recyclerViewSetupFinished) {
                 setupMoviesObserver { observerSetupFinished ->
                     if (observerSetupFinished) {
-                        getMoviesOnViewModelInitIfConnected()
+                        getMoviesOnViewModelInit()
                         setupOnScrollListener()
                     }
                 }
@@ -101,7 +105,7 @@ class ApiFragment @Inject constructor(
         moviesRecyclerView.adapter = adapter
     }
 
-    private fun goToDetailsFragment(movie: Movie){
+    private fun goToDetailsFragment(movie: Movie) {
         activity?.run {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
@@ -125,9 +129,11 @@ class ApiFragment @Inject constructor(
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
         viewModel.moviesAndCategoryLD.observe(viewLifecycleOwner) { resource ->
-            hideProgressBar()
+            showProgressBar(false)
             when (resource.status) {
-                Status.SUCCESS -> { updateContent(resource.data!!) }
+                Status.SUCCESS -> {
+                    updateContent(resource.data!!)
+                }
                 Status.ERROR -> {
                     showToast(resource.message!!)
                     resource.data?.let { updateContent(it) }
@@ -136,9 +142,9 @@ class ApiFragment @Inject constructor(
         }
         complete(true)
     }
-//todo dac 1 funkcje przyjmujaca true lub false
-    private fun hideProgressBar() {
-        progressBar.isVisible = false
+
+    private fun showProgressBar(visible: Boolean) {
+        progressBar.isVisible = visible
     }
 
     private fun updateContent(data: Pair<List<Movie>, Category>) {
@@ -155,18 +161,10 @@ class ApiFragment @Inject constructor(
         toolbar.title = "Movies: $category"
     }
 
-    private fun getMoviesOnViewModelInitIfConnected() {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
-            viewModel.getFirstMovies(categoryFromBundle)
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
-    }
-
-    private fun showProgressBar() {
-        progressBar.isVisible = true
+    private fun getMoviesOnViewModelInit() {
+        showProgressBar(true)
+        val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
+        viewModel.getFirstMovies(categoryFromBundle)
     }
 
     private fun setupOnScrollListener() {
@@ -176,19 +174,15 @@ class ApiFragment @Inject constructor(
                 val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
                         newState == RecyclerView.SCROLL_STATE_IDLE
                 if (isRecyclerViewBottom) {
-                    downloadNextPageIfConnected()
+                    downloadNextPage()
                 }
             }
         })
     }
 
-    private fun downloadNextPageIfConnected() {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            viewModel.getNextMovies()
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
+    private fun downloadNextPage() {
+        showProgressBar(true)
+        viewModel.getNextMoviesIfConnected()
     }
 
     private fun setupDrawer() {
@@ -244,18 +238,14 @@ class ApiFragment @Inject constructor(
         if (category == displayedCategory) {
             showToast("This is category $category.")
         } else {
-            downloadNewCategoryIfConnected(category)
+            downloadNewCategory(category)
         }
     }
 
-    private fun downloadNewCategoryIfConnected(category: Category) {
-        if (Variables.isNetworkConnected) {
-            showProgressBar()
-            viewModel.getNextMovies(category)
-            moviesRecyclerView.scrollToPosition(0)
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
+    private fun downloadNewCategory(category: Category) {
+        showProgressBar(true)
+        viewModel.getNextMoviesIfConnected(category)
+        moviesRecyclerView.scrollToPosition(0)
     }
 
 }

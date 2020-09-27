@@ -27,11 +27,14 @@ import javax.inject.Inject
 
 class DBFragment @Inject constructor(
     private val viewModelFactory: DBVMFactory,
-    private val picasso: Picasso
+    private val picasso: Picasso,
+    private val networkCheck: NetworkCheck
 ) : Fragment() {
 
     private val viewModel: DBVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
+
+
     //todo on back pressed
     private val dispatcher by lazy {requireActivity().onBackPressed()}
 
@@ -124,7 +127,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun checkInternetConnection() {
-        if (!Variables.isNetworkConnected) {
+        if (!networkCheck.isNetworkConnected) {
             showToast(CONNECTION_PROBLEM)
         }
     }
@@ -169,7 +172,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun categoryClicked(category: Category) {
-        if (Variables.isNetworkConnected) {
+        if (networkCheck.isNetworkConnected) {
             switchToApiFragment(category)
         } else {
             showToast(CONNECTION_PROBLEM)

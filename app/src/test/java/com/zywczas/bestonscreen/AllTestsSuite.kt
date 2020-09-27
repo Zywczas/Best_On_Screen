@@ -7,7 +7,8 @@ import org.junit.runner.RunWith
 @RunWith(JUnitPlatform::class)
 @SelectPackages(
     "com.zywczas.bestonscreen.model",
-    "com.zywczas.bestonscreen.viewmodels",
-    "com.zywczas.bestonscreen.views"
+    "com.zywczas.bestonscreen.viewmodels"
+
+    //todo dodac pozniej "com.zywczas.bestonscreen.views"
 )
 class AllTestsSuite
