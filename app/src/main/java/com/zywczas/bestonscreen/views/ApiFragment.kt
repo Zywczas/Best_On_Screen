@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
@@ -21,6 +20,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
@@ -113,7 +113,7 @@ class ApiFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostContainerView, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -165,7 +165,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun updateToolbarTitle(category: Category) {
-        toolbar.title = "Movies: $category"
+        moviesToolbar.title = "Movies: $category"
     }
 
     private fun getMoviesOnViewModelInit() {
@@ -194,7 +194,7 @@ class ApiFragment @Inject constructor(
 
     private fun setupDrawer() {
         val toggle = ActionBarDrawerToggle(
-            activity, drawer_layout, toolbar,
+            activity, drawer_layout, moviesToolbar,
             R.string.nav_drawer_open, R.string.nav_drawer_closed
         )
         drawer_layout.addDrawerListener(toggle)
@@ -236,7 +236,7 @@ class ApiFragment @Inject constructor(
     private fun switchToDBFragment() {
         activity?.run {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, DBFragment::class.java, null)
+                .replace(R.id.navHostContainerView, DBFragment::class.java, null)
                 .commit()
         }
     }

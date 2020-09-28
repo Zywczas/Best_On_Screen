@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bestOnScreenApp="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,11 +12,11 @@
         android:text="@string/to_watch_list"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="24sp"
-        bestOnScreenApp:layout_constraintBottom_toTopOf="@+id/textView4"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/textView4"
-        bestOnScreenApp:layout_constraintStart_toStartOf="@+id/textView4"
-        bestOnScreenApp:layout_constraintTop_toTopOf="parent"
-        bestOnScreenApp:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/topRatedTextView"
@@ -25,11 +25,11 @@
         android:text="@string/top_rated"
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="21sp"
-        bestOnScreenApp:layout_constraintBottom_toBottomOf="parent"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="parent"
-        bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
-        bestOnScreenApp:layout_constraintStart_toStartOf="parent"
-        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/popularTextView" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popularTextView" />
 
     <TextView
         android:id="@+id/textView4"
@@ -40,10 +40,10 @@
         android:textColor="@android:color/black"
         android:textSize="22sp"
         android:textStyle="bold"
-        bestOnScreenApp:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
-        bestOnScreenApp:layout_constraintStart_toStartOf="@+id/upcomingTextView"
-        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
+        app:layout_constraintBottom_toTopOf="@+id/upcomingTextView"
+        app:layout_constraintEnd_toEndOf="@+id/upcomingTextView"
+        app:layout_constraintStart_toStartOf="@+id/upcomingTextView"
+        app:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
 
     <TextView
         android:id="@+id/upcomingTextView"
@@ -53,10 +53,10 @@
         android:text="@string/upcoming"
         android:textColor="@android:color/holo_purple"
         android:textSize="21sp"
-        bestOnScreenApp:layout_constraintBottom_toTopOf="@+id/popularTextView"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/popularTextView"
-        bestOnScreenApp:layout_constraintStart_toStartOf="@+id/popularTextView"
-        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintBottom_toTopOf="@+id/popularTextView"
+        app:layout_constraintEnd_toEndOf="@+id/popularTextView"
+        app:layout_constraintStart_toStartOf="@+id/popularTextView"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/popularTextView"
@@ -66,10 +66,10 @@
         android:text="@string/popular"
         android:textColor="@android:color/holo_blue_light"
         android:textSize="21sp"
-        bestOnScreenApp:layout_constraintBottom_toTopOf="@+id/topRatedTextView"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/topRatedTextView"
-        bestOnScreenApp:layout_constraintStart_toStartOf="@+id/topRatedTextView"
-        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
+        app:layout_constraintBottom_toTopOf="@+id/topRatedTextView"
+        app:layout_constraintEnd_toEndOf="@+id/topRatedTextView"
+        app:layout_constraintStart_toStartOf="@+id/topRatedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingTextView" />
 
     <View
         android:id="@+id/divider"
@@ -79,10 +79,10 @@
         android:layout_marginBottom="21dp"
         android:background="@android:color/darker_gray"
         android:visibility="visible"
-        bestOnScreenApp:layout_constraintBottom_toTopOf="@+id/textView4"
-        bestOnScreenApp:layout_constraintEnd_toEndOf="@+id/myToWatchListTextView"
-        bestOnScreenApp:layout_constraintHorizontal_bias="0.5"
-        bestOnScreenApp:layout_constraintStart_toStartOf="@+id/myToWatchListTextView"
-        bestOnScreenApp:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/myToWatchListTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/myToWatchListTextView"
+        app:layout_constraintTop_toBottomOf="@+id/myToWatchListTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

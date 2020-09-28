@@ -19,11 +19,11 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
-
 
 class DBFragment @Inject constructor(
     private val viewModelFactory: DBVMFactory,
@@ -83,7 +83,7 @@ class DBFragment @Inject constructor(
             bundle.putParcelable(EXTRA_MOVIE, movie)
             //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostContainerView, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -119,7 +119,7 @@ class DBFragment @Inject constructor(
 
     private fun setupDrawer() {
         val toggle = ActionBarDrawerToggle(
-            activity, drawer_layout, toolbar,
+            activity, drawer_layout, moviesToolbar,
             R.string.nav_drawer_open, R.string.nav_drawer_closed
         )
         drawer_layout.addDrawerListener(toggle)
@@ -184,7 +184,7 @@ class DBFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_CATEGORY, category)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, ApiFragment::class.java, bundle)
+                .replace(R.id.navHostContainerView, ApiFragment::class.java, bundle)
                 .commit()
         }
     }
