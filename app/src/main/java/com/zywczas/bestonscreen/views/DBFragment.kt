@@ -19,9 +19,9 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
+import kotlinx.android.synthetic.main.movies_toolbar.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
@@ -83,7 +83,7 @@ class DBFragment @Inject constructor(
             bundle.putParcelable(EXTRA_MOVIE, movie)
             //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostContainerView, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentContainer, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -184,7 +184,7 @@ class DBFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_CATEGORY, category)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostContainerView, ApiFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentContainer, ApiFragment::class.java, bundle)
                 .commit()
         }
     }

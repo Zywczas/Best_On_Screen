@@ -20,9 +20,9 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
+import kotlinx.android.synthetic.main.movies_toolbar.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
@@ -80,6 +80,7 @@ class ApiFragment @Inject constructor(
         startApiUISetupChain()
         setupDrawer()
         setupDrawerNavButtons()
+
     }
 
     private fun startApiUISetupChain() {
@@ -113,7 +114,7 @@ class ApiFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostContainerView, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentContainer, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -217,6 +218,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupOnClickListeners() {
+        //todo chyba mozna dac osobne click listenery dla mojej listy
         myToWatchListTextView.setOnClickListener(onClickListener)
         popularTextView.setOnClickListener(onClickListener)
         upcomingTextView.setOnClickListener(onClickListener)
@@ -236,7 +238,7 @@ class ApiFragment @Inject constructor(
     private fun switchToDBFragment() {
         activity?.run {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostContainerView, DBFragment::class.java, null)
+                .replace(R.id.navHostFragmentContainer, DBFragment::class.java, null)
                 .commit()
         }
     }

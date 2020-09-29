@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.zywczas.bestonscreen.R
 import dagger.android.*
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.movies_toolbar.*
 
 import javax.inject.Inject
 
@@ -14,9 +14,6 @@ class MainActivity : AppCompatActivity(){
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
 
-//    private val netwo rk = NetworkCheck(applicationContext)
-
-
     //todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,21 +21,23 @@ class MainActivity : AppCompatActivity(){
         supportFragmentManager.fragmentFactory = moviesFragmentsFactory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostContainerView) as NavHostFragment
+        //todo ustawic toolbar - na ten z androida
+        setSupportActionBar(moviesToolbar)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment
         val navController = navHostFragment.navController
 
-        initDBFragment()
-        //todo ustawic toolbar
-        setSupportActionBar(moviesToolbar)
+//        initDBFragment()
+
+
     }
 
-    private fun initDBFragment(){
-        if (supportFragmentManager.fragments.size == 0){
-            supportFragmentManager.beginTransaction()
-                    //todo moze dac add?
-                .replace(R.id.navHostContainerView, DBFragment::class.java, null)
-                .commit()
-        }
-    }
+//    private fun initDBFragment(){
+//        if (supportFragmentManager.fragments.size == 0){
+//            supportFragmentManager.beginTransaction()
+//
+//                .replace(R.id.navHostContainerView, DBFragment::class.java, null)
+//                .commit()
+//        }
+//    }
 
 }

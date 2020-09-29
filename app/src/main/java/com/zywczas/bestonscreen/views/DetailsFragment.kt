@@ -64,7 +64,7 @@ class DetailsFragment @Inject constructor(
             showToast("Cannot load the movie. Go back and try again.")
         }
     }
-
+//todo dac jakis lepsze uzycie tekstu zeby nie trzeba bylo kominikatu zagluszac
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
