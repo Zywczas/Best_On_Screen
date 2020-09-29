@@ -50,7 +50,6 @@ class DBFragment @Inject constructor(
 //        setupDrawer()
         checkInternetConnection()
 //        setupDrawerNavButtons()
-        Log.d("film", "db fragment")
     }
 
     private fun startDbUISetupChain() {

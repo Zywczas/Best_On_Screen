@@ -25,10 +25,11 @@ class DetailsFragment @Inject constructor(
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
 ) : Fragment() {
+
     //todo dodac pasek ze strzalka wstecz i wtedy moze tytul filmu na pasku
 
-    private lateinit var movie: Movie
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
+    private val movie : Movie by lazy { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,30 +41,12 @@ class DetailsFragment @Inject constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        startDetailsUISetupChain()
+        setupUIState()
+        setupMessageObserver()
         checkInternetConnection()
         setupOnClickListener()
     }
 
-    private fun startDetailsUISetupChain() {
-        getMovieFromBundle { success ->
-            if (success) {
-                setupUIState()
-                setupMessageObserver()
-            }
-        }
-    }
-
-    private fun getMovieFromBundle(complete: (Boolean) -> Unit) {
-        val movieFromBundle = arguments?.getParcelable<Movie>(EXTRA_MOVIE)
-        if (movieFromBundle != null) {
-            movie = movieFromBundle
-            complete(true)
-        } else {
-            addToListBtn.isVisible = false
-            showToast("Cannot load the movie. Go back and try again.")
-        }
-    }
 //todo dac jakis lepsze uzycie tekstu zeby nie trzeba bylo kominikatu zagluszac
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
