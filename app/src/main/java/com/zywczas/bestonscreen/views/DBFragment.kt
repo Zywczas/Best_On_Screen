@@ -19,9 +19,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
-import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
-import kotlinx.android.synthetic.main.movies_toolbar.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
@@ -36,7 +34,7 @@ class DBFragment @Inject constructor(
 
 
     //todo on back pressed
-    private val dispatcher by lazy {requireActivity().onBackPressed()}
+    private val dispatcher by lazy { requireActivity().onBackPressed() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,9 +46,9 @@ class DBFragment @Inject constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startDbUISetupChain()
-        setupDrawer()
+//        setupDrawer()
         checkInternetConnection()
-        setupDrawerNavButtons()
+//        setupDrawerNavButtons()
     }
 
     private fun startDbUISetupChain() {
@@ -83,7 +81,7 @@ class DBFragment @Inject constructor(
             bundle.putParcelable(EXTRA_MOVIE, movie)
             //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentContainer, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentView, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -118,12 +116,12 @@ class DBFragment @Inject constructor(
     }
 
     private fun setupDrawer() {
-        val toggle = ActionBarDrawerToggle(
-            activity, drawer_layout, moviesToolbar,
-            R.string.nav_drawer_open, R.string.nav_drawer_closed
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+//        val toggle = ActionBarDrawerToggle(
+//            activity, drawer_layout, moviesToolbar,
+//            R.string.nav_drawer_open, R.string.nav_drawer_closed
+//        )
+//        drawer_layout.addDrawerListener(toggle)
+//        toggle.syncState()
     }
 
     private fun checkInternetConnection() {
@@ -166,9 +164,9 @@ class DBFragment @Inject constructor(
 
     //todo dac close drawer or minimize app bo teraz szuflada sie nie zamyka tylko aplikacja znika jak sie da onBackPressed
     private fun closeDrawer() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        }
+//        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+//            drawer_layout.closeDrawer(GravityCompat.START)
+//        }
     }
 
     private fun categoryClicked(category: Category) {
@@ -184,7 +182,7 @@ class DBFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_CATEGORY, category)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentContainer, ApiFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentView, ApiFragment::class.java, bundle)
                 .commit()
         }
     }

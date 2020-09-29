@@ -20,9 +20,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
-import kotlinx.android.synthetic.main.content_movies.*
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
-import kotlinx.android.synthetic.main.movies_toolbar.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
@@ -60,12 +58,12 @@ class ApiFragment @Inject constructor(
 
     //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
     private fun closeDrawerOrGoBack() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            callback.isEnabled = false
-            dispatcher.onBackPressed()
-        }
+//        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+//            drawer_layout.closeDrawer(GravityCompat.START)
+//        } else {
+//            callback.isEnabled = false
+//            dispatcher.onBackPressed()
+//        }
     }
 
     override fun onCreateView(
@@ -114,7 +112,7 @@ class ApiFragment @Inject constructor(
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MOVIE, movie)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentContainer, DetailsFragment::class.java, bundle)
+                .replace(R.id.navHostFragmentView, DetailsFragment::class.java, bundle)
                 .addToBackStack("DetailsFragment")
                 .commit()
         }
@@ -166,7 +164,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun updateToolbarTitle(category: Category) {
-        moviesToolbar.title = "Movies: $category"
+        //todo moviesToolbar.title = "Movies: $category"
     }
 
     private fun getMoviesOnViewModelInit() {
@@ -194,12 +192,12 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupDrawer() {
-        val toggle = ActionBarDrawerToggle(
-            activity, drawer_layout, moviesToolbar,
-            R.string.nav_drawer_open, R.string.nav_drawer_closed
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+//        val toggle = ActionBarDrawerToggle(
+//            activity, drawer_layout, moviesToolbar,
+//            R.string.nav_drawer_open, R.string.nav_drawer_closed
+//        )
+//        drawer_layout.addDrawerListener(toggle)
+//        toggle.syncState()
     }
 
     private fun setupDrawerNavButtons() {
@@ -238,7 +236,7 @@ class ApiFragment @Inject constructor(
     private fun switchToDBFragment() {
         activity?.run {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentContainer, DBFragment::class.java, null)
+                .replace(R.id.navHostFragmentView, DBFragment::class.java, null)
                 .commit()
         }
     }

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.zywczas.bestonscreen.R
 import dagger.android.*
-import kotlinx.android.synthetic.main.movies_toolbar.*
 
 import javax.inject.Inject
 
@@ -22,8 +21,8 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //todo ustawic toolbar - na ten z androida
-        setSupportActionBar(moviesToolbar)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment
         val navController = navHostFragment.navController
 
 //        initDBFragment()
