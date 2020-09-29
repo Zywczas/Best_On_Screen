@@ -14,6 +14,7 @@ class ApiVM(
     private val networkCheck: NetworkCheck
 ) : ViewModel() {
 
+    //todo pozamieniac wszystkie val w klasach na lazy
     private var firstMoviesRequested = false
     private val firstPageOfNewCategory = 1
     private val anyCategoryOnInit = Category.POPULAR

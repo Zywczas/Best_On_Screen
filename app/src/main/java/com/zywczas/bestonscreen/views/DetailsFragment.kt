@@ -29,7 +29,8 @@ class DetailsFragment @Inject constructor(
     //todo dodac pasek ze strzalka wstecz i wtedy moze tytul filmu na pasku
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
-    private val movie : Movie by lazy { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
+    private val movie : Movie
+            by lazy { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

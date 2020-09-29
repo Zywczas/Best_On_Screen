@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
@@ -31,8 +29,10 @@ class DBFragment @Inject constructor(
     private val networkCheck: NetworkCheck
 ) : Fragment() {
 
-    private val viewModel: DBVM by viewModels { viewModelFactory }
-    private lateinit var adapter: MovieAdapter
+    private val viewModel : DBVM by viewModels { viewModelFactory }
+    private lateinit var adapter : MovieAdapter
+    private val navController : NavController
+            by lazy{ Navigation.findNavController(requireView()) }
 
     //todo on back pressed
     private val dispatcher by lazy { requireActivity().onBackPressed() }
@@ -49,7 +49,7 @@ class DBFragment @Inject constructor(
         startDbUISetupChain()
 //        setupDrawer()
         checkInternetConnection()
-//        setupDrawerNavButtons()
+//        setupDrawerOnClickListeners()
     }
 
     private fun startDbUISetupChain() {
@@ -77,7 +77,7 @@ class DBFragment @Inject constructor(
 
     private fun goToDetailsFragment(movie: Movie) {
         val directions = DBFragmentDirections.actionToDetails(movie)
-        Navigation.findNavController(requireActivity(), R.id.navHostFragmentView).navigate(directions)
+        navController.navigate(directions)
     }
 
     private fun setupLayoutManager() {
@@ -123,7 +123,7 @@ class DBFragment @Inject constructor(
         }
     }
 
-    private fun setupDrawerNavButtons() {
+    private fun setupDrawerOnClickListeners() {
         setupTags { isFinished ->
             if (isFinished) {
                 setupOnClickListeners()
@@ -171,18 +171,11 @@ class DBFragment @Inject constructor(
     }
 
     private fun switchToApiFragment(category: Category) {
-        activity?.run {
-            val bundle = Bundle()
-            bundle.putSerializable(EXTRA_CATEGORY, category)
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentView, ApiFragment::class.java, bundle)
-                .commit()
-        }
+        val destination = DBFragmentDirections.actionToApi(category)
+        navController.navigate(destination)
     }
 
     //todo dodac onBack pressed bo nie zamyka szuflady tylko minimalizuje cala apke
-    //todo pousuwac importy
 
-//todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
 
 }

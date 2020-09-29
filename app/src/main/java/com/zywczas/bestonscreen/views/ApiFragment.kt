@@ -32,13 +32,7 @@ class ApiFragment @Inject constructor(
     private val picasso: Picasso
 ) : Fragment() {
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-    }
+    //todo zmieniac tytuly toolbar
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
