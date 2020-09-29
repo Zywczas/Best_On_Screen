@@ -2,14 +2,16 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
@@ -32,7 +34,6 @@ class DBFragment @Inject constructor(
     private val viewModel: DBVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
 
-
     //todo on back pressed
     private val dispatcher by lazy { requireActivity().onBackPressed() }
 
@@ -49,6 +50,7 @@ class DBFragment @Inject constructor(
 //        setupDrawer()
         checkInternetConnection()
 //        setupDrawerNavButtons()
+        Log.d("film", "db fragment")
     }
 
     private fun startDbUISetupChain() {
@@ -73,18 +75,10 @@ class DBFragment @Inject constructor(
         }
         moviesRecyclerView.adapter = adapter
     }
-    //todo sprawdzic o co chodzi z grafami z navigation i moze dodac je tutaj
 
     private fun goToDetailsFragment(movie: Movie) {
-        activity?.run {
-            val bundle = Bundle()
-            bundle.putParcelable(EXTRA_MOVIE, movie)
-            //todo dodac transition animation do wszystkich fragmentow przy przechodzeniu do details
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentView, DetailsFragment::class.java, bundle)
-                .addToBackStack("DetailsFragment")
-                .commit()
-        }
+        val directions = DBFragmentDirections.actionToDetails(movie)
+        Navigation.findNavController(requireActivity(), R.id.navHostFragmentView).navigate(directions)
     }
 
     private fun setupLayoutManager() {

@@ -26,3 +26,5 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 
 //todo backstack:
 //jak damy w jakims action popUpto i inclusive to uzywajac tego action czyszcze caly backstack
+
+//todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
