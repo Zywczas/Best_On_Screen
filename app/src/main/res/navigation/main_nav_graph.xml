@@ -25,6 +25,9 @@
         android:name="com.zywczas.bestonscreen.views.DetailsFragment"
         android:label="Details"
         tools:layout="@layout/fragment_details">
+        <argument
+            android:name="movie"
+            app:argType="com.zywczas.bestonscreen.model.Movie" />
     </fragment>
 
     <fragment
