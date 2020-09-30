@@ -51,9 +51,6 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             />
-        <argument
-            android:name="apiMoviesCategory"
-            app:argType="com.zywczas.bestonscreen.model.Category" />
     </fragment>
 
     <fragment

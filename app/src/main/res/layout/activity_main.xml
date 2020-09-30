@@ -29,12 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-
-        <include
-            layout="@layout/navigation_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:fitsSystemWindows="true"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:itemTextColor="@color/colorAccent"
+        app:menu="@menu/menu_navigation">
 
     </com.google.android.material.navigation.NavigationView>
 

@@ -1,13 +1,11 @@
 package com.zywczas.bestonscreen.views
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,8 +18,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
-import kotlinx.android.synthetic.main.fragment_api_and_db.*
-import kotlinx.android.synthetic.main.navigation_drawer.*
+import kotlinx.android.synthetic.main.fragment_api.*
 import javax.inject.Inject
 
 //todo ogarnac back stack, sprawdzic czy jak jest sie w Api i zminimaluzuje to po czasie wraca do tego czy od nowa wlacza aktivity i DB
@@ -32,39 +29,20 @@ class ApiFragment @Inject constructor(
     private val picasso: Picasso
 ) : Fragment() {
 
-    //todo zmieniac tytuly toolbar
-
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
     private var displayedCategory: Category? = null
 
-    //todo on back pressed
-    private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
-    private lateinit var callback: OnBackPressedCallback
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
-        callback = dispatcher.addCallback(this) {
-            closeDrawerOrGoBack()
-        }
-    }
-
-    //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
-    private fun closeDrawerOrGoBack() {
-//        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-//            drawer_layout.closeDrawer(GravityCompat.START)
-//        } else {
-//            callback.isEnabled = false
-//            dispatcher.onBackPressed()
-//        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_api_and_db, container, false)
+        return inflater.inflate(R.layout.fragment_api, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -98,7 +76,7 @@ class ApiFragment @Inject constructor(
         adapter = MovieAdapter( requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
-        moviesRecyclerView.adapter = adapter
+        apiMoviesRecyclerView.adapter = adapter
     }
 
     private fun goToDetailsFragment(movie: Movie) {
@@ -119,8 +97,8 @@ class ApiFragment @Inject constructor(
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(activity, spanCount)
-        moviesRecyclerView.layoutManager = layoutManager
-        moviesRecyclerView.setHasFixedSize(true)
+        apiMoviesRecyclerView.layoutManager = layoutManager
+        apiMoviesRecyclerView.setHasFixedSize(true)
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {

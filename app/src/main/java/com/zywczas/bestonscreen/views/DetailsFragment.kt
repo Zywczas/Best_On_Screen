@@ -18,7 +18,6 @@ import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.android.synthetic.main.navigation_drawer.*
 import javax.inject.Inject
 
 class DetailsFragment @Inject constructor(

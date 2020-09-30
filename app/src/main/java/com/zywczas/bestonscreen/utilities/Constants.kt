@@ -32,3 +32,11 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 //todo pousuwac importy
 
 //todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
+
+//todo zmieniac tytuly toolbar
+
+//todo on back pressed
+//    private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
+//    private lateinit var callback: OnBackPressedCallback
+
+//todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie

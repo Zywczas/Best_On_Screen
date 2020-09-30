@@ -6,14 +6,11 @@
     <string name="add_to_my_list">Add to my list</string>
     <string name="remove_from_my_list">Remove from my list</string>
     <string name="rate_movie">Rate movie</string>
-    <string name="choose_category">Your list is empty. Choose category from top left corner to find interesting movies.</string>
-    <string name="star">Star</string>
-    <string name="my_list_title">Movies: My List</string>
-    <string name="to_watch_list">My To Watch List</string>
+    <string name="choose_category">Your list is empty. Click Find Movies from top left corner menu to find interesting movies.</string>
+    <string name="my_to_watch_list">My To Watch List</string>
     <string name="top_rated">Top Rated</string>
-    <string name="choose_category_header">Choose category</string>
     <string name="upcoming">Upcoming</string>
     <string name="popular">Popular</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="find_movies">Find Movies</string>
+
 </resources>
