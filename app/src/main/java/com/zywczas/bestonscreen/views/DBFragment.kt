@@ -2,9 +2,12 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ExpandableListView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,21 +24,19 @@ import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.fragment_api_and_db.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import kotlinx.android.synthetic.main.navigation_drawer.view.*
 import javax.inject.Inject
 
 class DBFragment @Inject constructor(
     private val viewModelFactory: DBVMFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment() {
+) : Fragment(), View.OnClickListener {
 
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter : MovieAdapter
     private val navController : NavController
             by lazy{ Navigation.findNavController(requireView()) }
-
-    //todo on back pressed
-    private val dispatcher by lazy { requireActivity().onBackPressed() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,12 +45,11 @@ class DBFragment @Inject constructor(
         return inflater.inflate(R.layout.fragment_api_and_db, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         startDbUISetupChain()
-//        setupDrawer()
         checkInternetConnection()
-//        setupDrawerOnClickListeners()
+        setupDrawerOnClickListeners()
     }
 
     private fun startDbUISetupChain() {
@@ -108,15 +108,6 @@ class DBFragment @Inject constructor(
         emptyListTextView.isVisible = true
     }
 
-    private fun setupDrawer() {
-//        val toggle = ActionBarDrawerToggle(
-//            activity, drawer_layout, moviesToolbar,
-//            R.string.nav_drawer_open, R.string.nav_drawer_closed
-//        )
-//        drawer_layout.addDrawerListener(toggle)
-//        toggle.syncState()
-    }
-
     private fun checkInternetConnection() {
         if (!networkCheck.isNetworkConnected) {
             showToast(CONNECTION_PROBLEM)
@@ -132,26 +123,27 @@ class DBFragment @Inject constructor(
     }
 
     private fun setupTags(complete: (Boolean) -> Unit) {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
+        upcomingTextView?.let { it.tag = Category.UPCOMING }
+        topRatedTextView?.let { it.tag = Category.TOP_RATED }
+        popularTextView?.let { it.tag = Category.POPULAR }
         complete(true)
     }
 
+
     private fun setupOnClickListeners() {
-        myToWatchListTextView.setOnClickListener(onClickListener)
-        popularTextView.setOnClickListener(onClickListener)
-        upcomingTextView.setOnClickListener(onClickListener)
-        topRatedTextView.setOnClickListener(onClickListener)
+//        myToWatchListTextView.setOnClickListener(this)
+//        popularTextView?.let { it.setOnClickListener(apiCategoryListener) }
+//        upcomingTextView?.let { it.setOnClickListener(apiCategoryListener) }
+//        topRatedTextView?.let { it.setOnClickListener(apiCategoryListener) }
     }
 
-    private val onClickListener = View.OnClickListener { view ->
+    private val apiCategoryListener = View.OnClickListener { view ->
         closeDrawer()
-        if (view.id == R.id.myToWatchListTextView) {
-            showToast("This is your list.")
-        } else {
+        if (networkCheck.isNetworkConnected) {
             val category = view.tag as Category
-            categoryClicked(category)
+            switchToApiFragment(category)
+        } else {
+            showToast(CONNECTION_PROBLEM)
         }
     }
 
@@ -162,17 +154,18 @@ class DBFragment @Inject constructor(
 //        }
     }
 
-    private fun categoryClicked(category: Category) {
-        if (networkCheck.isNetworkConnected) {
-            switchToApiFragment(category)
-        } else {
-            showToast(CONNECTION_PROBLEM)
-        }
-    }
-
     private fun switchToApiFragment(category: Category) {
         val destination = DBFragmentDirections.actionToApi(category)
         navController.navigate(destination)
+    }
+
+    override fun onClick(v: View?) {
+        if (v != null) {
+            if (v.id == myToWatchListTextView.id) {
+                showToast("dziala!!")
+            }
+
+        }
     }
 
     //todo dodac onBack pressed bo nie zamyka szuflady tylko minimalizuje cala apke

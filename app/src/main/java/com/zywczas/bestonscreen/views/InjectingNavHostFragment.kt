@@ -9,7 +9,7 @@ class InjectingNavHostFragment @Inject constructor(
     private val moviesFragmentsFactory: MoviesFragmentsFactory
 ) : NavHostFragment() {
 
-    //todo sprawdzic gdzie to ma byc
+    //todo chyba mozna usunac te funkcje i z daggera tez
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        childFragmentManager.fragmentFactory = moviesFragmentsFactory
 //        super.onCreate(savedInstanceState)
