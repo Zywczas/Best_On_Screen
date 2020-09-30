@@ -35,7 +35,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navDrawer.setupWithNavController(navController)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
+//        toolbarMovies.setupWithNavController(navController, appBarConfiguration)
+        collapsingToolbarMovies.setupWithNavController(toolbarMovies, navController, appBarConfiguration)
     }
 
 
@@ -43,9 +45,9 @@ class MainActivity : AppCompatActivity() {
 
 
     //wazna funkcja, ustawia kilka rzeczy, nie jest potrzebna jezeli mamy swoje wlasne toolbary,
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
+//   todo  override fun onSupportNavigateUp(): Boolean {
+//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val shouldCloseDrawer = item.itemId == android.R.id.home &&

@@ -8,37 +8,55 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="DBFragment4">
+                  <entry key="destApiFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="93" />
-                            <option name="y" value="69" />
+                            <option name="x" value="75" />
+                            <option name="y" value="241" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="actionToDetails">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="apiFragment4">
+                  <entry key="destDbFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="93" />
-                            <option name="y" value="416" />
+                            <option name="x" value="46" />
+                            <option name="y" value="-76" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="actionToDetails">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="detailsFragment2">
+                  <entry key="destDetailsFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="434" />
-                            <option name="y" value="220" />
+                            <option name="x" value="402" />
+                            <option name="y" value="63" />
                           </Point>
                         </option>
                       </LayoutPositions>
