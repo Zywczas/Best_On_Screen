@@ -3,48 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainNavGraph"
-    app:startDestination="@id/destinationDbFragment">
+    app:startDestination="@id/destDbFragment">
 
 
     <fragment
-        android:id="@+id/destinationDbFragment"
+        android:id="@+id/destDbFragment"
         android:name="com.zywczas.bestonscreen.views.DBFragment"
         android:label="Best On Screen">
         <action
             android:id="@+id/actionToApi"
-            app:destination="@id/destinationApiFragment"
-            app:popUpTo="@id/destinationApiFragment"
-            app:popUpToInclusive="true"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/destApiFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            />
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/actionToDetails"
-            app:destination="@id/destinationDetailsFragment"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/destDetailsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            />
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
-        android:id="@+id/destinationApiFragment"
+        android:id="@+id/destApiFragment"
         android:name="com.zywczas.bestonscreen.views.ApiFragment"
         android:label="ApiFragment">
         <action
             android:id="@+id/actionToDetails"
-            app:destination="@id/destinationDetailsFragment"
+            app:destination="@id/destDetailsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/actionToDb"
-            app:destination="@id/destinationDbFragment"
-            app:popUpTo="@id/destinationDbFragment"
+            app:destination="@id/destDbFragment"
+            app:popUpTo="@id/destDbFragment"
             app:popUpToInclusive="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
@@ -54,7 +52,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/destinationDetailsFragment"
+        android:id="@+id/destDetailsFragment"
         android:name="com.zywczas.bestonscreen.views.DetailsFragment"
         android:label="DetailsFragment" >
         <argument
@@ -62,5 +60,10 @@
             app:argType="com.zywczas.bestonscreen.model.Movie" />
     </fragment>
 
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zywczas.bestonscreen.views.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 
 </navigation>

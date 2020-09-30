@@ -1,7 +1,7 @@
 package com.zywczas.bestonscreen.views
 
+
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -9,15 +9,14 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.navigation.NavigationView
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.utilities.showToast
-import dagger.android.*
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
-
-
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupActionBar()
-//        setupSideDrawer()
+        setupSideDrawer()
     }
 
     private fun setupActionBar(){
@@ -62,6 +61,24 @@ class MainActivity : AppCompatActivity(){
         return super.onOptionsItemSelected(item)
     }
 
+    //ta funkcja ustawia klikanie na menu w szufladzie, ale musi byc interface NavigationView.OnNavigationItemSelectedListener
+    //oraz navDrawer.setNavigationItemSelectedListener(this)
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.goToDbFragmentBtn -> navController.navigate(R.id.destDbFragment)
+            R.id.goToApiFragmentBtn -> navController.navigate(R.id.destApiFragment)
+            else -> showToast("Button not assigned")
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
 
-
+    //todo sprawdza czy dane dstination do ktorego chcemy isc jest juz w widoku, jezeli tak to nie idzie tam drugi raz, zeby backstack nie rosl bez sensu
+//    private fun isValidDestination(destination: Int): Boolean {
+//        return destination != Navigation.findNavController(
+//            this,
+//            R.id.nav_host_fragment
+//        ).currentDestination!!
+//            .id
+//    }
 }
