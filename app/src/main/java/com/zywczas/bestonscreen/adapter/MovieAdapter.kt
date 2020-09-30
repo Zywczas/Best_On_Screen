@@ -1,13 +1,11 @@
 package com.zywczas.bestonscreen.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,9 +30,9 @@ class MovieAdapter(
 }) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val posterImage: ImageView = itemView.findViewById(R.id.posterImageViewMovies)
-        private val title: TextView = itemView.findViewById(R.id.titleTextViewMovies)
-        private val rate: TextView = itemView.findViewById(R.id.rateTextViewMovies)
+        private val posterImage: ImageView = itemView.findViewById(R.id.posterImageViewListItem)
+        private val title: TextView = itemView.findViewById(R.id.titleTextViewListItem)
+        private val rate: TextView = itemView.findViewById(R.id.rateTextViewListItem)
 
         fun bindMovie(movie: Movie) {
             title.text = movie.title

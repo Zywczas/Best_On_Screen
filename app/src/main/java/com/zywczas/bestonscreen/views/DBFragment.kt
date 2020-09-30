@@ -65,7 +65,7 @@ class DBFragment @Inject constructor(
         adapter = MovieAdapter(requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
-        dbMoviesRecyclerView.adapter = adapter
+        recyclerViewDB.adapter = adapter
     }
 
     private fun goToDetailsFragment(movie: Movie) {
@@ -80,8 +80,8 @@ class DBFragment @Inject constructor(
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(activity, spanCount)
-        dbMoviesRecyclerView.layoutManager = layoutManager
-        dbMoviesRecyclerView.setHasFixedSize(true)
+        recyclerViewDB.layoutManager = layoutManager
+        recyclerViewDB.setHasFixedSize(true)
     }
 
     private fun setupMoviesObserver() {

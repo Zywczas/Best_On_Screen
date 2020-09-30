@@ -12,5 +12,6 @@
     <string name="upcoming">Upcoming</string>
     <string name="popular">Popular</string>
     <string name="find_movies">Find Movies</string>
+    <string name="rating_star">Rating star</string>
 
 </resources>

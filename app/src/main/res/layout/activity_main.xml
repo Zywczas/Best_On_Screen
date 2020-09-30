@@ -26,12 +26,12 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navDrawer"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:itemIconTint="@color/colorPrimary"
-        app:itemTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body2"
         app:itemTextColor="@color/colorAccent"
         app:menu="@menu/menu_navigation">
 

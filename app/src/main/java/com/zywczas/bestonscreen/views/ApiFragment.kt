@@ -1,11 +1,9 @@
 package com.zywczas.bestonscreen.views
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -48,8 +46,7 @@ class ApiFragment @Inject constructor(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         startApiUISetupChain()
-        setupDrawer()
-        setupDrawerNavButtons()
+        setupCategoryButtons()
 
     }
 
@@ -58,7 +55,6 @@ class ApiFragment @Inject constructor(
             if (recyclerViewSetupFinished) {
                 setupMoviesObserver { observerSetupFinished ->
                     if (observerSetupFinished) {
-                        getMoviesOnViewModelInit()
                         setupOnScrollListener()
                     }
                 }
@@ -76,7 +72,7 @@ class ApiFragment @Inject constructor(
         adapter = MovieAdapter( requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
-        apiMoviesRecyclerView.adapter = adapter
+        recyclerViewApi.adapter = adapter
     }
 
     private fun goToDetailsFragment(movie: Movie) {
@@ -97,8 +93,8 @@ class ApiFragment @Inject constructor(
             spanCount = 4
         }
         val layoutManager = GridLayoutManager(activity, spanCount)
-        apiMoviesRecyclerView.layoutManager = layoutManager
-        apiMoviesRecyclerView.setHasFixedSize(true)
+        recyclerViewApi.layoutManager = layoutManager
+        recyclerViewApi.setHasFixedSize(true)
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
@@ -118,16 +114,15 @@ class ApiFragment @Inject constructor(
     }
 
     private fun showProgressBar(visible: Boolean) {
-        progressBar.isVisible = visible
+        progressBarApi.isVisible = visible
     }
 
     private fun updateContent(data: Pair<List<Movie>, Category>) {
         updateDisplayedMovies(data.first)
         val isNewCategoryLoaded = data.second != displayedCategory
         if (isNewCategoryLoaded){
-            moviesRecyclerView.scrollToPosition(0)
+            recyclerViewApi.scrollToPosition(0)
         }
-        updateToolbarTitle(data.second)
         displayedCategory = data.second
     }
 
@@ -135,18 +130,8 @@ class ApiFragment @Inject constructor(
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun updateToolbarTitle(category: Category) {
-        //todo moviesToolbar.title = "Movies: $category"
-    }
-
-    private fun getMoviesOnViewModelInit() {
-        showProgressBar(true)
-        val categoryFromBundle = arguments?.getSerializable(EXTRA_CATEGORY) as Category
-        viewModel.getFirstMovies(categoryFromBundle)
-    }
-
     private fun setupOnScrollListener() {
-        moviesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerViewApi.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
@@ -163,16 +148,7 @@ class ApiFragment @Inject constructor(
         viewModel.getNextMoviesIfConnected()
     }
 
-    private fun setupDrawer() {
-//        val toggle = ActionBarDrawerToggle(
-//            activity, drawer_layout, moviesToolbar,
-//            R.string.nav_drawer_open, R.string.nav_drawer_closed
-//        )
-//        drawer_layout.addDrawerListener(toggle)
-//        toggle.syncState()
-    }
-
-    private fun setupDrawerNavButtons() {
+    private fun setupCategoryButtons() {
         setupTags { isFinished ->
             if (isFinished) {
                 setupOnClickListeners()
@@ -188,32 +164,14 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupOnClickListeners() {
-        //todo chyba mozna dac osobne click listenery dla mojej listy
-        myToWatchListTextView.setOnClickListener(onClickListener)
-        popularTextView.setOnClickListener(onClickListener)
-        upcomingTextView.setOnClickListener(onClickListener)
-        topRatedTextView.setOnClickListener(onClickListener)
+        popularTextView.setOnClickListener(categoryClickListener)
+        upcomingTextView.setOnClickListener(categoryClickListener)
+        topRatedTextView.setOnClickListener(categoryClickListener)
     }
 
-    private val onClickListener = View.OnClickListener { view ->
-        closeDrawerOrGoBack()
-        if (view.id == R.id.myToWatchListTextView) {
-            switchToDBFragment()
-        } else {
-            val category = view.tag as Category
-            categoryClicked(category)
-        }
-    }
-
-    private fun switchToDBFragment() {
-        activity?.run {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentView, DBFragment::class.java, null)
-                .commit()
-        }
-    }
-
-    private fun categoryClicked(category: Category) {
+//todo zamienic na podswietlanie wybranej kategorii
+    private val categoryClickListener = View.OnClickListener { view ->
+        val category = view.tag as Category
         if (category == displayedCategory) {
             showToast("This is category $category.")
         } else {

@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.zywczas.bestonscreen.R
 import dagger.android.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.navigation_drawer.*
+
 
 import javax.inject.Inject
 
