@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/goToDbFragmentBtn"
+        android:id="@+id/destDbFragment"
         android:checkable="false"
         android:icon="@drawable/star_in_circle_icon"
         android:title="@string/my_to_watch_list" />
 
     <item
-        android:id="@+id/goToApiFragmentBtn"
+        android:id="@+id/destApiFragment"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/find_movies" />
 
