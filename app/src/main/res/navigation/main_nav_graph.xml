@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,23 +6,11 @@
 
 
     <fragment
-        android:id="@+id/destDbFragment"
-        android:name="com.zywczas.bestonscreen.views.DBFragment"
-        android:label="Best On Screen">
-        <action
-            android:id="@+id/actionToDetails"
-            app:destination="@id/destDetailsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpToInclusive="false" />
-    </fragment>
-
-    <fragment
         android:id="@+id/destApiFragment"
         android:name="com.zywczas.bestonscreen.views.ApiFragment"
-        android:label="ApiFragment">
+        android:label="On Screen"
+        tools:layout="@layout/fragment_api">
+
         <action
             android:id="@+id/actionToDetails"
             app:destination="@id/destDetailsFragment"
@@ -36,10 +23,26 @@
     <fragment
         android:id="@+id/destDetailsFragment"
         android:name="com.zywczas.bestonscreen.views.DetailsFragment"
-        android:label="DetailsFragment" >
-        <argument
-            android:name="movie"
-            app:argType="com.zywczas.bestonscreen.model.Movie" />
+        android:label="Details"
+        tools:layout="@layout/fragment_details">
     </fragment>
+
+    <fragment
+        android:id="@+id/destDbFragment"
+        android:name="com.zywczas.bestonscreen.views.DBFragment"
+        android:label="Best On Screen"
+        tools:layout="@layout/fragment_db" >
+
+        <action
+            android:id="@+id/actionToDetails"
+            app:destination="@id/destDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+
 
 </navigation>
