@@ -30,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/colorPrimary"
-        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:itemTextColor="@color/colorAccent"
+        app:itemIconTint="@android:color/holo_red_dark"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:itemTextColor="@android:color/black"
         app:menu="@menu/menu_navigation">
 
     </com.google.android.material.navigation.NavigationView>

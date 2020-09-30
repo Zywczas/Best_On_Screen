@@ -6,6 +6,8 @@ import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -29,6 +31,8 @@ class ApiFragment @Inject constructor(
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
+    private val navController : NavController
+            by lazy{ Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,14 +80,8 @@ class ApiFragment @Inject constructor(
     }
 
     private fun goToDetailsFragment(movie: Movie) {
-        activity?.run {
-            val bundle = Bundle()
-            bundle.putParcelable(EXTRA_MOVIE, movie)
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragmentView, DetailsFragment::class.java, bundle)
-                .addToBackStack("DetailsFragment")
-                .commit()
-        }
+        val destination = ApiFragmentDirections.actionToDetails(movie)
+        navController.navigate(destination)
     }
 
     private fun setupLayoutManager() {
