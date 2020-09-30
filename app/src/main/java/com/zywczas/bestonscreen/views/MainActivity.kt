@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.utilities.showToast
 import dagger.android.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupActionBar()
-        setupSideDrawer()
+//        setupSideDrawer()
     }
 
     private fun setupActionBar(){
@@ -38,13 +39,19 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun setupSideDrawer(){
-        NavigationUI.setupWithNavController(navDrawer, navController)
+        //to ustawia navController na guzikach w szufladzie, jak sa takie same id guzikow i destination,
+        //to tam przechodzi, nie potrzebuje akcji zadnej,
+        //mi ta funkcja nie jest potrzebna bo chce przechodzic akcjami
+//        NavigationUI.setupWithNavController(navDrawer, navController)
+        navDrawer.setNavigationItemSelectedListener(this)
     }
 
+    //wazna funkcja, ustawia kilka rzeczy
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, drawer_layout)
     }
 
+    //to sie wlacza jak klikamy guziki z paska
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val shouldCloseDrawer = item.itemId == android.R.id.home &&
                 drawer_layout != null && drawer_layout.isDrawerOpen(GravityCompat.START)
@@ -54,5 +61,7 @@ class MainActivity : AppCompatActivity(){
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 
 }
