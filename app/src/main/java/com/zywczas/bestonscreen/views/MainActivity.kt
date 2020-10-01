@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    //todo dodac collapsing bar, i osobne bary do kazdego fragmentu
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
     private val navHostFragment: NavHostFragment by lazy {
@@ -33,19 +32,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navDrawer.setupWithNavController(navController)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
         toolbarMovies.setupWithNavController(navController, appBarConfiguration)
-//        appbarMovies.setupWithNavController(toolbarMovies, navController, appBarConfiguration)
     }
-
-
-//        NavigationUI.setupActionBarWithNavController(this, navController) <- to daje sam pasek i strzalke wstecz jak jest do czego wrocic :), nie trzeba dawac szuflady
-
-
-    //wazna funkcja, ustawia kilka rzeczy, nie jest potrzebna jezeli mamy swoje wlasne toolbary,
-//   todo  override fun onSupportNavigateUp(): Boolean {
-//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val shouldCloseDrawer = item.itemId == android.R.id.home &&

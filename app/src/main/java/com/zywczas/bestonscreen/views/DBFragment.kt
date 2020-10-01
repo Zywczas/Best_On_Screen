@@ -39,8 +39,8 @@ class DBFragment @Inject constructor(
         return inflater.inflate(R.layout.fragment_db, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         startDbUISetupChain()
         checkInternetConnection()
     }

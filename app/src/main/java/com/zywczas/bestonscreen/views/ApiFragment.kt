@@ -48,8 +48,8 @@ class ApiFragment @Inject constructor(
         return inflater.inflate(R.layout.fragment_api, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         startApiUISetupChain()
         setupCategoryButtons()
     }
@@ -86,6 +86,8 @@ class ApiFragment @Inject constructor(
 
     //todo dodac toolbar z zakladkami i zeby observer tez ustawial ktory jest wcisniety, bo  jak nie
     // wybierzemy kategori a scrollujemy na dol to sie zalacza domyslna kategoria czyli popular
+    //przy przechodzeniu z top rated do upcoming iz upcoming do popular recycler view nie leci na gore, spowrotem juz leci
+    //moze dac wszystko w on view created
 
     private fun setupLayoutManager() {
         var spanCount = 2

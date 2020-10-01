@@ -48,8 +48,6 @@ class DetailsFragment @Inject constructor(
         setupOnClickListener()
     }
 
-    //todo pomyslec pozniej nad view binding
-
 //todo dac jakis lepsze uzycie tekstu zeby nie trzeba bylo kominikatu zagluszac
     @SuppressLint("SetTextI18n")
     private fun setupUIState() {
@@ -66,6 +64,7 @@ class DetailsFragment @Inject constructor(
         setupAddToListBtnStateObserver()
     }
 
+    //todo wrzucic to w klase i niech trzyma to w stringu zamiast w 5 roznych zmiennych, wtedy ta funkcja zniknie stad i pojdzie do klasy
     private fun getGenresDescription(): String {
         return when (movie.assignedGenresAmount) {
             1 -> "Genre: ${movie.genre1}"
