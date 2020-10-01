@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/destApiFragment"
         android:name="com.zywczas.bestonscreen.views.ApiFragment"
-        android:label="On Screen"
+        android:label="Best On Screen"
         tools:layout="@layout/fragment_api">
 
         <action
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/destDetailsFragment"
         android:name="com.zywczas.bestonscreen.views.DetailsFragment"
-        android:label="Details"
+        android:label="Movie Details"
         tools:layout="@layout/fragment_details">
         <argument
             android:name="movie"
@@ -33,8 +33,8 @@
     <fragment
         android:id="@+id/destDbFragment"
         android:name="com.zywczas.bestonscreen.views.DBFragment"
-        android:label="Best On Screen"
-        tools:layout="@layout/fragment_db" >
+        android:label="To Watch List"
+        tools:layout="@layout/fragment_db">
 
         <action
             android:id="@+id/actionToDetails"
