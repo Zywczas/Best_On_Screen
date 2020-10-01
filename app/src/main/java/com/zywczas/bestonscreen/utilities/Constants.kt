@@ -24,10 +24,6 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 //- 2 inne dla powrotu ta sama akcja do pierwszego fragmentu (popEnterAnim i popExitAnim)
 //-->
 
-//todo backstack:
-//jak damy w jakims action popUpto i inclusive to uzywajac tego action czyszcze caly backstack
-
-//todo dac cos co zapobiegnie resetowaniu sie fragmentow przy minimalizowaniu aplikacji
 
 //todo pousuwac importy
 
@@ -35,9 +31,7 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 
 //todo zmieniac tytuly toolbar
 
-//todo on back pressed
-//    private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
-//    private lateinit var callback: OnBackPressedCallback
+//todo zmienic kolor toolbar na bialy
 
 //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
 

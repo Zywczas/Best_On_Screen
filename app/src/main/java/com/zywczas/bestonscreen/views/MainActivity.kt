@@ -8,8 +8,6 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.zywczas.bestonscreen.R
 import dagger.android.AndroidInjection
@@ -26,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
     private val navController: NavController by lazy { navHostFragment.navController }
     private val appBarConfiguration: AppBarConfiguration by lazy {
-        AppBarConfiguration(setOf(R.id.destDbFragment, R.id.destApiFragment), drawerLayout)
+        AppBarConfiguration(setOf(R.id.destDbFragment, R.id.destApiFragment), drawerLayoutMain)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +34,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         navDrawer.setupWithNavController(navController)
 //        setupActionBarWithNavController(navController, appBarConfiguration)
-//        toolbarMovies.setupWithNavController(navController, appBarConfiguration)
-        collapsingToolbarMovies.setupWithNavController(toolbarMovies, navController, appBarConfiguration)
+        toolbarMovies.setupWithNavController(navController, appBarConfiguration)
+//        appbarMovies.setupWithNavController(toolbarMovies, navController, appBarConfiguration)
     }
 
 
@@ -51,9 +49,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val shouldCloseDrawer = item.itemId == android.R.id.home &&
-                drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)
+                drawerLayoutMain != null && drawerLayoutMain.isDrawerOpen(GravityCompat.START)
         if (shouldCloseDrawer) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+            drawerLayoutMain.closeDrawer(GravityCompat.START)
             return true
         }
         return super.onOptionsItemSelected(item)

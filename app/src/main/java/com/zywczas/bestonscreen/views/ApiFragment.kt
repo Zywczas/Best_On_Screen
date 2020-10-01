@@ -84,6 +84,9 @@ class ApiFragment @Inject constructor(
         navController.navigate(destination)
     }
 
+    //todo dodac toolbar z zakladkami i zeby observer tez ustawial ktory jest wcisniety, bo  jak nie
+    // wybierzemy kategori a scrollujemy na dol to sie zalacza domyslna kategoria czyli popular
+
     private fun setupLayoutManager() {
         var spanCount = 2
         val orientation = resources.configuration.orientation
