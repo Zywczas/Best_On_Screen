@@ -168,7 +168,9 @@ class ApiFragment @Inject constructor(
         moviesCategoriesTabs.addOnTabSelectedListener(categoryClickListener)
     }
     //todo dac na start ladowanie pierwszej kategori
-//todo przy obracaniu ekranu resetuje kliknieta zakladke
+//todo przy obracaniu ekranu resetuje kliknieta zakladke -> dac to: moviesCategoriesTabs.getTabAt(2)?.select(), sprawdzic czy jak to daje to nie resetuje kategorii
+    //todo jak przelaczam na popular to niby resetuje ale u gory jest wiecej lifmow i nie skroluje do nich
+    //nie scroluje jak sie przelacza z top rated na upcoming i z upcoming na popular, w druga strone dziala...
     private val categoryClickListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let{
@@ -193,10 +195,6 @@ class ApiFragment @Inject constructor(
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
-    }
-
-    fun topRatedClicked(view: View) {
-        showToast("dziala")
     }
 
 }
