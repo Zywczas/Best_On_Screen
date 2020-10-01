@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
@@ -51,7 +52,6 @@ class ApiFragment @Inject constructor(
         super.onActivityCreated(savedInstanceState)
         startApiUISetupChain()
         setupCategoryButtons()
-
     }
 
     private fun startApiUISetupChain() {
@@ -158,25 +158,30 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupTags(complete: (Boolean) -> Unit) {
-        upcomingTextView.tag = Category.UPCOMING
-        topRatedTextView.tag = Category.TOP_RATED
-        popularTextView.tag = Category.POPULAR
+        moviesCategoriesTabs.getTabAt(0)?.tag = Category.TOP_RATED
+        moviesCategoriesTabs.getTabAt(1)?.tag = Category.POPULAR
+        moviesCategoriesTabs.getTabAt(2)?.tag = Category.UPCOMING
         complete(true)
     }
 
     private fun setupOnClickListeners() {
-        popularTextView.setOnClickListener(categoryClickListener)
-        upcomingTextView.setOnClickListener(categoryClickListener)
-        topRatedTextView.setOnClickListener(categoryClickListener)
+        moviesCategoriesTabs.addOnTabSelectedListener(categoryClickListener)
     }
+    //todo dac na start ladowanie pierwszej kategori
+//todo przy obracaniu ekranu resetuje kliknieta zakladke
+    private val categoryClickListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab?) {
+            tab?.let{
+                val category = it.tag as Category
+                downloadNewCategory(category)
+            }
+        }
 
-//todo zamienic na podswietlanie wybranej kategorii
-    private val categoryClickListener = View.OnClickListener { view ->
-        val category = view.tag as Category
-        if (category == displayedCategory) {
-            showToast("This is category $category.")
-        } else {
-            downloadNewCategory(category)
+    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+            tab?.let {val category = it.tag as Category
+                showToast("This is category $category") }
         }
     }
 
@@ -188,6 +193,10 @@ class ApiFragment @Inject constructor(
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
+    }
+
+    fun topRatedClicked(view: View) {
+        showToast("dziala")
     }
 
 }

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dbFragmentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.DBFragment">
@@ -15,7 +14,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layoutManager="GridLayoutManager"
+        tools:listitem="@layout/movies_list_item"
+        tools:spanCount="2" />
 
     <TextView
         android:id="@+id/emptyListTextView"
@@ -33,6 +35,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        tools:textColor="@android:color/holo_red_light"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
