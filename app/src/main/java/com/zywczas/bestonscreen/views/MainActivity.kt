@@ -15,6 +15,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.utilities.lazyAndroid
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -23,10 +24,10 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
-    private val navHostFragment: NavHostFragment by lazy {
+    private val navHostFragment: NavHostFragment by lazyAndroid {
         supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment }
-    private val navController: NavController by lazy { navHostFragment.navController }
-    private val appBarConfiguration: AppBarConfiguration by lazy {
+    private val navController: NavController by lazyAndroid { navHostFragment.navController }
+    private val appBarConfiguration: AppBarConfiguration by lazyAndroid {
         AppBarConfiguration(setOf(R.id.destDbFragment, R.id.destApiFragment), drawerLayoutMain) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

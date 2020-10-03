@@ -11,10 +11,7 @@ import androidx.fragment.app.viewModels
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
-import com.zywczas.bestonscreen.utilities.EXTRA_MOVIE
-import com.zywczas.bestonscreen.utilities.NetworkCheck
-import com.zywczas.bestonscreen.utilities.showToast
+import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -30,7 +27,7 @@ class DetailsFragment @Inject constructor(
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
     private val movie : Movie
-            by lazy { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
+            by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

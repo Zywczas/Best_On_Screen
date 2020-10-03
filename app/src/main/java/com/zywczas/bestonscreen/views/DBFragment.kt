@@ -30,7 +30,7 @@ class DBFragment @Inject constructor(
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter : MovieAdapter
     private val navController : NavController
-            by lazy{ Navigation.findNavController(requireView()) }
+            by lazyAndroid{ Navigation.findNavController(requireView()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

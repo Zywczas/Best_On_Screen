@@ -9,5 +9,5 @@ fun Fragment.showToast(message: String) =
 
 fun Context.showToast(message: String) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
+//todo test??
 fun <T> lazyAndroid(initializer: () -> T) : Lazy<T> = lazy(LazyThreadSafetyMode.NONE, initializer)

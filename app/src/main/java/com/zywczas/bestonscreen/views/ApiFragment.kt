@@ -34,7 +34,7 @@ class ApiFragment @Inject constructor(
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
     private val navController : NavController
-            by lazy{ Navigation.findNavController(requireView()) }
+            by lazyAndroid{ Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
