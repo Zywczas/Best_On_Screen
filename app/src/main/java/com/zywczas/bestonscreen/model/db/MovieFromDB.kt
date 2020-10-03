@@ -11,36 +11,22 @@ data class MovieFromDB(
     @ColumnInfo(name = "id")
     val id: Int,
 
-    @ColumnInfo(name = "poster_path", defaultValue = "")
+    @ColumnInfo(name = "poster_path")
     val posterPath: String,
 
-    @ColumnInfo(name = "title", defaultValue = "")
+    @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name = "vote_average", defaultValue = "0.0")
+    @ColumnInfo(name = "vote_average")
     val voteAverage: Double,
 
-    @ColumnInfo(name = "overview", defaultValue = "")
+    @ColumnInfo(name = "overview")
     val overview: String,
 
-    @ColumnInfo(name = "release_date", defaultValue = "")
+    @ColumnInfo(name = "release_date")
     val releaseDate: String,
 
-    @ColumnInfo(name = "genre1", defaultValue = "")
-    val genre1: String,
+    @ColumnInfo(name = "genres")
+    val genresDescription: String
 
-    @ColumnInfo(name = "genre2", defaultValue = "")
-    val genre2: String,
-
-    @ColumnInfo(name = "genre3", defaultValue = "")
-    val genre3: String,
-
-    @ColumnInfo(name = "genre4", defaultValue = "")
-    val genre4: String,
-
-    @ColumnInfo(name = "genre5", defaultValue = "")
-    val genre5: String,
-
-    @ColumnInfo(name = "genres_amount", defaultValue = "0")
-    val assignedGenresAmount: Int
 )

@@ -12,10 +12,5 @@ data class Movie(
     val voteAverage: Double,
     val overview: String,
     val releaseDate: String,
-    val genre1: String,
-    val genre2: String,
-    val genre3: String,
-    val genre4: String,
-    val genre5: String,
-    val assignedGenresAmount: Int
+    val genresDescription: String,
 ) : Parcelable

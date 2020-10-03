@@ -23,8 +23,6 @@ class DetailsFragment @Inject constructor(
     private val networkCheck: NetworkCheck
 ) : Fragment() {
 
-    //todo dodac pasek ze strzalka wstecz i wtedy moze tytul filmu na pasku
-
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
     private val movie : Movie
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
@@ -35,7 +33,6 @@ class DetailsFragment @Inject constructor(
     ): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
-    //todo dac w kazdym fragmencie live data w oncreate a tylko UI w onViewCreated
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,20 +54,8 @@ class DetailsFragment @Inject constructor(
         rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
         releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
         overviewTextViewDetails.text = movie.overview
-        genresTextViewDetails.text = getGenresDescription()
+        genresTextViewDetails.text = movie.genresDescription
         setupAddToListBtnStateObserver()
-    }
-
-    //todo wrzucic to w klase i niech trzyma to w stringu zamiast w 5 roznych zmiennych, wtedy ta funkcja zniknie stad i pojdzie do klasy
-    private fun getGenresDescription(): String {
-        return when (movie.assignedGenresAmount) {
-            1 -> "Genre: ${movie.genre1}"
-            2 -> "Genres: ${movie.genre1}, ${movie.genre2}"
-            3 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}"
-            4 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}"
-            5 -> "Genres: ${movie.genre1}, ${movie.genre2}, ${movie.genre3}, ${movie.genre4}, ${movie.genre5}"
-            else -> "Genres: no information"
-        }
     }
 
     private fun setupAddToListBtnStateObserver() {

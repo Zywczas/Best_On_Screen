@@ -2,70 +2,59 @@ package com.zywczas.bestonscreen.model.webservice
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.zywczas.bestonscreen.utilities.lazyAndroid
 
 data class MovieFromApi(
 
     @SerializedName("id")
     @Expose
-    var id: Int? = null,
+    val id: Int?,
 
     @SerializedName("poster_path")
     @Expose
-    var posterPath: String? = null,
+    val posterPath: String?,
 
     @SerializedName("genre_ids")
     @Expose
-    var genreIds: List<Int>? = null,
+    val genres: List<Int>?,
 
     @SerializedName("title")
     @Expose
-    var title: String? = null,
+    val title: String?,
 
     @SerializedName("vote_average")
     @Expose
-    var voteAverage: Double? = null,
+    val voteAverage: Double?,
 
     @SerializedName("overview")
     @Expose
-    var overview: String? = null,
+    val overview: String?,
 
     @SerializedName("release_date")
     @Expose
-    var releaseDate: String? = null
+    val releaseDate: String?
 ) {
+    val genresDescription : String by lazyAndroid { convertGenres() }
 
-    var genre1: String = ""
-
-    var genre2: String = ""
-
-    var genre3: String = ""
-
-    var genre4: String = ""
-
-    var genre5: String = ""
-
-    var assignedGenresAmount: Int = 0
-
-    fun convertGenreIdsToVariables() {
-        if (genreIds == null) {
-            return
-        }
-        var nextVarToAssign = 1
-        val availableGenreVars = 5
-        for (id in genreIds!!) {
-            if (nextVarToAssign <= availableGenreVars) {
-                convertGenreIdToStringAndAssign(id, nextVarToAssign)
-                nextVarToAssign++
+    private fun convertGenres() : String {
+        //todo test na empty
+        return if (!genres.isNullOrEmpty()) {
+            when (genres.size) {
+                1 -> "Genre: ${toStr(genres[0])}"
+                2 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}"
+                3 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}"
+                4 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}, " +
+                        toStr(genres[3])
+                5 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}, " +
+                        "${toStr(genres[3])}, ${toStr(genres[4])}"
+                else -> "Genres: no information"
             }
+        } else {
+            "Genres: no information"
         }
     }
 
-    private fun convertGenreIdToStringAndAssign(id: Int, varNumber: Int) {
-        val convertedGenre = convertToString(id)
-        assignToVariable(convertedGenre, varNumber)
-    }
-
-    private fun convertToString(id: Int): String {
+    private fun toStr(id: Int): String {
         return when (id) {
             28 -> "Action"
             12 -> "Adventure"
@@ -89,31 +78,5 @@ data class MovieFromApi(
             else -> "missing info"
         }
     }
-
-    private fun assignToVariable(convertedGenre: String, varNumber: Int) {
-        when (varNumber) {
-            1 -> {
-                genre1 = convertedGenre
-                assignedGenresAmount = 1
-            }
-            2 -> {
-                genre2 = convertedGenre
-                assignedGenresAmount = 2
-            }
-            3 -> {
-                genre3 = convertedGenre
-                assignedGenresAmount = 3
-            }
-            4 -> {
-                genre4 = convertedGenre
-                assignedGenresAmount = 4
-            }
-            5 -> {
-                genre5 = convertedGenre
-                assignedGenresAmount = 5
-            }
-        }
-    }
-
 
 }
