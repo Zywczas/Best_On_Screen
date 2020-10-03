@@ -10,5 +10,3 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 //todo pousuwac importy
 
 //todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
-
-//todo sprobowac dac ten glupi host w nav graph

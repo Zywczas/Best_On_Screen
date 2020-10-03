@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment }
     private val navController: NavController by lazyAndroid { navHostFragment.navController }
     private val appBarConfiguration: AppBarConfiguration by lazyAndroid {
-        AppBarConfiguration(setOf(R.id.destDbFragment, R.id.destApiFragment), drawerLayoutMain) }
+        AppBarConfiguration(setOf(R.id.destinationDb, R.id.destinationApi), drawerLayoutMain) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
