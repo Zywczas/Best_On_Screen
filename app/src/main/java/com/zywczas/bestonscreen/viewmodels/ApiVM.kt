@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
@@ -16,11 +17,17 @@ class ApiVM(
 
     //todo pozamieniac wszystkie val w klasach na lazy
     private var firstMoviesRequested = false
-    private val firstPageOfNewCategory = 1
+    private val firstPageOfNewCategory :Int by lazy{
+        Log.d("film", "lazy first page in ApiVm")
+        1
+    }
     private val anyCategoryOnInit = Category.POPULAR
     private var page = firstPageOfNewCategory
     private var category = anyCategoryOnInit
-    private val movies = mutableListOf<Movie>()
+    private val movies : MutableList<Movie> by lazy{
+        Log.d("film", "lazy movies in ApiVm")
+        mutableListOf<Movie>()
+    }
 
     private val moviesAndCategoryMLD = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
     val moviesAndCategoryLD =

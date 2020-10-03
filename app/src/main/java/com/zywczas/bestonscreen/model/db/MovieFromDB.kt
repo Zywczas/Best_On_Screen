@@ -9,38 +9,38 @@ data class MovieFromDB(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int,
+    val id: Int,
 
     @ColumnInfo(name = "poster_path", defaultValue = "")
-    var posterPath: String,
+    val posterPath: String,
 
     @ColumnInfo(name = "title", defaultValue = "")
-    var title: String,
+    val title: String,
 
     @ColumnInfo(name = "vote_average", defaultValue = "0.0")
-    var voteAverage: Double,
+    val voteAverage: Double,
 
     @ColumnInfo(name = "overview", defaultValue = "")
-    var overview: String,
+    val overview: String,
 
     @ColumnInfo(name = "release_date", defaultValue = "")
-    var releaseDate: String,
+    val releaseDate: String,
 
     @ColumnInfo(name = "genre1", defaultValue = "")
-    var genre1: String,
+    val genre1: String,
 
     @ColumnInfo(name = "genre2", defaultValue = "")
-    var genre2: String,
+    val genre2: String,
 
     @ColumnInfo(name = "genre3", defaultValue = "")
-    var genre3: String,
+    val genre3: String,
 
     @ColumnInfo(name = "genre4", defaultValue = "")
-    var genre4: String,
+    val genre4: String,
 
     @ColumnInfo(name = "genre5", defaultValue = "")
-    var genre5: String,
+    val genre5: String,
 
     @ColumnInfo(name = "genres_amount", defaultValue = "0")
-    var assignedGenresAmount: Int
+    val assignedGenresAmount: Int
 )

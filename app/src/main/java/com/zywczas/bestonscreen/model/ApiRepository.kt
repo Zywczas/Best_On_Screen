@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.model
 
+import android.util.Log
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.Resource
