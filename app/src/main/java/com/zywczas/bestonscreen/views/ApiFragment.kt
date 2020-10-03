@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
 import com.zywczas.bestonscreen.utilities.Status
@@ -40,8 +42,7 @@ class ApiFragment @Inject constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)
-            ?.let { displayedCategory = it as Category }
+        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
     }
 
     override fun onCreateView(
@@ -62,6 +63,7 @@ class ApiFragment @Inject constructor(
             if (recyclerViewSetupFinished) {
                 setupMoviesObserver { observerSetupFinished ->
                     if (observerSetupFinished) {
+                        viewModel.getFirstMovies(TOP_RATED)
                         setupOnScrollListener()
                     }
                 }
@@ -87,10 +89,7 @@ class ApiFragment @Inject constructor(
         navController.navigate(destination)
     }
 
-    //todo dodac toolbar z zakladkami i zeby observer tez ustawial ktory jest wcisniety, bo  jak nie
-    // wybierzemy kategori a scrollujemy na dol to sie zalacza domyslna kategoria czyli popular
-    //przy przechodzeniu z top rated do upcoming iz upcoming do popular recycler view nie leci na gore, spowrotem juz leci
-    //moze dac wszystko w on view created
+    //todo przy przechodzeniu z top rated do upcoming iz upcoming do popular recycler view nie leci na gore, spowrotem juz leci
 
     private fun setupLayoutManager() {
         var spanCount = 2
@@ -125,15 +124,21 @@ class ApiFragment @Inject constructor(
 
     private fun updateContent(data: Pair<List<Movie>, Category>) {
         updateDisplayedMovies(data.first)
-        val isNewCategoryLoaded = data.second != displayedCategory
-        if (isNewCategoryLoaded) {
-            recyclerViewApi.scrollToPosition(0)
-        }
         displayedCategory = data.second
+        updateSelectedTab(data.second)
     }
 
     private fun updateDisplayedMovies(movies: List<Movie>) {
         adapter.submitList(movies.toMutableList())
+    }
+
+    private fun updateSelectedTab(category: Category){
+        val index = when (category) {
+            TOP_RATED -> 0
+            POPULAR -> 1
+            UPCOMING -> 2
+        }
+        moviesCategoriesTabs.getTabAt(index)?.select()
     }
 
     private fun setupOnScrollListener() {
@@ -163,9 +168,9 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupTags(complete: (Boolean) -> Unit) {
-        moviesCategoriesTabs.getTabAt(0)?.tag = Category.TOP_RATED
-        moviesCategoriesTabs.getTabAt(1)?.tag = Category.POPULAR
-        moviesCategoriesTabs.getTabAt(2)?.tag = Category.UPCOMING
+        moviesCategoriesTabs.getTabAt(0)?.tag = TOP_RATED
+        moviesCategoriesTabs.getTabAt(1)?.tag = POPULAR
+        moviesCategoriesTabs.getTabAt(2)?.tag = UPCOMING
         complete(true)
     }
 
@@ -173,15 +178,15 @@ class ApiFragment @Inject constructor(
         moviesCategoriesTabs.addOnTabSelectedListener(categoryClickListener)
     }
 
-    //todo dac na start ladowanie pierwszej kategori
-//todo przy obracaniu ekranu resetuje kliknieta zakladke -> dac to: moviesCategoriesTabs.getTabAt(2)?.select(), sprawdzic czy jak to daje to nie resetuje kategorii
-    //todo jak przelaczam na popular to niby resetuje ale u gory jest wiecej lifmow i nie skroluje do nich
-    //nie scroluje jak sie przelacza z top rated na upcoming i z upcoming na popular, w druga strone dziala...
     private val categoryClickListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let {
                 val category = it.tag as Category
-                downloadNewCategory(category)
+                if (category != displayedCategory){
+                    Log.d("film", "pobiera nowe dane")
+                    downloadNewCategory(category)
+                }
+
             }
         }
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -191,11 +196,14 @@ class ApiFragment @Inject constructor(
     private fun downloadNewCategory(category: Category) {
         showProgressBar(true)
         viewModel.getNextMoviesIfConnected(category)
+        recyclerViewApi.scrollToPosition(0)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
     }
+
+
 
 }
