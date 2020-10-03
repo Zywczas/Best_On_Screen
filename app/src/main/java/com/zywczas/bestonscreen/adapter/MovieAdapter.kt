@@ -46,7 +46,6 @@ class MovieAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //todo dac parent.context i wtedy chyba nie potrzeba dawac contextu w construktorze
         val view = LayoutInflater.from(context).inflate(R.layout.movies_list_item, parent, false)
         return ViewHolder(view)
     }

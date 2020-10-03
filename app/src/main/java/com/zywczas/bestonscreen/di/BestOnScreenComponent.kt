@@ -12,8 +12,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     BestOnScreenModule::class,
-    //AndroidInjectionModule binds your app.Fragment to dagger. But If you want to use injection
-    // in v4.fragment then you should add AndroidSupportInjectionModule.class
     AndroidInjectionModule::class,
     FragmentFactoryModule::class,
     ActivityBuilderModule::class
@@ -24,8 +22,5 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
     interface Factory {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
-
-    //todo sprawdzic czy to potrzebne
-    fun networkCheck() : NetworkCheck
 
 }
