@@ -33,9 +33,9 @@
     <fragment
         android:id="@+id/destDbFragment"
         android:name="com.zywczas.bestonscreen.views.DBFragment"
-        android:label="To Watch List"
+        android:label="@string/my_to_watch_list"
         tools:layout="@layout/fragment_db">
-
+        <!--todo wrzucic labels w stringi-->
         <action
             android:id="@+id/actionToDetails"
             app:destination="@id/destDetailsFragment"

@@ -36,3 +36,5 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 //todo jak wchodze w details a pozniej cofam to resetuje sie Api na kategorie ktora byla zainicjowana z bundle, ale jak sie obroci ekran to juz nie
 
 //todo sprobowac dac ten glupi host w nav graph
+
+//todo szuflada sie nie zamyka jak sie klika w hamburgera
