@@ -13,5 +13,6 @@
     <string name="popular">Popular</string>
     <string name="find_movies">Find Movies</string>
     <string name="rating_star">Rating star</string>
+    <string name="movie_details">Movie Details</string>
 
 </resources>

@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.views
 
-
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem

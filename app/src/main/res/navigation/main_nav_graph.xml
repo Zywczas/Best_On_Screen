@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/destApiFragment"
         android:name="com.zywczas.bestonscreen.views.ApiFragment"
-        android:label="Best On Screen"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_api">
 
         <action
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/destDetailsFragment"
         android:name="com.zywczas.bestonscreen.views.DetailsFragment"
-        android:label="Movie Details"
+        android:label="@string/movie_details"
         tools:layout="@layout/fragment_details">
         <argument
             android:name="movie"
@@ -35,7 +35,7 @@
         android:name="com.zywczas.bestonscreen.views.DBFragment"
         android:label="@string/my_to_watch_list"
         tools:layout="@layout/fragment_db">
-        <!--todo wrzucic labels w stringi-->
+
         <action
             android:id="@+id/actionToDetails"
             app:destination="@id/destDetailsFragment"
