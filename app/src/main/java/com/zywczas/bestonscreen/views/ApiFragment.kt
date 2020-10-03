@@ -73,7 +73,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupAdapter() {
-        adapter = MovieAdapter(picasso) { movie ->
+        adapter = MovieAdapter(requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
         recyclerViewApi.adapter = adapter

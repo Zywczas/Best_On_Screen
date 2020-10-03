@@ -62,7 +62,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun setupAdapter() {
-        adapter = MovieAdapter(picasso) { movie ->
+        adapter = MovieAdapter(requireContext(), picasso) { movie ->
             goToDetailsFragment(movie)
         }
         recyclerViewDB.adapter = adapter

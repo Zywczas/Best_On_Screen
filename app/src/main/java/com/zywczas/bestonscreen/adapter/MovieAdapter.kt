@@ -15,6 +15,7 @@ import com.zywczas.bestonscreen.model.Movie
 import java.util.*
 
 class MovieAdapter(
+    private val context: Context,
     private val picasso: Picasso,
     private val itemClick: (Movie) -> Unit
 ) : ListAdapter<Movie, MovieAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
@@ -46,7 +47,7 @@ class MovieAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //todo dac parent.context i wtedy chyba nie potrzeba dawac contextu w construktorze
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.movies_list_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.movies_list_item, parent, false)
         return ViewHolder(view)
     }
 
