@@ -7,11 +7,6 @@ const val CONNECTION_PROBLEM = "Problem with internet. Check your connection and
 
 //todo pousuwac wszystkie logi
 
-//todo to mi da wszystko biale na pasku
-// <style name="ToolbarTheme" parent="ThemeOverlay.MaterialComponents.ActionBar">
-//        <item name="android:textColorPrimary">@android:color/white</item>
-//    </style>
-
 //todo pousuwac importy
 
 //todo przejrzec kazda funkcje jeszcze raz i sprawdzi czjest czysto i poukladane
