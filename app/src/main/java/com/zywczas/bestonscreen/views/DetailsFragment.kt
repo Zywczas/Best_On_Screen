@@ -13,12 +13,13 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
+import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.inject.Inject
 
 class DetailsFragment @Inject constructor(
-    private val viewModelFactory: DetailsVMFactory,
+    private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
 ) : Fragment() {

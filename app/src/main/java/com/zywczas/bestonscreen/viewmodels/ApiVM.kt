@@ -9,8 +9,9 @@ import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
+import javax.inject.Inject
 
-class ApiVM(
+class ApiVM @Inject constructor(
     private val repo: ApiRepository,
     private val networkCheck: NetworkCheck
 ) : ViewModel() {

@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
+import javax.inject.Inject
 
-class DetailsVM(private val repo: DetailsRepository) : ViewModel() {
+class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
 
     private val isMovieInDbMLD = MediatorLiveData<Event<Boolean>>()
     private val messageMLD = MediatorLiveData<Event<String>>()

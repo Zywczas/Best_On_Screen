@@ -2,8 +2,9 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,26 +18,30 @@ import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
+import com.zywczas.bestonscreen.utilities.Status
+import com.zywczas.bestonscreen.utilities.lazyAndroid
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.ApiVM
-import com.zywczas.bestonscreen.viewmodels.factories.ApiVMFactory
+import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import kotlinx.android.synthetic.main.fragment_api.*
 import javax.inject.Inject
 
 class ApiFragment @Inject constructor(
-    private val viewModelFactory: ApiVMFactory,
+    private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso
 ) : Fragment() {
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-    private val navController : NavController
-            by lazyAndroid{ Navigation.findNavController(requireView()) }
+    private val navController: NavController
+            by lazyAndroid { Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
+        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)
+            ?.let { displayedCategory = it as Category }
     }
 
     override fun onCreateView(
@@ -121,7 +126,7 @@ class ApiFragment @Inject constructor(
     private fun updateContent(data: Pair<List<Movie>, Category>) {
         updateDisplayedMovies(data.first)
         val isNewCategoryLoaded = data.second != displayedCategory
-        if (isNewCategoryLoaded){
+        if (isNewCategoryLoaded) {
             recyclerViewApi.scrollToPosition(0)
         }
         displayedCategory = data.second
@@ -167,24 +172,20 @@ class ApiFragment @Inject constructor(
     private fun setupOnClickListeners() {
         moviesCategoriesTabs.addOnTabSelectedListener(categoryClickListener)
     }
+
     //todo dac na start ladowanie pierwszej kategori
 //todo przy obracaniu ekranu resetuje kliknieta zakladke -> dac to: moviesCategoriesTabs.getTabAt(2)?.select(), sprawdzic czy jak to daje to nie resetuje kategorii
     //todo jak przelaczam na popular to niby resetuje ale u gory jest wiecej lifmow i nie skroluje do nich
     //nie scroluje jak sie przelacza z top rated na upcoming i z upcoming na popular, w druga strone dziala...
     private val categoryClickListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            tab?.let{
+            tab?.let {
                 val category = it.tag as Category
                 downloadNewCategory(category)
             }
         }
-
-    override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-    override fun onTabReselected(tab: TabLayout.Tab?) {
-            tab?.let {val category = it.tag as Category
-                showToast("This is category $category") }
-        }
+        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
 
     private fun downloadNewCategory(category: Category) {

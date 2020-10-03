@@ -17,12 +17,13 @@ import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.DBVM
+import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.fragment_db.*
 import javax.inject.Inject
 
 class DBFragment @Inject constructor(
-    private val viewModelFactory: DBVMFactory,
+    private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
 ) : Fragment() {
