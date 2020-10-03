@@ -4,6 +4,7 @@ import com.zywczas.bestonscreen.model.db.MovieFromDB
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 fun toMovie(movieFromApi: MovieFromApi): Movie {
+    movieFromApi.convertGenreIdsToDescription()
     return Movie(
         movieFromApi.id ?: 0,
         movieFromApi.posterPath ?: "",

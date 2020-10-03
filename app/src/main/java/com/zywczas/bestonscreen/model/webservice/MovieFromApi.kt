@@ -34,11 +34,11 @@ data class MovieFromApi(
     @Expose
     val releaseDate: String?
 ) {
-    val genresDescription : String by lazyAndroid { convertGenres() }
+    lateinit var genresDescription : String
 
-    private fun convertGenres() : String {
+    fun convertGenreIdsToDescription() {
         //todo test na empty
-        return if (!genres.isNullOrEmpty()) {
+        genresDescription = if (genres != null) {
             when (genres.size) {
                 1 -> "Genre: ${toStr(genres[0])}"
                 2 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}"
