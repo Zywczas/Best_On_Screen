@@ -1,19 +1,14 @@
 package com.zywczas.bestonscreen.views
 
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.utilities.lazyAndroid
 import dagger.android.AndroidInjection

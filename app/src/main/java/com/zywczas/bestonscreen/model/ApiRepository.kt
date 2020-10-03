@@ -1,14 +1,11 @@
 package com.zywczas.bestonscreen.model
 
-import android.util.Log
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.Resource
-import com.zywczas.bestonscreen.utilities.Status
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 open class ApiRepository @Inject constructor(private val apiService: ApiService) {
 

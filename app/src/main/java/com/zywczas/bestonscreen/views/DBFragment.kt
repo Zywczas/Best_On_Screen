@@ -15,10 +15,12 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
+import com.zywczas.bestonscreen.utilities.NetworkCheck
+import com.zywczas.bestonscreen.utilities.lazyAndroid
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import com.zywczas.bestonscreen.viewmodels.factories.DBVMFactory
 import kotlinx.android.synthetic.main.fragment_db.*
 import javax.inject.Inject
 

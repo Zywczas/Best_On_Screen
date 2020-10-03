@@ -1,10 +1,5 @@
 package com.zywczas.bestonscreen.model.db
 
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import org.junit.After
-import org.junit.Before
-
 internal abstract class MoviesDataBaseTest {
 //todo wlaczyc pozniej
 //    private lateinit var dataBase: MoviesDataBase

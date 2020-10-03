@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.di
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
 import kotlin.reflect.KClass

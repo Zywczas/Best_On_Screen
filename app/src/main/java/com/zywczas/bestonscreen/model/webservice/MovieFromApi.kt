@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.model.webservice
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.zywczas.bestonscreen.utilities.lazyAndroid
 
 data class MovieFromApi(
 

@@ -1,7 +1,9 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie

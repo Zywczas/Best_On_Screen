@@ -6,7 +6,6 @@ import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 open class DetailsRepository @Inject constructor(private val movieDao: MovieDao) {
 

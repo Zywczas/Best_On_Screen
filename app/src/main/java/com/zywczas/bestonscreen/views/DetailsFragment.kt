@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
+import com.zywczas.bestonscreen.utilities.NetworkCheck
+import com.zywczas.bestonscreen.utilities.lazyAndroid
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import com.zywczas.bestonscreen.viewmodels.factories.DetailsVMFactory
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.inject.Inject
 
