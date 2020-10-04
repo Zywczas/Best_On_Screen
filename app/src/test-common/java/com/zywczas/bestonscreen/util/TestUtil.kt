@@ -7,6 +7,7 @@ import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 
 object TestUtil {
 
+    @Suppress("SpellCheckingInspection")
     val movieFromApi1 = MovieFromApi(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
@@ -17,6 +18,7 @@ object TestUtil {
         "2020-08-25"
     )
 
+    @Suppress("SpellCheckingInspection")
     val movie1 = Movie(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
@@ -24,14 +26,10 @@ object TestUtil {
         5.5,
         "The work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
         "2020-08-25",
-        "Action",
-        "Thriller",
-        "",
-        "",
-        "",
-        2
+        "Genres: Action, Thriller"
     )
 
+    @Suppress("SpellCheckingInspection")
     val movieFromDB1 = MovieFromDB(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
@@ -39,12 +37,7 @@ object TestUtil {
         5.5,
         "The work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
         "2020-08-25",
-        "Action",
-        "Thriller",
-        "",
-        "",
-        "",
-        2
+        "Genres: Action, Thriller"
     )
 
     private val movieFromApi2 = MovieFromApi(
@@ -64,12 +57,7 @@ object TestUtil {
         6.2,
         "In Madrid, Spain, a mysterious serial killer ruthlessly murders his victims...",
         "2020-08-28",
-        "Drama",
-        "Thriller",
-        "",
-        "",
-        "",
-        2
+        "Genres: Drama, Thriller"
     )
 
     val movieFromDB2 = MovieFromDB(
@@ -79,12 +67,7 @@ object TestUtil {
         6.2,
         "In Madrid, Spain, a mysterious serial killer ruthlessly murders his victims...",
         "2020-08-28",
-        "Drama",
-        "Thriller",
-        "",
-        "",
-        "",
-        2
+        "Genres: Drama, Thriller"
     )
 
     val movies = listOf(movie1, movie2)

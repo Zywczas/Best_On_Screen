@@ -36,7 +36,6 @@ data class MovieFromApi(
     lateinit var genresDescription : String
 
     fun convertGenreIdsToDescription() {
-        //todo test na empty
         genresDescription = if (genres != null) {
             when (genres.size) {
                 1 -> "Genre: ${toStr(genres[0])}"

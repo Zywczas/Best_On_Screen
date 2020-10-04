@@ -7,72 +7,55 @@ import org.junit.jupiter.api.Test
 
 internal class MovieFromApiTest {
 
-    private lateinit var movieFromApi: MovieFromApi
-
-    @BeforeEach
-    private fun init() {
-        movieFromApi = MovieFromApi()
-    }
-
     @Nested
     inner class ConvertGenres {
 
         @Test
         fun returnSuccess() {
-            movieFromApi.genres = listOf(28, 14, 10751, 10749, 37)
+            val expected = "Genres: Action, Fantasy, Family, Romance, Western"
+            val movieFromApi = MovieFromApi(null, null, listOf(28, 14, 10751, 10749, 37),
+                null, null, null, null)
 
-            movieFromApi.convertGenreIdsListToString()
+            movieFromApi.convertGenreIdsToDescription()
 
-            assertEquals(5, movieFromApi.assignedGenresAmount)
-            assertEquals("Action", movieFromApi.genre1)
-            assertEquals("Fantasy", movieFromApi.genre2)
-            assertEquals("Family", movieFromApi.genre3)
-            assertEquals("Romance", movieFromApi.genre4)
-            assertEquals("Western", movieFromApi.genre5)
+            assertEquals(expected, movieFromApi.genresDescription)
         }
 
         @Test
         fun wrongID_returnMissingInfo() {
+            val expected = "Genres: missing info, Fantasy, missing info"
             val wrongId1 = 123456
             val wrongId2 = 0
-            movieFromApi.genres = listOf(wrongId1, 14, wrongId2)
+            val movieFromApi = MovieFromApi(null, null, listOf(wrongId1, 14, wrongId2),
+                null, null, null, null)
 
-            movieFromApi.convertGenreIdsListToString()
+            movieFromApi.convertGenreIdsToDescription()
 
-            assertEquals(3, movieFromApi.assignedGenresAmount)
-            assertEquals("missing info", movieFromApi.genre1)
-            assertEquals("Fantasy", movieFromApi.genre2)
-            assertEquals("missing info", movieFromApi.genre3)
-            assertEquals("", movieFromApi.genre4)
-            assertEquals("", movieFromApi.genre5)
+            assertEquals(expected, movieFromApi.genresDescription)
         }
 
         @Test
-        fun moreThan5GenresInList_return5genres() {
-            movieFromApi.genres = listOf(12, 16, 80, 28, 14, 10751, 10749, 37)
+        fun otherThan1To5GenresInList_returnMissingInfo() {
+            val expected = "Genres: missing information"
+            val movieFromApi = MovieFromApi(null, null,
+                listOf(12, 16, 80, 28, 14, 10751, 10749, 37), null, null,
+                null, null
+            )
 
-            movieFromApi.convertGenreIdsListToString()
+            movieFromApi.convertGenreIdsToDescription()
 
-            assertEquals(5, movieFromApi.assignedGenresAmount)
-            assertEquals("Adventure", movieFromApi.genre1)
-            assertEquals("Animation", movieFromApi.genre2)
-            assertEquals("Crime", movieFromApi.genre3)
-            assertEquals("Action", movieFromApi.genre4)
-            assertEquals("Fantasy", movieFromApi.genre5)
+            assertEquals(expected, movieFromApi.genresDescription)
         }
 
         @Test
-        fun noIds_returnEmptyGenres() {
-            movieFromApi.genres = null
+        fun nullIds_returnNoInformation() {
+            val expected = "Genres: no information"
+            val movieFromApi = MovieFromApi(null, null, null,
+            null, null, null, null)
 
-            movieFromApi.convertGenreIdsListToString()
+            movieFromApi.convertGenreIdsToDescription()
 
-            assertEquals(0, movieFromApi.assignedGenresAmount)
-            assertEquals("", movieFromApi.genre1)
-            assertEquals("", movieFromApi.genre2)
-            assertEquals("", movieFromApi.genre3)
-            assertEquals("", movieFromApi.genre4)
-            assertEquals("", movieFromApi.genre5)
+            assertEquals(expected, movieFromApi.genresDescription)
         }
 
     }
