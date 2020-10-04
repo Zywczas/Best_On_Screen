@@ -103,8 +103,10 @@ dependencies {
     //noinspection GradleDependency
     implementation 'org.mockito:mockito-core:2.9.0'
 
-    //Mockk
-    testImplementation "io.mockk:mockk-android:1.10.0"
+    //Mockk - instrumentation tests
+    testImplementation 'io.mockk:mockk-android:1.10.2'
+    //Mockk - unit tests
+    testImplementation 'io.mockk:mockk:1.10.2'
 
     //espresso
     testImplementation 'androidx.test.espresso:espresso-core:3.3.0'

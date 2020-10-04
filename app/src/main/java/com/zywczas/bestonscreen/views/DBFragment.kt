@@ -103,7 +103,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun checkInternetConnection() {
-        if (networkCheck.isConnected().not()) {
+        if (networkCheck.isConnected.not()) {
             showToast(CONNECTION_PROBLEM)
         }
     }
