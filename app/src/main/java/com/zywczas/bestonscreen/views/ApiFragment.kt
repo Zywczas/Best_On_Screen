@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
@@ -89,15 +90,13 @@ class ApiFragment @Inject constructor(
         navController.navigate(destination)
     }
 
-    //todo przy przechodzeniu z top rated do upcoming iz upcoming do popular recycler view nie leci na gore, spowrotem juz leci
-
     private fun setupLayoutManager() {
         var spanCount = 2
         val orientation = resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 4
         }
-        val layoutManager = GridLayoutManager(activity, spanCount)
+        val layoutManager = GridLayoutManager(requireContext(), spanCount)
         recyclerViewApi.layoutManager = layoutManager
         recyclerViewApi.setHasFixedSize(true)
     }
@@ -125,7 +124,7 @@ class ApiFragment @Inject constructor(
     private fun updateContent(data: Pair<List<Movie>, Category>) {
         updateDisplayedMovies(data.first)
         displayedCategory = data.second
-        updateSelectedTab(data.second)
+        updateSelectedTab(displayedCategory!!)
     }
 
     private fun updateDisplayedMovies(movies: List<Movie>) {
@@ -183,7 +182,6 @@ class ApiFragment @Inject constructor(
             tab?.let {
                 val category = it.tag as Category
                 if (category != displayedCategory){
-                    Log.d("film", "pobiera nowe dane")
                     downloadNewCategory(category)
                 }
 
@@ -195,8 +193,10 @@ class ApiFragment @Inject constructor(
 
     private fun downloadNewCategory(category: Category) {
         showProgressBar(true)
-        viewModel.getNextMoviesIfConnected(category)
+        adapter.submitList(emptyList())
         recyclerViewApi.scrollToPosition(0)
+        viewModel.getNextMoviesIfConnected(category)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
