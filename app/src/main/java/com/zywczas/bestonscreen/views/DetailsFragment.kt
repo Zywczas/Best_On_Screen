@@ -1,6 +1,5 @@
 package com.zywczas.bestonscreen.views
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,7 @@ class DetailsFragment @Inject constructor(
 ) : Fragment() {
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
-    private val movie : Movie
+    private val movie: Movie
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
     override fun onCreateView(
@@ -44,8 +43,6 @@ class DetailsFragment @Inject constructor(
         setupOnClickListener()
     }
 
-//todo dac jakis lepsze uzycie tekstu zeby nie trzeba bylo kominikatu zagluszac
-    @SuppressLint("SetTextI18n")
     private fun setupUIState() {
         val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
         picasso.load(posterPath)
@@ -53,8 +50,10 @@ class DetailsFragment @Inject constructor(
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
         titleTextViewDetails.text = movie.title
-        rateTextViewDetails.text = "Rate: ${movie.voteAverage}"
-        releaseDateTextViewDetails.text = "Release date: ${movie.releaseDate}"
+        val rate = "Rate: ${movie.voteAverage}"
+        rateTextViewDetails.text = rate
+        val releaseDate = "Release date: ${movie.releaseDate}"
+        releaseDateTextViewDetails.text = releaseDate
         overviewTextViewDetails.text = movie.overview
         genresTextViewDetails.text = movie.genresDescription
         setupAddToListBtnStateObserver()

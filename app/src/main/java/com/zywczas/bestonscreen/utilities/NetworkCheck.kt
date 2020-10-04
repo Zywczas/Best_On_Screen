@@ -16,7 +16,7 @@ class NetworkCheck @Inject constructor(private val app: Application) {
     init {
         registerNetworkCallback()
     }
-
+    //todo dac test sprawdzajacy czy to ten sam obiekt jest podawany
     private fun registerNetworkCallback() {
         val connectivityManager =
             app.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
