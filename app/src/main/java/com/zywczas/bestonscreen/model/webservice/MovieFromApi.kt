@@ -46,7 +46,7 @@ data class MovieFromApi(
                         toStr(genres[3])
                 5 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}, " +
                         "${toStr(genres[3])}, ${toStr(genres[4])}"
-                else -> "Genres: no information"
+                else -> "Genres: missing information"
             }
         } else {
             "Genres: no information"

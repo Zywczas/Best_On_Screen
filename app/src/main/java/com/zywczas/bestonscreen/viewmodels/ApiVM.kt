@@ -18,16 +18,16 @@ class ApiVM @Inject constructor(
     private val networkCheck: NetworkCheck
 ) : ViewModel() {
 
-    private val firstPageOfNewCategory = 1
-    private val anyCategoryOnInit = Category.UPCOMING
-    private var page = firstPageOfNewCategory
-    private var category = anyCategoryOnInit
+    private var page = 1
+    private var category = Category.UPCOMING
     private var firstMoviesRequested = false
-    private val movies : MutableList<Movie> by lazy{ mutableListOf() }
+    private val movies by lazy { mutableListOf<Movie>() }
 
-    private val moviesAndCategoryMLD = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
-    val moviesAndCategoryLD =
-        moviesAndCategoryMLD as LiveData<Resource<Pair<List<Movie>, Category>>>
+    private val moviesAndCategoryMLD
+            by lazy { MediatorLiveData<Resource<Pair<List<Movie>, Category>>>() }
+    val moviesAndCategoryLD : LiveData<Resource<Pair<List<Movie>, Category>>>
+            by lazy { moviesAndCategoryMLD }
+
 
     fun getFirstMovies(nextCategory: Category) {
         if (!firstMoviesRequested) {

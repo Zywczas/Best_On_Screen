@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,10 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
-    private val navHostFragment: NavHostFragment by lazyAndroid {
+    private val navHostFragment by lazyAndroid {
         supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment }
-    private val navController: NavController by lazyAndroid { navHostFragment.navController }
-    private val appBarConfiguration: AppBarConfiguration by lazyAndroid {
+    private val navController by lazyAndroid { navHostFragment.navController }
+    private val appBarConfiguration by lazyAndroid {
         AppBarConfiguration(setOf(R.id.destinationDb, R.id.destinationApi), drawerLayoutMain) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

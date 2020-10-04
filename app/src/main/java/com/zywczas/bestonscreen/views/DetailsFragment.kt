@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.lazyAndroid
@@ -25,7 +24,7 @@ class DetailsFragment @Inject constructor(
 ) : Fragment() {
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
-    private val movie: Movie
+    private val movie
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
     override fun onCreateView(

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
@@ -32,8 +31,7 @@ class DBFragment @Inject constructor(
 
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter : MovieAdapter
-    private val navController : NavController
-            by lazyAndroid{ Navigation.findNavController(requireView()) }
+    private val navController by lazyAndroid{ Navigation.findNavController(requireView()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 open class DBRepository @Inject constructor(private val movieDao: MovieDao) {
 
-    private val movies : MutableList<Movie> by lazy { mutableListOf() }
+    private val movies by lazy { mutableListOf<Movie>() }
 
     open fun getMoviesFromDB(): Flowable<List<Movie>> {
         val databaseFlowable = RxJavaBridge.toV3Flowable(movieDao.getMovies())

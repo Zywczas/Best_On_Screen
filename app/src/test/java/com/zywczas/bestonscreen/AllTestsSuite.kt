@@ -12,3 +12,5 @@ import org.junit.runner.RunWith
     //todo dodac pozniej "com.zywczas.bestonscreen.views"
 )
 class AllTestsSuite
+
+//todo pousuwac importy

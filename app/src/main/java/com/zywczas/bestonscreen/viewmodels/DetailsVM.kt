@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
 
-    private val isMovieInDbMLD = MediatorLiveData<Event<Boolean>>()
-    private val messageMLD = MediatorLiveData<Event<String>>()
-    val isMovieInDbLD = isMovieInDbMLD as LiveData<Event<Boolean>>
-    val messageLD = messageMLD as LiveData<Event<String>>
+    private val isMovieInDbMLD by lazy { MediatorLiveData<Event<Boolean>>() }
+    private val messageMLD by lazy { MediatorLiveData<Event<String>>() }
+    val isMovieInDbLD : LiveData<Event<Boolean>> by lazy { isMovieInDbMLD }
+    val messageLD : LiveData<Event<String>> by lazy { messageMLD }
 
     fun checkIfIsInDb(movieId: Int) {
         val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))

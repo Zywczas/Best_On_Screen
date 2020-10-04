@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class DBVM @Inject constructor(repo: DBRepository) : ViewModel() {
 
-    val moviesLD =
-        LiveDataReactiveStreams.fromPublisher(repo.getMoviesFromDB())
+    val moviesLD
+            by lazy { LiveDataReactiveStreams.fromPublisher(repo.getMoviesFromDB()) }
 
 }

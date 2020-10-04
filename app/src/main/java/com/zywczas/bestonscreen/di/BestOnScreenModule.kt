@@ -19,7 +19,6 @@ class BestOnScreenModule {
     companion object {
 
         @Provides
-        @Singleton
         fun provideTMDBService(): ApiService = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
