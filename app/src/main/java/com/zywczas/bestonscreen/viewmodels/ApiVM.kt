@@ -38,7 +38,7 @@ class ApiVM @Inject constructor(
     }
 
     fun getNextMoviesIfConnected(nextCategory: Category = category) {
-        if (networkCheck.isNetworkConnected) {
+        if (networkCheck.isConnected()) {
             getNextMovies(nextCategory)
         } else {
             sendError(CONNECTION_PROBLEM)

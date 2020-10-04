@@ -8,10 +8,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkCheck @Inject constructor(private val app: Application) {
+open class NetworkCheck @Inject constructor(private val app: Application) {
 
-    var isNetworkConnected = false
-        private set
+    private var isNetworkConnected = false
 
     init {
         registerNetworkCallback()
@@ -36,5 +35,7 @@ class NetworkCheck @Inject constructor(private val app: Application) {
 
         })
     }
+
+    open fun isConnected() = isNetworkConnected
 
 }

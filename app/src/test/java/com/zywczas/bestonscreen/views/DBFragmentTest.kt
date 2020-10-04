@@ -6,7 +6,7 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-internal class DBActivityTest {
+class DBFragmentTest
 
 //    @Rule
 //    @JvmField
@@ -31,6 +31,3 @@ internal class DBActivityTest {
 //        onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText("Movies: My List"))))
 //
 //    }
-
-}
-
