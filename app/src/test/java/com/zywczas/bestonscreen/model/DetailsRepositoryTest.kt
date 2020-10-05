@@ -36,9 +36,9 @@ internal class DetailsRepositoryTest {
             val actual =
                 repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
 
+            assertEquals(true, actual)
             verify(movieDao).getIdCount(movieId)
             verifyNoMoreInteractions(movieDao)
-            assertEquals(true, actual)
         }
 
         @Test
@@ -66,9 +66,9 @@ internal class DetailsRepositoryTest {
 
             val actualMessage = repo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
+            assertEquals(expectedMessage, actualMessage)
             verify(movieDao).insertMovie(anyMovieFromDB())
             verifyNoMoreInteractions(movieDao)
-            assertEquals(expectedMessage, actualMessage)
         }
 
         @Test
@@ -107,9 +107,9 @@ internal class DetailsRepositoryTest {
             val actualMessage =
                 repo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
+            assertEquals(expectedMessage, actualMessage)
             verify(movieDao).deleteMovie(anyMovieFromDB())
             verifyNoMoreInteractions(movieDao)
-            assertEquals(expectedMessage, actualMessage)
         }
 
         @Test

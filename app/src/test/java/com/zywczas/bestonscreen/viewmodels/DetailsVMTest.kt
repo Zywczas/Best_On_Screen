@@ -71,9 +71,9 @@ internal class DetailsVMTest {
             viewModel.addOrDeleteMovie(movie, isInDb)
             val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
+            assertEquals(expectedMessage, actualMessage)
             verify(repo).addMovieToDB(movie)
             verifyNoMoreInteractions(repo)
-            assertEquals(expectedMessage, actualMessage)
         }
 
         @Test
@@ -86,9 +86,9 @@ internal class DetailsVMTest {
             viewModel.addOrDeleteMovie(movie, isInDb)
             val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
+            assertEquals(expectedMessage, actualMessage)
             verify(repo).deleteMovieFromDB(movie)
             verifyNoMoreInteractions(repo)
-            assertEquals(expectedMessage, actualMessage)
         }
 
     }

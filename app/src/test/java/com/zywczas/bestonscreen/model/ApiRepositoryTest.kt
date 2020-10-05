@@ -36,9 +36,9 @@ internal class ApiRepositoryTest {
 
             val actual = apiRepository.getApiMovies(Category.POPULAR, 4).blockingFirst()
 
+            assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getPopularMovies(anyString(), anyInt())
             verifyNoMoreInteractions(apiService)
-            assertEquals(Resource.success(expectedMovies), actual)
         }
 
         @Test
@@ -50,9 +50,9 @@ internal class ApiRepositoryTest {
 
             val actual = apiRepository.getApiMovies(Category.TOP_RATED, 6).blockingFirst()
 
+            assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getTopRatedMovies(anyString(), anyInt())
             verifyNoMoreInteractions(apiService)
-            assertEquals(Resource.success(expectedMovies), actual)
         }
 
         @Test
@@ -64,9 +64,9 @@ internal class ApiRepositoryTest {
 
             val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
 
+            assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getUpcomingMovies(anyString(), anyInt())
             verifyNoMoreInteractions(apiService)
-            assertEquals(Resource.success(expectedMovies), actual)
         }
 
     }

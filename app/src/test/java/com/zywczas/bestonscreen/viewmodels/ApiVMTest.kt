@@ -45,14 +45,13 @@ internal class ApiVMTest {
             val category = Category.POPULAR
             val movies = TestUtil.movies
             val returnedMovies = Flowable.just(Resource.success(movies))
-            every { repo.getApiMovies(any(), any()) } returns returnedMovies
+            every { repo.getApiMovies(category, 1) } returns returnedMovies
             every { network.isConnected } returns true
 
             viewModel.getNextMoviesIfConnected(category)
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
             assertEquals(Resource.success(Pair(movies, category)), actual)
-            verify { network.isConnected }
         }
 
         @Test
@@ -60,109 +59,38 @@ internal class ApiVMTest {
             val category = Category.UPCOMING
             val message = "some error"
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
-            every { repo.getApiMovies(any(), any()) } returns returnedError
+            every { repo.getApiMovies(category, 1) } returns returnedError
             every { network.isConnected } returns true
 
             viewModel.getNextMoviesIfConnected(category)
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//todo dokonczyc przechodznenie na Mockk
-            verify(repo).getApiMovies(anyCategory(), anyInt())
-            verifyNoMoreInteractions(repo)
+
             assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
+            verify (exactly = 1) { repo.getApiMovies(any(), any()) }
         }
 
         @Test
         fun `1st call OK, 2nd error, observe error and data`() {
-            val category = Category.UPCOMING
+            val category = Category.TOP_RATED
             val message = "some error message from ApiRepository"
             val movies = TestUtil.movies
+            val pages = mutableListOf<Int>()
             val returnedMovies = Flowable.just(Resource.success(movies))
-            `when`(repo.getApiMovies(category, 1)).thenReturn(returnedMovies)
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
-            `when`(repo.getApiMovies(category, 2)).thenReturn(returnedError)
-            `when`(network.isConnected()).thenReturn(true)
+            every { repo.getApiMovies(category, capture(pages)) } returns returnedMovies andThen returnedError
+            every { network.isConnected } returns true
 
             viewModel.getNextMoviesIfConnected(category)
             val needToPullFirstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
             viewModel.getNextMoviesIfConnected(category)
             val actualSecondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
 
-            verify(repo, atLeast(2)).getApiMovies(anyCategory(), anyInt())
-            verifyNoMoreInteractions(repo)
             assertEquals(Resource.error(message, Pair(movies, category)), actualSecondValue)
+            verify (exactly = 2) { repo.getApiMovies(category, any()) }
+            assertEquals(listOf(1,2), pages)
         }
+        //todo dac 2 testy nowe na getFirstMovies + internet check
 
     }
-
-//    private lateinit var viewModel : ApiVM
-//    //todo dac 2 testy nowe na getFirstMovies + internet check
-//    @Mock
-//    private lateinit var repo : ApiRepository
-//    @Mock
-//    private lateinit var network : NetworkCheck
-//
-//    @BeforeEach
-//    private fun init() {
-//        MockitoAnnotations.initMocks(this)
-//        viewModel = ApiVM(repo, network)
-//    }
-//
-//    private fun <Category> anyCategory(): Category = any()
-//
-//    @Nested
-//    inner class GetNextMovies {
-//
-//        @Test
-//        fun observeChange() {
-//            val category = Category.POPULAR
-//            val movies = TestUtil.movies
-//            val returnedMovies = Flowable.just(Resource.success(movies))
-//            `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedMovies)
-//            `when`(network.isConnected()).thenReturn(true)
-//
-//            viewModel.getNextMoviesIfConnected(category)
-//            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//
-//            assertEquals(Resource.success(Pair(movies, category)), actual)
-//        }
-//
-//        @Test
-//        fun error_observeError() {
-//            val category = Category.UPCOMING
-//            val message = "some error"
-//            val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
-//            `when`(repo.getApiMovies(anyCategory(), anyInt())).thenReturn(returnedError)
-//            `when`(network.isConnected()).thenReturn(true)
-//
-//            viewModel.getNextMoviesIfConnected(category)
-//            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//
-//            verify(repo).getApiMovies(anyCategory(), anyInt())
-//            verifyNoMoreInteractions(repo)
-//            assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
-//        }
-//
-//        @Test
-//        fun `1st call OK, 2nd error, observe error and data`() {
-//            val category = Category.UPCOMING
-//            val message = "some error message from ApiRepository"
-//            val movies = TestUtil.movies
-//            val returnedMovies = Flowable.just(Resource.success(movies))
-//            `when`(repo.getApiMovies(category, 1)).thenReturn(returnedMovies)
-//            val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
-//            `when`(repo.getApiMovies(category, 2)).thenReturn(returnedError)
-//            `when`(network.isConnected()).thenReturn(true)
-//
-//            viewModel.getNextMoviesIfConnected(category)
-//            val needToPullFirstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//            viewModel.getNextMoviesIfConnected(category)
-//            val actualSecondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
-//
-//            verify(repo, atLeast(2)).getApiMovies(anyCategory(), anyInt())
-//            verifyNoMoreInteractions(repo)
-//            assertEquals(Resource.error(message, Pair(movies, category)), actualSecondValue)
-//        }
-//
-//    }
 
 }

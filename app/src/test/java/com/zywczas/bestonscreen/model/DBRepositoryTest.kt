@@ -32,9 +32,9 @@ internal class DBRepositoryTest {
 
             val actualMovies = repo.getMoviesFromDB().blockingFirst()
 
+            assertEquals(expectedMovies, actualMovies)
             verify(movieDao).getMovies()
             verifyNoMoreInteractions(movieDao)
-            assertEquals(expectedMovies, actualMovies)
 
         }
 
