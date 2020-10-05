@@ -14,3 +14,4 @@ import org.junit.runner.RunWith
 class AllTestsSuite
 
 //todo pousuwac importy
+//todo usunac te glupie activity test
