@@ -3,10 +3,9 @@ package com.zywczas.bestonscreen.viewmodels
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
-import org.junit.jupiter.api.extension.ExtendWith
 import com.zywczas.bestonscreen.util.LiveDataTestUtil
 import com.zywczas.bestonscreen.util.TestUtil
+import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import io.mockk.MockKAnnotations
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 
 @ExtendWith(InstantExecutorExtension::class)
