@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test
 internal class ApiVMTest {
 
     private lateinit var viewModel : ApiVM
-    //todo dac 2 testy nowe na getFirstMovies + internet check
 
     @MockK
     lateinit var repo : ApiRepository
@@ -35,6 +34,59 @@ internal class ApiVMTest {
     private fun init() {
         MockKAnnotations.init(this)
         viewModel = ApiVM(repo, network)
+    }
+
+    @Nested
+    inner class GetFirstMovies {
+
+        @Test
+        fun observeChange(){
+            val category = Category.POPULAR
+            val movies = TestUtil.movies
+            val returnedMovies = Flowable.just(Resource.success(movies))
+            every { repo.getApiMovies(category, 1) } returns returnedMovies
+            every { network.isConnected } returns true
+
+            viewModel.getFirstMovies(category)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            assertEquals(Resource.success(Pair(movies, category)), actual)
+        }
+
+        @Test
+        fun noConnection_observeError(){
+            val message = "Problem with internet. Check your connection and try again."
+            val category = Category.UPCOMING
+            val movies = TestUtil.movies
+            val returnedMovies = Flowable.just(Resource.success(movies))
+            every { repo.getApiMovies(category, 1) } returns returnedMovies
+            every { network.isConnected } returns false
+
+            viewModel.getFirstMovies(category)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            assertEquals(Resource.error(message, Pair(emptyList<Movie>(), category)), actual)
+        }
+
+        @Test
+        fun tryToGetAgain_observeNoAction(){
+            val category = Category.TOP_RATED
+            val movies1 = TestUtil.movies
+            val movies2 = listOf(TestUtil.movie2)
+            val returnedMovies1 = Flowable.just(Resource.success(movies1))
+            val returnedMovies2 = Flowable.just(Resource.success(movies2))
+            every { repo.getApiMovies(category, any()) } returns returnedMovies1 andThen returnedMovies2
+            every { network.isConnected } returns true
+
+            viewModel.getFirstMovies(category)
+            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            viewModel.getFirstMovies(category)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            assertEquals(Resource.success(Pair(movies1, category)), actual)
+            verify (exactly = 1) { repo.getApiMovies(any(), any()) }
+        }
+
     }
 
     @Nested
@@ -89,7 +141,27 @@ internal class ApiVMTest {
             verify (exactly = 2) { repo.getApiMovies(category, any()) }
             assertEquals(listOf(1,2), pages)
         }
-        //todo dac 2 testy nowe na getFirstMovies + internet check
+
+        @Test
+        fun changeCategory_observeNewCategory(){
+            val category1 = Category.TOP_RATED
+            val category2 = Category.UPCOMING
+            val movies1 = TestUtil.movies
+            val movies2 = listOf(TestUtil.movie2)
+            val pages = mutableListOf<Int>()
+            val returnedMovies1 = Flowable.just(Resource.success(movies1))
+            val returnedMovies2 = Flowable.just(Resource.success(movies2))
+            every { repo.getApiMovies(any(), capture(pages)) } returns returnedMovies1 andThen returnedMovies2
+            every { network.isConnected } returns true
+
+            viewModel.getNextMoviesIfConnected(category1)
+            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            viewModel.getNextMoviesIfConnected(category2)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+
+            assertEquals(Resource.success(Pair(movies2, category2)), actual)
+            assertEquals(listOf(1,1), pages)
+        }
 
     }
 

@@ -50,7 +50,7 @@ object TestUtil {
         "2020-08-28"
     )
 
-    private val movie2 = Movie(
+    val movie2 = Movie(
         438396,
         "/sMO1v5TUf8GOJHbJieDXsgWT2Ud.jpg",
         "Unknown Origins",
