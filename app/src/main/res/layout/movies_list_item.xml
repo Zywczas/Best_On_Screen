@@ -30,7 +30,7 @@
         android:layout_marginTop="16dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/starImageViewListItem"
         app:layout_constraintTop_toBottomOf="@+id/posterImageViewListItem"
         tools:text="7.7" />
 
@@ -49,7 +49,7 @@
         tools:text="movie title" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/starImageViewListItem"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginStart="8dp"

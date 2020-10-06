@@ -2,6 +2,7 @@ package com.zywczas.bestonscreen.views
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class DBFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         startDbUISetupChain()
         checkInternetConnection()
+
     }
 
     private fun startDbUISetupChain() {

@@ -25,7 +25,7 @@ internal class DBRepositoryTest {
 
         @Test
         fun returnMovieList() {
-            val expectedMovies = TestUtil.movies
+            val expectedMovies = TestUtil.moviesListOf2
             val moviesFromDB = TestUtil.moviesFromDb
             val returnedMoviesFromDb = Flowable.just(moviesFromDB)
             `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
