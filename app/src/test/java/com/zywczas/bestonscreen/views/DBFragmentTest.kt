@@ -106,8 +106,6 @@ class DBFragmentTest {
         }
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(7, click()))
 
-        val cos =navController.backStack.last().viewModelStore
-
         assertEquals(R.id.destinationDetails ,navController.currentDestination?.id)
         assertEquals(expectedArgument, navController.backStack.last().arguments?.get("movie"))
     }
