@@ -1,7 +1,6 @@
 package com.zywczas.bestonscreen.views
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,8 +61,8 @@ class DetailsFragment @Inject constructor(
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isInDb ->
-                addToListBtn.isChecked = isInDb
-                addToListBtn.tag = isInDb
+                addToListBtnDetails.isChecked = isInDb
+                addToListBtnDetails.tag = isInDb
             }
         }
         updateAddToListBtnState()
@@ -88,8 +87,8 @@ class DetailsFragment @Inject constructor(
     }
 
     private fun setupOnClickListener() {
-        addToListBtn.setOnClickListener {
-            val isButtonChecked = addToListBtn.tag as Boolean
+        addToListBtnDetails.setOnClickListener {
+            val isButtonChecked = addToListBtnDetails.tag as Boolean
             viewModel.addOrDeleteMovie(movie, isButtonChecked)
             updateAddToListBtnState()
         }

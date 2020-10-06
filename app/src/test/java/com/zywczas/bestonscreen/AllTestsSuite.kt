@@ -15,3 +15,4 @@ class AllTestsSuite
 
 //todo pousuwac importy
 //todo usunac te glupie activity test
+//todo sprawdzic czy jak dam przy mockach @Mockk i init w kazdym before czy to mocno wydluzy czas testow

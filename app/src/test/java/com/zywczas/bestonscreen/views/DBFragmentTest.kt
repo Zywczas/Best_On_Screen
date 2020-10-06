@@ -37,6 +37,8 @@ import org.robolectric.annotation.LooperMode
 class DBFragmentTest {
 //todo dac na razie mocki wszedzie a pozniej porownac czy jak dam daggera to czy bedzie szybciej
     //todo chyba lepiej nie mockowac fragment factory a dac z daggera normalna, zeby przy obrotach sprawdzalo czy na prawde dobrze wczytuje
+
+    //todo dodac sprawdzanie czy toast sie pokazuje jak nie ma neta
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DBVM>()
