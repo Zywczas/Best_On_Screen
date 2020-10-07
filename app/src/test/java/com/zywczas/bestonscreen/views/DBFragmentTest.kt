@@ -36,31 +36,26 @@ class DBFragmentTest {
 
     //todo chyba lepiej nie mockowac fragment factory a dac z daggera normalna, zeby przy obrotach sprawdzalo czy na prawde dobrze wczytuje
 
-    //todo dodac sprawdzanie czy toast sie pokazuje jak nie ma neta
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DBVM>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
     private val recyclerView = onView(withId(R.id.recyclerViewDB))
+    private val moviesLD = MutableLiveData<List<Movie>>()
 
     @Before
     fun init() {
+        moviesLD.value = TestUtil.moviesListOf10
         every { networkCheck.isConnected } returns true
+        every { viewModel.moviesLD } returns moviesLD
         every { viewModelFactory.create(DBVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) } returns DBFragment(
-            viewModelFactory,
-            picasso,
-            networkCheck
-        )
+        every { fragmentsFactory.instantiate(any(), any()) }returns
+                DBFragment(viewModelFactory, picasso, networkCheck)
     }
 
     @Test
     fun isFragmentInView() {
-        val moviesLD = MutableLiveData<List<Movie>>()
-        moviesLD.value = TestUtil.moviesListOf10
-        every { viewModel.moviesLD } returns moviesLD
-
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         recyclerView.check(matches(isDisplayed()))
@@ -69,9 +64,7 @@ class DBFragmentTest {
 
     @Test
     fun noMovies_isEmptyListMessageInView() {
-        val moviesLD = MutableLiveData<List<Movie>>()
         moviesLD.value = emptyList()
-        every { viewModel.moviesLD } returns moviesLD
 
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
@@ -80,10 +73,6 @@ class DBFragmentTest {
 
     @Test
     fun isDataDisplayed() {
-        val moviesLD = MutableLiveData<List<Movie>>()
-        moviesLD.value = TestUtil.moviesListOf10
-        every { viewModel.moviesLD } returns moviesLD
-
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         recyclerView.perform(scrollToPosition<ViewHolder>(9))
@@ -95,15 +84,10 @@ class DBFragmentTest {
 
     @Test
     fun navigationToDetailsFragment() {
-        val expectedArgument = DBFragmentDirections.actionToDetails(TestUtil.moviesListOf10[7])
-            .arguments["movie"] as Movie
+        val expectedArgument = DBFragmentDirections.actionToDetails(TestUtil.moviesListOf10[7]).arguments["movie"] as Movie
         val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
         navController.setGraph(R.navigation.main_nav_graph)
         navController.setCurrentDestination(R.id.destinationDb)
-        //todo dac wszystkie na zewnatrz live data i view model every
-        val moviesLD = MutableLiveData<List<Movie>>()
-        moviesLD.value = TestUtil.moviesListOf10
-        every { viewModel.moviesLD } returns moviesLD
 
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
         scenario.onFragment { fragment ->
@@ -117,10 +101,6 @@ class DBFragmentTest {
 
     @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
-        val moviesLD = MutableLiveData<List<Movie>>()
-        moviesLD.value = TestUtil.moviesListOf10
-        every { viewModel.moviesLD } returns moviesLD
-
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
         recyclerView.perform(scrollToPosition<ViewHolder>(9))
         scenario.recreate()
@@ -130,9 +110,6 @@ class DBFragmentTest {
 
     @Test
     fun noInternet_isToastShown(){
-        val moviesLD = MutableLiveData<List<Movie>>()
-        moviesLD.value = TestUtil.moviesListOf10
-        every { viewModel.moviesLD } returns moviesLD
         every { networkCheck.isConnected } returns false
 
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
