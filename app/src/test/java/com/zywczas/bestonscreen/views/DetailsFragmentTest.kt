@@ -26,12 +26,14 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 class DetailsFragmentTest {
 
-    private val directions = DBFragmentDirections.actionToDetails(TestUtil.movie1)
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DetailsVM>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
+    private val directions = DBFragmentDirections.actionToDetails(TestUtil.movie1)
+    private val isMovieInDbLD = MutableLiveData<Event<Boolean>>()
+    private val messageLD = MutableLiveData<Event<String>>()
 
     @Before
     fun init(){
@@ -42,11 +44,10 @@ class DetailsFragmentTest {
 
     @Test
     fun isFragmentInView(){
-        val isMovieInDbLD = MutableLiveData<Event<Boolean>>()
-        isMovieInDbLD.value = Event(true)
-        val messageLD = MutableLiveData<Event<String>>()
-        messageLD.value = Event("Movie added to your list")
+
+//        messageLD.value = Event("Movie added to your list")
         //todo dodac answers { code }
+        //todo sprobowac wniesc do Before
         every { viewModel.isMovieInDbLD } returns isMovieInDbLD
         every { viewModel.messageLD } returns messageLD
         every { viewModel.checkIfIsInDb(any()) } just runs
@@ -71,7 +72,28 @@ class DetailsFragmentTest {
             .check(matches(isDisplayed()))
     }
 
-    //czy laduje film
+    @Test
+    fun isDataDisplayed(){
+        every { viewModel.isMovieInDbLD } returns isMovieInDbLD
+        every { viewModel.messageLD } returns messageLD
+        every { viewModel.checkIfIsInDb(any()) } just runs
+
+        val scenario = launchFragmentInContainer<DetailsFragment>(
+            factory = fragmentsFactory,
+            fragmentArgs = directions.arguments
+        )
+
+//todo dac picasso check      onView(withId(R.id.posterImageViewDetails)).check(matches(isDisplayed()))
+        onView(withId(R.id.titleTextViewDetails)).check(matches(withText("Hard Kill")))
+        onView(withId(R.id.rateTextViewDetails)).check(matches(withText("Rate: 5.5")))
+        onView(withId(R.id.releaseDateTextViewDetails)).check(matches(withText("Release date: 2020-08-25")))
+        onView(withId(R.id.genresTextViewDetails)).check(matches(withText("Genres: Action, Thriller")))
+        onView(withId(R.id.overviewTextViewDetails))
+            .check(matches(withText("The work of billionaire tech CEO Donovan Chalmers " +
+                "is so valuable that he hires mercenaries to protect it, and a terrorist group " +
+                    "kidnaps his daughter just to get it.")))
+
+    }
 
     //czy dodawanie filmu do bazy dziala - czy klikanie guzika dziala i zostawia checked lub unchecked
 
