@@ -146,7 +146,6 @@ class DetailsFragmentTest {
     fun deletingMovieFromDatabase_isAddToMyListBtnUnchecked(){
         isMovieInDbLD.value = Event(true)
         every { viewModel.addOrDeleteMovie(any(), true) } answers {
-            messageLD.value = Event("movie deleted from database")
             isMovieInDbLD.value = Event(false)
         }
 
@@ -156,24 +155,23 @@ class DetailsFragmentTest {
         )
 
         onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-        onView(withId(R.id.addToMyListBtnDetails)).check(matches(not(isChecked())))
+            .check(matches(not(isChecked())))
     }
 
     @Test
     fun deletingMovieFromDatabase_isToastShown(){
         isMovieInDbLD.value = Event(true)
         every { viewModel.addOrDeleteMovie(any(), true) } answers {
-            messageLD.value = Event("movie deleted from database")
-            isMovieInDbLD.value = Event(false)
+            messageLD.value = Event("movie deleted")
         }
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
+        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
 
-//        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-//        onView(withId(R.id.addToMyListBtnDetails)).check(matches(not(isChecked())))
+        assertEquals("movie deleted", ShadowToast.getTextOfLatestToast())
     }
 
     @Test
@@ -203,8 +201,29 @@ class DetailsFragmentTest {
             .check(matches(isDisplayed()))
     }
 
-    //todo ac test sprawdzajacy czy toast sie nie powtarza po recreate
+    @Test
+    fun activityDestroyed_isToastNotShownAgainOnFragmentRecreated(){
+        messageLD.value = Event("all good so far")
 
-    //todo dac test czy jak nie ma neta to pokazuje sie toast i od razu skopiowac do DBfragment test
+        val scenario = launchFragmentInContainer<DetailsFragment>(
+            factory = fragmentsFactory,
+            fragmentArgs = directions.arguments
+        )
+        scenario.recreate()
+
+        assertEquals(1, ShadowToast.shownToastCount())
+    }
+
+    @Test
+    fun noInternet_isToastShown(){
+        every { networkCheck.isConnected } returns false
+
+        val scenario = launchFragmentInContainer<DetailsFragment>(
+            factory = fragmentsFactory,
+            fragmentArgs = directions.arguments
+        )
+
+        assertEquals("Problem with internet. Check your connection and try again.", ShadowToast.getTextOfLatestToast())
+    }
 
 }

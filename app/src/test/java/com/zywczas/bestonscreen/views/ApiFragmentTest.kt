@@ -6,3 +6,5 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
 
 class ApiFragmentTest
+
+//todo ac test sprawdzajacy czy toast sie nie powtarza po recreate

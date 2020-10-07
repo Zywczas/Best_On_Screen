@@ -28,6 +28,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -125,6 +126,18 @@ class DBFragmentTest {
         scenario.recreate()
 
         onView(withText("The Pianist")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun noInternet_isToastShown(){
+        val moviesLD = MutableLiveData<List<Movie>>()
+        moviesLD.value = TestUtil.moviesListOf10
+        every { viewModel.moviesLD } returns moviesLD
+        every { networkCheck.isConnected } returns false
+
+        val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
+
+        assertEquals("Problem with internet. Check your connection and try again.", ShadowToast.getTextOfLatestToast())
     }
 
 
