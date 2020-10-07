@@ -9,7 +9,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Event
 import javax.inject.Inject
 
-class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
+open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
 
     private val isMovieInDbMLD by lazy { MediatorLiveData<Event<Boolean>>() }
     private val messageMLD by lazy { MediatorLiveData<Event<String>>() }

@@ -5,6 +5,4 @@ import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
 
-@RunWith(AndroidJUnit4::class)
-@LooperMode(LooperMode.Mode.PAUSED)
 class ApiFragmentTest
