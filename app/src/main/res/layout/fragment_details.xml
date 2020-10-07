@@ -79,7 +79,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addToListBtnDetails"
+                app:layout_constraintTop_toBottomOf="@+id/addToMyListBtnDetails"
                 tools:text="Genres: " />
 
             <TextView
@@ -114,7 +114,7 @@
 
 
             <ToggleButton
-                android:id="@+id/addToListBtnDetails"
+                android:id="@+id/addToMyListBtnDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginTop="8dp"

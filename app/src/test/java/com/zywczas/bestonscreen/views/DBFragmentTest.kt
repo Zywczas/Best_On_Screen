@@ -5,19 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.actionWithAssertions
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.adapter.MovieAdapter.*
+import com.zywczas.bestonscreen.adapter.MovieAdapter.ViewHolder
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
@@ -26,7 +23,7 @@ import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.every
 import io.mockk.mockk
 import org.hamcrest.core.IsNot.not
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,14 +44,18 @@ class DBFragmentTest {
     private val recyclerView = onView(withId(R.id.recyclerViewDB))
 
     @Before
-    fun init(){
+    fun init() {
         every { networkCheck.isConnected } returns true
         every { viewModelFactory.create(DBVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) } returns DBFragment(viewModelFactory, picasso, networkCheck)
+        every { fragmentsFactory.instantiate(any(), any()) } returns DBFragment(
+            viewModelFactory,
+            picasso,
+            networkCheck
+        )
     }
 
     @Test
-    fun isFragmentInView(){
+    fun isFragmentInView() {
         val moviesLD = MutableLiveData<List<Movie>>()
         moviesLD.value = TestUtil.moviesListOf10
         every { viewModel.moviesLD } returns moviesLD
@@ -66,7 +67,7 @@ class DBFragmentTest {
     }
 
     @Test
-    fun noMovies_isEmptyListMessageInView(){
+    fun noMovies_isEmptyListMessageInView() {
         val moviesLD = MutableLiveData<List<Movie>>()
         moviesLD.value = emptyList()
         every { viewModel.moviesLD } returns moviesLD
@@ -77,7 +78,7 @@ class DBFragmentTest {
     }
 
     @Test
-    fun isDataDisplayed(){
+    fun isDataDisplayed() {
         val moviesLD = MutableLiveData<List<Movie>>()
         moviesLD.value = TestUtil.moviesListOf10
         every { viewModel.moviesLD } returns moviesLD
@@ -92,7 +93,7 @@ class DBFragmentTest {
     }
 
     @Test
-    fun navigationToDetailsFragment(){
+    fun navigationToDetailsFragment() {
         val expectedArgument = DBFragmentDirections.actionToDetails(TestUtil.moviesListOf10[7])
             .arguments["movie"] as Movie
         val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
@@ -108,12 +109,12 @@ class DBFragmentTest {
         }
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(7, click()))
 
-        assertEquals(R.id.destinationDetails ,navController.currentDestination?.id)
+        assertEquals(R.id.destinationDetails, navController.currentDestination?.id)
         assertEquals(expectedArgument, navController.backStack.last().arguments?.get("movie"))
     }
 
     @Test
-    fun isInstanceStateSavedAndRestored_onActivityDestroyed(){
+    fun activityDestroyed_isInstanceStateSavedAndRestored() {
         val moviesLD = MutableLiveData<List<Movie>>()
         moviesLD.value = TestUtil.moviesListOf10
         every { viewModel.moviesLD } returns moviesLD

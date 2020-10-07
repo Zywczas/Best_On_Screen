@@ -61,8 +61,8 @@ class DetailsFragment @Inject constructor(
     private fun setupAddToListBtnStateObserver() {
         viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isInDb ->
-                addToListBtnDetails.isChecked = isInDb
-                addToListBtnDetails.tag = isInDb
+                addToMyListBtnDetails.isChecked = isInDb
+                addToMyListBtnDetails.tag = isInDb
             }
         }
         updateAddToListBtnState()
@@ -87,8 +87,9 @@ class DetailsFragment @Inject constructor(
     }
 
     private fun setupOnClickListener() {
-        addToListBtnDetails.setOnClickListener {
-            val isButtonChecked = addToListBtnDetails.tag as Boolean
+        addToMyListBtnDetails.setOnClickListener {
+//todo sprawdzic to pozniej po napisaniu testow            val isButtonChecked = addToMyListBtnDetails.isChecked
+            val isButtonChecked = addToMyListBtnDetails.tag as Boolean
             viewModel.addOrDeleteMovie(movie, isButtonChecked)
             updateAddToListBtnState()
         }
