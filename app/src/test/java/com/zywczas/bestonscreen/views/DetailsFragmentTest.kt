@@ -1,40 +1,29 @@
 package com.zywczas.bestonscreen.views
 
-import android.util.Log
-import android.view.View
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.*
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.viewpager.widget.ViewPager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.util.LiveDataTestUtil
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.NestedScrollViewExtension
 import com.zywczas.bestonscreen.utilities.NetworkCheck
-import com.zywczas.bestonscreen.utilities.ToastMatcher
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
-import kotlinx.android.synthetic.main.fragment_details.*
-import org.hamcrest.Matchers
 import org.hamcrest.core.IsNot.not
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Captor
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -47,8 +36,6 @@ class DetailsFragmentTest {
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
     private val directions = DBFragmentDirections.actionToDetails(TestUtil.movie1)
     private val isMovieInDbLD = MutableLiveData<Event<Boolean>>()
-    @Captor
-
     private val messageLD = MutableLiveData<Event<String>>()
 
     @Before
@@ -128,10 +115,8 @@ class DetailsFragmentTest {
     @Test
     fun addingMovieToDatabase_isAddToMyListBtnChecked(){
         isMovieInDbLD.value = Event(false)
-
         every { viewModel.addOrDeleteMovie(any(), false) } answers {
-            isMovieInDbLD.value = Event(true)
-        }
+            isMovieInDbLD.value = Event(true) }
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -145,29 +130,16 @@ class DetailsFragmentTest {
     @Test
     fun addingMovieToDatabase_isToastShown(){
         isMovieInDbLD.value = Event(false)
-
         every { viewModel.addOrDeleteMovie(any(), false) } answers {
-            messageLD.value = Event("movie added to database")
-        }
+            messageLD.value = Event("movie added to database") }
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
-
-
-//todo dodac toast
-
         onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-        onView(withText("movie added to database")).inRoot(ToastMatcher()).check(matches(isDisplayed()))
-//        onView(withId(R.id.addToMyListBtnDetails)).check(matches(isChecked()))
-//        verify { viewModel.addOrDeleteMovie(any(), false) }
 
-
-//        lateinit var decorView : View
-//        scenario.onFragment { decorView = it.requireActivity().window.decorView }
-//        onView(withText(R.string.toast)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()))
-
+        assertEquals("movie added to database", ShadowToast.getTextOfLatestToast())
     }
 
     @Test
@@ -182,7 +154,7 @@ class DetailsFragmentTest {
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
-//todo dodac toast
+
         onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
         onView(withId(R.id.addToMyListBtnDetails)).check(matches(not(isChecked())))
     }
@@ -199,9 +171,9 @@ class DetailsFragmentTest {
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
-//todo dodac toast
-        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-        onView(withId(R.id.addToMyListBtnDetails)).check(matches(not(isChecked())))
+
+//        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
+//        onView(withId(R.id.addToMyListBtnDetails)).check(matches(not(isChecked())))
     }
 
     @Test
@@ -230,5 +202,9 @@ class DetailsFragmentTest {
                 "kidnaps his daughter just to get it.")).perform(NestedScrollViewExtension())
             .check(matches(isDisplayed()))
     }
+
+    //todo ac test sprawdzajacy czy toast sie nie powtarza po recreate
+
+    //todo dac test czy jak nie ma neta to pokazuje sie toast i od razu skopiowac do DBfragment test
 
 }
