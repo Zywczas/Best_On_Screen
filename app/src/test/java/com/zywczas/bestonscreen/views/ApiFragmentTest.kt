@@ -181,6 +181,33 @@ class ApiFragmentTest {
         assertEquals(mutableListOf(1, 1), actualPages)
     }
 
+    @Test
+    fun clickingTheSameTab_isNothingChanged(){
+        val actualCategories = mutableListOf<Category>()
+        val actualPages = mutableListOf<Int>()
+        var actualSelectedTabIndex : Int? = null
+        var actualItemsInRecyclerView : Int? = null
+        every { repo.getApiMovies(capture(actualCategories), capture(actualPages)) } returns
+                Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
+                Flowable.just(Resource.success(TestUtil.moviesList6_8))
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        onView(withText("Top Rated")).perform(click())
+        scenario.onFragment {
+            actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
+            actualItemsInRecyclerView = it.recyclerViewApi.adapter?.itemCount
+        }
+
+        onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
+        assertEquals(0, actualSelectedTabIndex)
+        assertEquals(5, actualItemsInRecyclerView)
+        verify(exactly = 1) { repo.getApiMovies(any(), any())}
+        assertEquals(mutableListOf(TOP_RATED), actualCategories)
+        assertEquals(mutableListOf(1), actualPages)
+    }
+
+
+
 
 }
 
@@ -192,4 +219,3 @@ class ApiFragmentTest {
 //todo czy nawigacja dziala
 //todo czy recycler view sciaga nowe filmy na przewijanie ekranu
 //todo czy jak success a pozniej error to dalej sa filmy i po obrocie tez
-//todo klikanie tej same kategori - nic sie nie dzieje
