@@ -1,16 +1,21 @@
 package com.zywczas.bestonscreen.views
 
 import android.app.Application
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.DrawableWrapper
+import android.graphics.drawable.GradientDrawable
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.*
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso

@@ -1,5 +1,6 @@
 package com.zywczas.bestonscreen.views
 
+import android.content.res.Configuration
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
@@ -8,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -22,6 +24,7 @@ import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.android.synthetic.main.fragment_db.*
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -39,8 +42,8 @@ class DBFragmentTest {
     private val viewModel = mockk<DBVM>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-    private val recyclerView = onView(withId(R.id.recyclerViewDB))
     private val moviesLD = MutableLiveData<List<Movie>>()
+    private val recyclerView = onView(withId(R.id.recyclerViewDB))
 
     @Before
     fun init() {
