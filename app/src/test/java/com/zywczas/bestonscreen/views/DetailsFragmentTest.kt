@@ -46,8 +46,12 @@ import org.robolectric.shadows.ShadowToast
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class DetailsFragmentTest {
+    //todo dac repo
+    //todo dac mockowanie osobno przed kazdym testem @After
+    //    fun finish(){
+    //        unmockkAll()
+    //    }
 
-    //todo dac mockowanie osobno przed kazdym testem
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DetailsVM>()

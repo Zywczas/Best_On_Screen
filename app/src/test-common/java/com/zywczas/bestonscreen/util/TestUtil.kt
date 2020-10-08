@@ -145,12 +145,13 @@ object TestUtil {
         "Genres: Drama, War"
     )
 
-    val moviesListOf2 = listOf(movie1, movie2)
+    val moviesList1_2 = listOf(movie1, movie2)
     val moviesFromDb = listOf(movieFromDB1, movieFromDB2)
     private val moviesFromApi = listOf(movieFromApi1, movieFromApi2)
     val apiResponse = ApiResponse(moviesFromApi)
-    val moviesListOf10 = listOf(movie1, movie2, movie3, movie4, movie5, movie6, movie7,
+    val moviesList1_10 = listOf(movie1, movie2, movie3, movie4, movie5, movie6, movie7,
     movie8, movie9, movie10)
-
+    val moviesList1_5 = listOf(movie1, movie2, movie3, movie4, movie5)
+    val moviesList6_8 = listOf(movie6, movie7, movie8)
 
 }

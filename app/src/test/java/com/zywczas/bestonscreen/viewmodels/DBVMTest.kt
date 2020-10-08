@@ -21,7 +21,7 @@ internal class DBVMTest {
     @Mock
     private lateinit var repo: DBRepository
 
-    private val expectedMovies = TestUtil.moviesListOf2
+    private val expectedMovies = TestUtil.moviesList1_2
 
     @BeforeEach
     private fun init() {

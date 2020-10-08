@@ -29,7 +29,7 @@ internal class ApiRepositoryTest {
 
         @Test
         fun categoryPopular() {
-            val expectedMovies = TestUtil.moviesListOf2
+            val expectedMovies = TestUtil.moviesList1_2
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
@@ -43,7 +43,7 @@ internal class ApiRepositoryTest {
 
         @Test
         fun categoryTopRated() {
-            val expectedMovies = TestUtil.moviesListOf2
+            val expectedMovies = TestUtil.moviesList1_2
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
@@ -57,7 +57,7 @@ internal class ApiRepositoryTest {
 
         @Test
         fun categoryUpcoming() {
-            val expectedMovies = TestUtil.moviesListOf2
+            val expectedMovies = TestUtil.moviesList1_2
             val apiResponse = TestUtil.apiResponse
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)

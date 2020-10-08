@@ -42,7 +42,7 @@ internal class ApiVMTest {
         @Test
         fun observeChange(){
             val category = Category.POPULAR
-            val movies = TestUtil.moviesListOf2
+            val movies = TestUtil.moviesList1_2
             val returnedMovies = Flowable.just(Resource.success(movies))
             every { repo.getApiMovies(category, 1) } returns returnedMovies
             every { network.isConnected } returns true
@@ -57,7 +57,7 @@ internal class ApiVMTest {
         fun noConnection_observeError(){
             val message = "Problem with internet. Check your connection and try again."
             val category = Category.UPCOMING
-            val movies = TestUtil.moviesListOf2
+            val movies = TestUtil.moviesList1_2
             val returnedMovies = Flowable.just(Resource.success(movies))
             every { repo.getApiMovies(category, 1) } returns returnedMovies
             every { network.isConnected } returns false
@@ -71,7 +71,7 @@ internal class ApiVMTest {
         @Test
         fun tryToGetAgain_observeNoAction(){
             val category = Category.TOP_RATED
-            val movies1 = TestUtil.moviesListOf2
+            val movies1 = TestUtil.moviesList1_2
             val movies2 = listOf(TestUtil.movie2)
             val returnedMovies1 = Flowable.just(Resource.success(movies1))
             val returnedMovies2 = Flowable.just(Resource.success(movies2))
@@ -95,7 +95,7 @@ internal class ApiVMTest {
         @Test
         fun observeChange() {
             val category = Category.POPULAR
-            val movies = TestUtil.moviesListOf2
+            val movies = TestUtil.moviesList1_2
             val returnedMovies = Flowable.just(Resource.success(movies))
             every { repo.getApiMovies(category, 1) } returns returnedMovies
             every { network.isConnected } returns true
@@ -125,7 +125,7 @@ internal class ApiVMTest {
         fun `1st call OK, 2nd error, observe error and data`() {
             val category = Category.TOP_RATED
             val message = "some error message from ApiRepository"
-            val movies = TestUtil.moviesListOf2
+            val movies = TestUtil.moviesList1_2
             val pages = mutableListOf<Int>()
             val returnedMovies = Flowable.just(Resource.success(movies))
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(message, null))
@@ -146,7 +146,7 @@ internal class ApiVMTest {
         fun changeCategory_observeNewCategory(){
             val category1 = Category.TOP_RATED
             val category2 = Category.UPCOMING
-            val movies1 = TestUtil.moviesListOf2
+            val movies1 = TestUtil.moviesList1_2
             val movies2 = listOf(TestUtil.movie2)
             val pages = mutableListOf<Int>()
             val returnedMovies1 = Flowable.just(Resource.success(movies1))
