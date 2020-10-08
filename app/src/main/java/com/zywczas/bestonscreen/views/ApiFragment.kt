@@ -61,7 +61,7 @@ class ApiFragment @Inject constructor(
             if (recyclerViewSetupFinished) {
                 setupMoviesObserver { observerSetupFinished ->
                     if (observerSetupFinished) {
-                        viewModel.getFirstMovies(TOP_RATED)
+                        downloadFirstMoviesOnViewModelInit()
                         setupOnScrollListener()
                     }
                 }
@@ -135,6 +135,11 @@ class ApiFragment @Inject constructor(
             UPCOMING -> 2
         }
         moviesCategoriesTabs.getTabAt(index)?.select()
+    }
+
+    private fun downloadFirstMoviesOnViewModelInit(){
+        showProgressBar(true)
+        viewModel.getFirstMovies(TOP_RATED)
     }
 
     private fun setupOnScrollListener() {

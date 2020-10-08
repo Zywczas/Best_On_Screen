@@ -32,6 +32,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowConnectivityManager
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -50,8 +51,7 @@ class ApiFragmentTest {
         every { fragmentsFactory.instantiate(any(), any()) } returns ApiFragment(viewModelFactory, picasso)
         every { viewModel.moviesAndCategoryLD } returns moviesAndCategoryLD
         every { viewModel.getFirstMovies(any()) } answers {
-            moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesListOf2, Category.TOP_RATED))
-        }
+            moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesListOf2, Category.TOP_RATED)) }
         every { viewModel.getNextMoviesIfConnected(any()) } just Runs
     }
 
@@ -64,10 +64,18 @@ class ApiFragmentTest {
         onView(withId(R.id.moviesCategoriesTabs)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun loadingMovies_isProgressBarDisplayed() {
+        every { viewModel.getFirstMovies(any()) } just Runs
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+
+        onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
+    }
+
 }
 
 //todo ac test sprawdzajacy czy toast sie nie powtarza po recreate
-//todo czy layout jest w widoku
 //todo czy wczytuja sie dane
 //todo czy sa filmy odpowiednie od razu pokazane
 //todo czy po recreate wszystko tak samo poustawiane filmy o zakladki
