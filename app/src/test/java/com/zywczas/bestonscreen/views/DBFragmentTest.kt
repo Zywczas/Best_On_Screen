@@ -37,6 +37,7 @@ import org.robolectric.shadows.ShadowToast
 @LooperMode(LooperMode.Mode.PAUSED)
 class DBFragmentTest {
 
+    //todo dac mockowanie osobno przed kazdym testem
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DBVM>()
@@ -51,7 +52,7 @@ class DBFragmentTest {
         every { networkCheck.isConnected } returns true
         every { viewModel.moviesLD } returns moviesLD
         every { viewModelFactory.create(DBVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) }returns
+        every { fragmentsFactory.instantiate(any(), any()) } returns
                 DBFragment(viewModelFactory, picasso, networkCheck)
     }
 
@@ -73,7 +74,7 @@ class DBFragmentTest {
     }
 
     @Test
-    fun isDataDisplayed() {
+    fun isDataDisplayedOnFragmentInit() {
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         recyclerView.perform(scrollToPosition<ViewHolder>(9))
