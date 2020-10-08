@@ -70,20 +70,20 @@ class ApiFragmentTest {
         recyclerView.check(matches(isDisplayed()))
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         onView(withId(R.id.moviesCategoriesTabs)).check(matches(isDisplayed()))
+        onView(withText("Top Rated")).check(matches(isDisplayed()))
+        onView(withText("Popular")).check(matches(isDisplayed()))
+        onView(withText("Upcoming")).check(matches(isDisplayed()))
     }
 
     @Test
     fun isDataDisplayedOnViewModelInit() {
         var actualSelectedTabIndex : Int? = null
-        var actual1stTabName : String? = null
-        var actual2ndTabName : String? = null
-        var actual3rdtTabName : String? = null
+        var actualItemsCountInRecyclerView : Int? = null
+
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
         scenario.onFragment {
             actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
-            actual1stTabName = it.moviesCategoriesTabs.getTabAt(0)?.text.toString()
-            actual2ndTabName = it.moviesCategoriesTabs.getTabAt(1)?.text.toString()
-            actual3rdtTabName = it.moviesCategoriesTabs.getTabAt(2)?.text.toString()
+            actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
         }
 
         recyclerView.perform(scrollToPosition<ViewHolder>(1))
@@ -91,41 +91,40 @@ class ApiFragmentTest {
             .check(matches(hasDescendant(withText("6.2"))))
             .check(matches(hasDescendant(withId(R.id.posterImageViewListItem))))
         assertEquals(0, actualSelectedTabIndex)
-        assertEquals("Top Rated", actual1stTabName)
-        assertEquals("Popular", actual2ndTabName)
-        assertEquals("Upcoming", actual3rdtTabName)
+        assertEquals(2, actualItemsCountInRecyclerView)
     }
 
     @Test
     fun loadingMovies_isProgressBarDisplayed() {
-        val viewModel = mockk<ApiVM>(relaxed = true)
-        val picasso = mockk<Picasso>(relaxed = true)
-        val viewModelFactory = mockk<ViewModelsProviderFactory>()
-        val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-        every { viewModelFactory.create(ApiVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) } returns ApiFragment(viewModelFactory, picasso)
+        val viewModelLocal = mockk<ApiVM>(relaxed = true)
+        val picassoLocal = mockk<Picasso>(relaxed = true)
+        val viewModelFactoryLocal = mockk<ViewModelsProviderFactory>()
+        val fragmentsFactoryLocal = mockk<MoviesFragmentsFactory>()
+        every { viewModelFactoryLocal.create(ApiVM::class.java) } returns viewModelLocal
+        every { fragmentsFactoryLocal.instantiate(any(), any()) } returns ApiFragment(viewModelFactoryLocal, picassoLocal)
 
-        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactoryLocal)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
     }
 
     @Test
     fun changingCategory_isProgressBarDisplayed() {
-        val viewModel = mockk<ApiVM>(relaxed = true)
-        val picasso = mockk<Picasso>(relaxed = true)
-        val viewModelFactory = mockk<ViewModelsProviderFactory>()
-        val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-        val moviesAndCategoryLD = MutableLiveData<Resource<Pair<List<Movie>, Category>>>()
-        moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, UPCOMING))
+        val viewModelLocal = mockk<ApiVM>(relaxed = true)
+        val picassoLocal = mockk<Picasso>(relaxed = true)
+        val viewModelFactoryLocal = mockk<ViewModelsProviderFactory>()
+        val fragmentsFactoryLocal = mockk<MoviesFragmentsFactory>()
+        val moviesAndCategoryLDLocal = MutableLiveData<Resource<Pair<List<Movie>, Category>>>()
+        moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_2, UPCOMING))
         val categorySlot = slot<Category>()
-        every { viewModelFactory.create(ApiVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) } returns ApiFragment(viewModelFactory, picasso)
-        every { viewModel.moviesAndCategoryLD } returns moviesAndCategoryLD
-        every { viewModel.getFirstMovies(capture(categorySlot)) } answers {
-            moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
+        every { viewModelFactoryLocal.create(ApiVM::class.java) } returns viewModelLocal
+        every { fragmentsFactoryLocal.instantiate(any(), any()) } returns
+                ApiFragment(viewModelFactoryLocal, picassoLocal)
+        every { viewModelLocal.moviesAndCategoryLD } returns moviesAndCategoryLDLocal
+        every { viewModelLocal.getFirstMovies(capture(categorySlot)) } answers
+                { moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
-        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactoryLocal)
         onView(withText("Popular")).perform(click())
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
@@ -134,7 +133,7 @@ class ApiFragmentTest {
     @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
         var actualSelectedTabIndex : Int? = null
-        var actualItemsInRecyclerView : Int? = null
+        var actualItemsCountInRecyclerView : Int? = null
         every { repo.getApiMovies(any(), any()) } returns
                 Flowable.just(Resource.success(TestUtil.moviesList1_2)) andThen
                 Flowable.just(Resource.success(TestUtil.moviesList1_10))
@@ -145,14 +144,14 @@ class ApiFragmentTest {
         scenario.recreate()
         scenario.onFragment {
             actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
-            actualItemsInRecyclerView = it.recyclerViewApi.adapter?.itemCount
+            actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
         }
 
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         recyclerView.check(matches(isDisplayed()))
         recyclerView.check(matches(hasDescendant(withText("The Empire Strikes Back"))))
         assertEquals(2, actualSelectedTabIndex)
-        assertEquals(10, actualItemsInRecyclerView)
+        assertEquals(10, actualItemsCountInRecyclerView)
         verify(exactly = 2) { repo.getApiMovies(any(), any())}
     }
 
@@ -161,7 +160,7 @@ class ApiFragmentTest {
         val actualCategories = mutableListOf<Category>()
         val actualPages = mutableListOf<Int>()
         var actualSelectedTabIndex : Int? = null
-        var actualItemsInRecyclerView : Int? = null
+        var actualItemsCountInRecyclerView : Int? = null
         every { repo.getApiMovies(capture(actualCategories), capture(actualPages)) } returns
                 Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
                 Flowable.just(Resource.success(TestUtil.moviesList6_8))
@@ -170,12 +169,12 @@ class ApiFragmentTest {
         onView(withText("Popular")).perform(click())
         scenario.onFragment {
             actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
-            actualItemsInRecyclerView = it.recyclerViewApi.adapter?.itemCount
+            actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
         }
 
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         assertEquals(1, actualSelectedTabIndex)
-        assertEquals(3, actualItemsInRecyclerView)
+        assertEquals(3, actualItemsCountInRecyclerView)
         verify(exactly = 2) { repo.getApiMovies(any(), any())}
         assertEquals(mutableListOf(TOP_RATED, POPULAR), actualCategories)
         assertEquals(mutableListOf(1, 1), actualPages)
@@ -186,7 +185,7 @@ class ApiFragmentTest {
         val actualCategories = mutableListOf<Category>()
         val actualPages = mutableListOf<Int>()
         var actualSelectedTabIndex : Int? = null
-        var actualItemsInRecyclerView : Int? = null
+        var actualItemsCountInRecyclerView : Int? = null
         every { repo.getApiMovies(capture(actualCategories), capture(actualPages)) } returns
                 Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
                 Flowable.just(Resource.success(TestUtil.moviesList6_8))
@@ -195,12 +194,12 @@ class ApiFragmentTest {
         onView(withText("Top Rated")).perform(click())
         scenario.onFragment {
             actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
-            actualItemsInRecyclerView = it.recyclerViewApi.adapter?.itemCount
+            actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
         }
 
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         assertEquals(0, actualSelectedTabIndex)
-        assertEquals(5, actualItemsInRecyclerView)
+        assertEquals(5, actualItemsCountInRecyclerView)
         verify(exactly = 1) { repo.getApiMovies(any(), any())}
         assertEquals(mutableListOf(TOP_RATED), actualCategories)
         assertEquals(mutableListOf(1), actualPages)
