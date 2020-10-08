@@ -1,38 +1,34 @@
 package com.zywczas.bestonscreen.views
 
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.*
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.contrib.RecyclerViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
-import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.viewmodels.ApiVM
-import com.zywczas.bestonscreen.viewmodels.DBVM
-import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import org.hamcrest.core.IsNot
+import kotlinx.android.synthetic.main.fragment_api.*
 import org.hamcrest.core.IsNot.*
+import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
-import org.robolectric.shadows.ShadowConnectivityManager
+import kotlin.math.exp
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -71,6 +67,31 @@ class ApiFragmentTest {
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun isDataDisplayed() {
+        var actualSelectedTabIndex : Int? = null
+        var actual1stTabName : String? = null
+        var actual2ndTabName : String? = null
+        var actual3rdtTabName : String? = null
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        scenario.onFragment {
+            actualSelectedTabIndex = it.moviesCategoriesTabs.selectedTabPosition
+            actual1stTabName = it.moviesCategoriesTabs.getTabAt(0)?.text.toString()
+            actual2ndTabName = it.moviesCategoriesTabs.getTabAt(1)?.text.toString()
+            actual3rdtTabName = it.moviesCategoriesTabs.getTabAt(2)?.text.toString()
+        }
+
+        recyclerView.perform(scrollToPosition<MovieAdapter.ViewHolder>(1))
+            .check(matches(hasDescendant(withText("Unknown Origins"))))
+            .check(matches(hasDescendant(withText("6.2"))))
+            .check(matches(hasDescendant(withId(R.id.posterImageViewListItem))))
+        assertEquals(0, actualSelectedTabIndex)
+        assertEquals("Top Rated", actual1stTabName)
+        assertEquals("Popular", actual2ndTabName)
+        assertEquals("Upcoming", actual3rdtTabName)
     }
 
 }
