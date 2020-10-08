@@ -34,8 +34,6 @@ import org.robolectric.shadows.ShadowToast
 @LooperMode(LooperMode.Mode.PAUSED)
 class DBFragmentTest {
 
-    //todo chyba lepiej nie mockowac fragment factory a dac z daggera normalna, zeby przy obrotach sprawdzalo czy na prawde dobrze wczytuje
-
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
     private val viewModel = mockk<DBVM>()
@@ -79,7 +77,6 @@ class DBFragmentTest {
             .check(matches(hasDescendant(withText("The Pianist"))))
             .check(matches(hasDescendant(withText("8.4"))))
             .check(matches(hasDescendant(withId(R.id.posterImageViewListItem))))
-        //todo chyba dodac sprawdzanie czy picasso laduje pliki, moze espresso ma jakas funkcje do sprawdzania obrazow, moe mitch ma cos w swojej aplikacji
     }
 
     @Test

@@ -1,13 +1,21 @@
 package com.zywczas.bestonscreen.views
 
+import android.app.Application
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.DrawableWrapper
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Request
+import com.zywczas.bestonscreen.BestOnScreenApp
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Event
@@ -16,13 +24,18 @@ import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
+import kotlinx.android.synthetic.main.fragment_details.*
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Captor
+import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowBitmap
+import org.robolectric.shadows.ShadowBitmapDrawable
+import org.robolectric.shadows.ShadowDrawable
 import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
@@ -77,15 +90,13 @@ class DetailsFragmentTest {
             fragmentArgs = directions.arguments
         )
 
-//todo dac picasso check      onView(withId(R.id.posterImageViewDetails)).check(matches(isDisplayed()))
         onView(withId(R.id.titleTextViewDetails)).check(matches(withText("Hard Kill")))
         onView(withId(R.id.rateTextViewDetails)).check(matches(withText("Rate: 5.5")))
         onView(withId(R.id.releaseDateTextViewDetails)).check(matches(withText("Release date: 2020-08-25")))
         onView(withId(R.id.genresTextViewDetails)).check(matches(withText("Genres: Action, Thriller")))
-        onView(withId(R.id.overviewTextViewDetails))
-            .check(matches(withText("The work of billionaire tech CEO Donovan Chalmers " +
-                "is so valuable that he hires mercenaries to protect it, and a terrorist group " +
-                    "kidnaps his daughter just to get it.")))
+        onView(withId(R.id.overviewTextViewDetails)).check(matches(withText("The work of " +
+                "billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to " +
+                "protect it, and a terrorist group kidnaps his daughter just to get it.")))
     }
 
     @Test
@@ -183,7 +194,7 @@ class DetailsFragmentTest {
             fragmentArgs = directions.arguments
         )
         scenario.recreate()
-//todo dac tu picasso
+
         onView(withId(R.id.posterImageViewDetails)).check(matches(isDisplayed()))
         onView(withText("Hard Kill")).perform(NestedScrollViewExtension())
             .check(matches(isDisplayed()))
