@@ -1,7 +1,11 @@
 package com.zywczas.bestonscreen.views
 
+import android.os.Looper.getMainLooper
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.*
@@ -31,7 +35,10 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadow.api.Shadow
+import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
@@ -156,12 +163,10 @@ class ApiFragmentTest {
     }
 
     @Test
-    fun isClickedTabLoadingNewCategory(){
-        val actualCategories = mutableListOf<Category>()
-        val actualPages = mutableListOf<Int>()
+    fun clickNotSelectedTab_isNewCategoryLoaded(){
         var actualSelectedTabIndex : Int? = null
         var actualItemsCountInRecyclerView : Int? = null
-        every { repo.getApiMovies(capture(actualCategories), capture(actualPages)) } returns
+        every { repo.getApiMovies(any(), any()) } returns
                 Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
                 Flowable.just(Resource.success(TestUtil.moviesList6_8))
 
@@ -175,20 +180,18 @@ class ApiFragmentTest {
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         assertEquals(1, actualSelectedTabIndex)
         assertEquals(3, actualItemsCountInRecyclerView)
-        verify(exactly = 2) { repo.getApiMovies(any(), any())}
-        assertEquals(mutableListOf(TOP_RATED, POPULAR), actualCategories)
-        assertEquals(mutableListOf(1, 1), actualPages)
+        verifySequence {
+            repo.getApiMovies(TOP_RATED, 1)
+            repo.getApiMovies(POPULAR, 1)
+        }
     }
 
     @Test
-    fun clickingTheSameTab_isNothingChanged(){
-        val actualCategories = mutableListOf<Category>()
-        val actualPages = mutableListOf<Int>()
+    fun clickTheSameTab_isNothingChanged(){
         var actualSelectedTabIndex : Int? = null
         var actualItemsCountInRecyclerView : Int? = null
-        every { repo.getApiMovies(capture(actualCategories), capture(actualPages)) } returns
-                Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
-                Flowable.just(Resource.success(TestUtil.moviesList6_8))
+        every { repo.getApiMovies(any(), any()) } returns
+                Flowable.just(Resource.success(TestUtil.moviesList1_5))
 
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
         onView(withText("Top Rated")).perform(click())
@@ -200,9 +203,53 @@ class ApiFragmentTest {
         onView(withId(R.id.progressBarApi)).check(matches(not(isDisplayed())))
         assertEquals(0, actualSelectedTabIndex)
         assertEquals(5, actualItemsCountInRecyclerView)
-        verify(exactly = 1) { repo.getApiMovies(any(), any())}
-        assertEquals(mutableListOf(TOP_RATED), actualCategories)
-        assertEquals(mutableListOf(1), actualPages)
+        verify(exactly = 1) { repo.getApiMovies(TOP_RATED, 1)}
+    }
+
+    @Test
+    fun getError_isToastDisplayed(){
+        every { repo.getApiMovies(any(), any()) } returns
+                Flowable.just(Resource.error("some error", TestUtil.moviesList1_2))
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+
+        shadowOf(getMainLooper()).idle()
+        assertEquals("some error", ShadowToast.getTextOfLatestToast())
+    }
+
+    @Test
+    fun getError_destroyActivity_isStillTheSameDataDisplayedAfterRestoration(){
+        var actualItemsCountInRecyclerView : Int? = null
+        every { repo.getApiMovies(any(), any()) } returns
+                Flowable.just(Resource.success(TestUtil.moviesList1_2)) andThen
+                Flowable.just(Resource.error("some error", null))
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        //todo tu dac ladowanie kolejnej strony z tej samej kategorii
+        scenario.recreate()
+        scenario.onFragment {
+            actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
+        }
+
+        assertEquals(2, actualItemsCountInRecyclerView)
+        verify(exactly = 2) { repo.getApiMovies(TOP_RATED, any()) }
+    }
+
+    @Test
+    fun navigationToDetailsFragment() {
+        val expectedArgument = ApiFragmentDirections.actionToDetails(TestUtil.moviesList1_2[0]).arguments["movie"] as Movie
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        navController.setGraph(R.navigation.main_nav_graph)
+        navController.setCurrentDestination(R.id.destinationApi)
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        scenario.onFragment { fragment ->
+            Navigation.setViewNavController(fragment.requireView(), navController)
+        }
+        recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+
+        assertEquals(R.id.destinationDetails, navController.currentDestination?.id)
+        assertEquals(expectedArgument, navController.backStack.last().arguments?.get("movie"))
     }
 
 
@@ -212,9 +259,5 @@ class ApiFragmentTest {
 
 
 
-//todo czy jak error to wszystko ok
 //todo czy progress bar sie pokazuje, przy ladowaniu kolejnej strony
-//todo czy toast sie pokazuje jak error
-//todo czy nawigacja dziala
 //todo czy recycler view sciaga nowe filmy na przewijanie ekranu
-//todo czy jak success a pozniej error to dalej sa filmy i po obrocie tez

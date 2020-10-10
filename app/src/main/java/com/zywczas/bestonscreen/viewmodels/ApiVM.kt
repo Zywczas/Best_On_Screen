@@ -30,7 +30,7 @@ class ApiVM @Inject constructor(
 
 
     fun getFirstMovies(nextCategory: Category) {
-        if (!firstMoviesRequested) {
+        if (firstMoviesRequested.not()) {
             firstMoviesRequested = true
             category = nextCategory
             getNextMoviesIfConnected()
