@@ -37,7 +37,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.LooperMode
-import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
@@ -72,6 +71,7 @@ class ApiFragmentTest {
 
     @Test
     fun isFragmentInView() {
+        @Suppress("UNUSED_VARIABLE") //todo dodac w innych miejscach tez
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         recyclerView.check(matches(isDisplayed()))
@@ -110,12 +110,13 @@ class ApiFragmentTest {
         every { viewModelFactoryLocal.create(ApiVM::class.java) } returns viewModelLocal
         every { fragmentsFactoryLocal.instantiate(any(), any()) } returns ApiFragment(viewModelFactoryLocal, picassoLocal)
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactoryLocal)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
     }
 
-    @Test
+    @Test //todo wrzucic w osobna klase
     fun changingCategory_isProgressBarDisplayed() {
         val viewModelLocal = mockk<ApiVM>(relaxed = true)
         val picassoLocal = mockk<Picasso>(relaxed = true)
@@ -131,6 +132,7 @@ class ApiFragmentTest {
         every { viewModelLocal.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactoryLocal)
         onView(withText("Popular")).perform(click())
 
@@ -211,6 +213,7 @@ class ApiFragmentTest {
         every { repo.getApiMovies(any(), any()) } returns
                 Flowable.just(Resource.error("some error", TestUtil.moviesList1_2))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         shadowOf(getMainLooper()).idle()
@@ -219,20 +222,22 @@ class ApiFragmentTest {
 
     @Test
     fun getError_destroyActivity_isStillTheSameDataDisplayedAfterRestoration(){
+        val movies = TestUtil.moviesList1_2
         var actualItemsCountInRecyclerView : Int? = null
         every { repo.getApiMovies(any(), any()) } returns
-                Flowable.just(Resource.success(TestUtil.moviesList1_2)) andThen
+                Flowable.just(Resource.success(movies)) andThen
                 Flowable.just(Resource.error("some error", null))
 
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
-        //todo tu dac ladowanie kolejnej strony z tej samej kategorii
-        scenario.recreate()
+        recyclerView.perform(scrollToPosition<ViewHolder>(1)).perform(scro)
+//        scenario.recreate()
         scenario.onFragment {
             actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
         }
 
+//        shadowOf(getMainLooper()).idle()
         assertEquals(2, actualItemsCountInRecyclerView)
-        verify(exactly = 2) { repo.getApiMovies(TOP_RATED, any()) }
+        verify(exactly = 2) { repo.getApiMovies(any(), any()) }
     }
 
     @Test
