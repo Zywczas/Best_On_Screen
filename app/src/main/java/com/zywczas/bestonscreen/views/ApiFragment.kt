@@ -18,10 +18,7 @@ import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
-import com.zywczas.bestonscreen.utilities.Status
-import com.zywczas.bestonscreen.utilities.lazyAndroid
-import com.zywczas.bestonscreen.utilities.showToast
+import com.zywczas.bestonscreen.utilities.*
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import kotlinx.android.synthetic.main.fragment_api.*
@@ -36,6 +33,15 @@ class ApiFragment @Inject constructor(
     private lateinit var adapter: MovieAdapter
     private val navController by lazyAndroid { Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
+    private var isLastPageReached = false
+    private val gridLayoutManager : GridLayoutManager by lazyAndroid {
+        var spanCount = 2
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            spanCount = 4
+        }
+        GridLayoutManager(requireContext(), spanCount)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,13 +93,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupLayoutManager() {
-        var spanCount = 2
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 4
-        }
-        val layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerViewApi.layoutManager = layoutManager
+        recyclerViewApi.layoutManager = gridLayoutManager
         recyclerViewApi.setHasFixedSize(true)
     }
 
@@ -103,10 +103,15 @@ class ApiFragment @Inject constructor(
             when (resource.status) {
                 Status.SUCCESS -> {
                     updateContent(resource.data!!)
+                    //todo chyba dac test na to
+                    isLastPageReached = false
                 }
                 Status.ERROR -> {
                     showToast(resource.message!!)
                     resource.data?.let { updateContent(it) }
+                    if (resource.message == NO_MORE_PAGES_ERROR) {
+                        isLastPageReached = true
+                    }
                 }
             }
         }
@@ -145,9 +150,8 @@ class ApiFragment @Inject constructor(
         recyclerViewApi.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
-                        newState == RecyclerView.SCROLL_STATE_IDLE
-                if (isRecyclerViewBottom) {
+                val isRecyclerViewBottom = gridLayoutManager.findLastVisibleItemPosition() == gridLayoutManager.itemCount-1
+                if (isRecyclerViewBottom && isLastPageReached.not()) {
                     downloadNextPage()
                 }
             }
@@ -185,7 +189,6 @@ class ApiFragment @Inject constructor(
                 if (category != displayedCategory){
                     downloadNewCategory(category)
                 }
-
             }
         }
         override fun onTabUnselected(tab: TabLayout.Tab?) {}

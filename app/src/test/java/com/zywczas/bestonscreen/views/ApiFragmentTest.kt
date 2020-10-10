@@ -229,7 +229,7 @@ class ApiFragmentTest {
                 Flowable.just(Resource.error("some error", null))
 
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
-        recyclerView.perform(scrollToPosition<ViewHolder>(1)).perform(scro)
+        //todo recyclerView.perform(scrollToPosition<ViewHolder>(1)).perform(scro)
 //        scenario.recreate()
         scenario.onFragment {
             actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount

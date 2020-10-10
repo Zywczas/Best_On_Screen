@@ -3,6 +3,7 @@ package com.zywczas.bestonscreen.model
 import com.zywczas.bestonscreen.model.webservice.ApiService
 import com.zywczas.bestonscreen.model.webservice.MovieFromApi
 import com.zywczas.bestonscreen.utilities.API_KEY
+import com.zywczas.bestonscreen.utilities.NO_MORE_PAGES_ERROR
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -14,7 +15,7 @@ open class ApiRepository @Inject constructor(private val apiService: ApiService)
     private val invalidApiKeyStatus by lazy { "HTTP 401" }
     private val noMorePagesStatus by lazy { "HTTP 422" }
     private val invalidApiKeyError by lazy { "Invalid API key. Contact technical support." }
-    private val noMorePagesError by lazy { "No more pages in this category." }
+    private val noMorePagesError by lazy { NO_MORE_PAGES_ERROR }
     private val generalApiError by lazy { "Problem with downloading movies. Check connection and try again." }
 
     open fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
