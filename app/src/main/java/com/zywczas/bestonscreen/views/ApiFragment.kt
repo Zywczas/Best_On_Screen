@@ -33,15 +33,6 @@ class ApiFragment @Inject constructor(
     private lateinit var adapter: MovieAdapter
     private val navController by lazyAndroid { Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
-    private var isLastPageReached = false
-    private val gridLayoutManager : GridLayoutManager by lazyAndroid {
-        var spanCount = 2
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 4
-        }
-        GridLayoutManager(requireContext(), spanCount)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +84,13 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupLayoutManager() {
-        recyclerViewApi.layoutManager = gridLayoutManager
+        var spanCount = 2
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            spanCount = 4
+        }
+        val layoutManager = GridLayoutManager(requireContext(), spanCount)
+        recyclerViewApi.layoutManager = layoutManager
         recyclerViewApi.setHasFixedSize(true)
     }
 
@@ -103,15 +100,10 @@ class ApiFragment @Inject constructor(
             when (resource.status) {
                 Status.SUCCESS -> {
                     updateContent(resource.data!!)
-                    //todo chyba dac test na to
-                    isLastPageReached = false
                 }
                 Status.ERROR -> {
                     showToast(resource.message!!)
                     resource.data?.let { updateContent(it) }
-                    if (resource.message == NO_MORE_PAGES_ERROR) {
-                        isLastPageReached = true
-                    }
                 }
             }
         }
@@ -132,7 +124,7 @@ class ApiFragment @Inject constructor(
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun updateSelectedTab(category: Category){
+    private fun updateSelectedTab(category: Category) {
         val index = when (category) {
             TOP_RATED -> 0
             POPULAR -> 1
@@ -141,7 +133,7 @@ class ApiFragment @Inject constructor(
         moviesCategoriesTabs.getTabAt(index)?.select()
     }
 
-    private fun downloadFirstMoviesOnViewModelInit(){
+    private fun downloadFirstMoviesOnViewModelInit() {
         showProgressBar(true)
         viewModel.getFirstMovies(TOP_RATED)
     }
@@ -150,8 +142,9 @@ class ApiFragment @Inject constructor(
         recyclerViewApi.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val isRecyclerViewBottom = gridLayoutManager.findLastVisibleItemPosition() == gridLayoutManager.itemCount-1
-                if (isRecyclerViewBottom && isLastPageReached.not()) {
+                val isRecyclerViewBottom = !recyclerView.canScrollVertically(1) &&
+                        newState == RecyclerView.SCROLL_STATE_IDLE
+                if (isRecyclerViewBottom) {
                     downloadNextPage()
                 }
             }
@@ -186,11 +179,12 @@ class ApiFragment @Inject constructor(
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let {
                 val category = it.tag as Category
-                if (category != displayedCategory){
+                if (category != displayedCategory) {
                     downloadNewCategory(category)
                 }
             }
         }
+
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
@@ -207,7 +201,6 @@ class ApiFragment @Inject constructor(
         super.onSaveInstanceState(outState)
         outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
     }
-
 
 
 }

@@ -182,9 +182,8 @@ class DetailsFragmentTest {
     @Test
     fun deletingMovieFromDatabase_isToastShown(){
         isMovieInDbLD.value = Event(true)
-        every { viewModel.addOrDeleteMovie(any(), true) } answers {
-            messageLD.value = Event("movie deleted")
-        }
+        every { viewModel.addOrDeleteMovie(any(), true) } answers
+                { messageLD.value = Event("movie deleted") }
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
