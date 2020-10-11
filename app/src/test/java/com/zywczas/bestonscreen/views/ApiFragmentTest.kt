@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.views
 
 import android.os.Looper.getMainLooper
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -16,13 +15,11 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter.*
 import com.zywczas.bestonscreen.model.ApiRepository
-import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
-import com.zywczas.bestonscreen.utilities.ScrollToBottomAction
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
