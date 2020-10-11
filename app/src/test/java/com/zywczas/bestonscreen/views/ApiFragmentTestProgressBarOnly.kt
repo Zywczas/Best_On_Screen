@@ -11,10 +11,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter.*
+import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
+import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
@@ -31,15 +33,11 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 class ApiFragmentTestProgressBarOnly {
 
-    //todo zamienic na val
     @MockK(relaxUnitFun = true)
     private lateinit var viewModel : ApiVM
-    @RelaxedMockK
-    private lateinit var picasso : Picasso
-    @MockK
-    private lateinit var viewModelFactory : ViewModelsProviderFactory
-    @MockK
-    private lateinit var fragmentsFactory : MoviesFragmentsFactory
+    private val picasso = mockk<Picasso>(relaxed = true)
+    private val viewModelFactory = mockk<ViewModelsProviderFactory>()
+    private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
     private  lateinit var  moviesAndCategoryLD : MutableLiveData<Resource<Pair<List<Movie>, Category>>>
     private val recyclerView = onView(withId(R.id.recyclerViewApi))
 
@@ -59,7 +57,7 @@ class ApiFragmentTestProgressBarOnly {
     }
 
     @Test
-    fun loadingMovies_isProgressBarDisplayed() {
+    fun loadingMoviesOnInit_isProgressBarDisplayed() {
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
