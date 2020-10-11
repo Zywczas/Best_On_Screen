@@ -19,10 +19,10 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
-    private val navHostFragment by lazyAndroid {
+    private val navHostFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment }
-    private val navController by lazyAndroid { navHostFragment.navController }
-    private val appBarConfiguration by lazyAndroid {
+    private val navController by lazy { navHostFragment.navController }
+    private val appBarConfiguration by lazy {
         AppBarConfiguration(setOf(R.id.destinationDb, R.id.destinationApi), drawerLayoutMain) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

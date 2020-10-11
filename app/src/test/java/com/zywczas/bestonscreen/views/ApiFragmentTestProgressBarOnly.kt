@@ -31,6 +31,7 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 class ApiFragmentTestProgressBarOnly {
 
+    //todo zamienic na val
     @MockK(relaxUnitFun = true)
     private lateinit var viewModel : ApiVM
     @RelaxedMockK

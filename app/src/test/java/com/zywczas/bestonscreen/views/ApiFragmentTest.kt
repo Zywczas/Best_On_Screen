@@ -41,30 +41,20 @@ import org.robolectric.shadows.ShadowToast
 @LooperMode(LooperMode.Mode.PAUSED)
 class ApiFragmentTest {
 
-    @MockK
-    private lateinit var repo : ApiRepository
-    @RelaxedMockK
-    private lateinit var picasso : Picasso
-    @MockK
-    private lateinit var networkCheck: NetworkCheck
-    @MockK
-    private lateinit var viewModelFactory : ViewModelsProviderFactory
-    @MockK
-    private lateinit var fragmentsFactory : MoviesFragmentsFactory
+
+    private val repo = mockk<ApiRepository>()
+    private val picasso = mockk<Picasso>(relaxed = true)
+    private val networkCheck = mockk<NetworkCheck>()
+    private val viewModelFactory = mockk<ViewModelsProviderFactory>()
+    private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
     private val recyclerView = onView(withId(R.id.recyclerViewApi))
 
     @Before
     fun init(){
-        MockKAnnotations.init(this)
         every { repo.getApiMovies(any(), any()) } returns Flowable.just(Resource.success(TestUtil.moviesList1_2))
         every { networkCheck.isConnected } returns true
         every { viewModelFactory.create(ApiVM::class.java) } returns ApiVM(repo, networkCheck)
         every { fragmentsFactory.instantiate(any(), any()) } returns ApiFragment(viewModelFactory, picasso)
-    }
-
-    @After
-    fun finish(){
-        unmockkAll()
     }
 
     @Test

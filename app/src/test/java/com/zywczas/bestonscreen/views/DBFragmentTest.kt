@@ -15,14 +15,21 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter.ViewHolder
+import com.zywczas.bestonscreen.model.DBRepository
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.reactivex.rxjava3.core.Flowable
 import org.hamcrest.core.IsNot.not
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -33,26 +40,19 @@ import org.robolectric.shadows.ShadowToast
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class DBFragmentTest {
-//todo dac repo
-    //todo dac mockowanie osobno przed kazdym testem @After
-    //    fun finish(){
-    //        unmockkAll()
-    //    }
 
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
-    private val viewModel = mockk<DBVM>()
+    private val repo = mockk<DBRepository>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-    private val moviesLD = MutableLiveData<List<Movie>>()
     private val recyclerView = onView(withId(R.id.recyclerViewDB))
 
     @Before
     fun init() {
-        moviesLD.value = TestUtil.moviesList1_10
         every { networkCheck.isConnected } returns true
-        every { viewModel.moviesLD } returns moviesLD
-        every { viewModelFactory.create(DBVM::class.java) } returns viewModel
+        every { repo.getMoviesFromDB() } returns Flowable.just(TestUtil.moviesList1_10)
+        every { viewModelFactory.create(DBVM::class.java) } returns DBVM(repo)
         every { fragmentsFactory.instantiate(any(), any()) } returns
                 DBFragment(viewModelFactory, picasso, networkCheck)
     }
@@ -67,7 +67,7 @@ class DBFragmentTest {
 
     @Test
     fun noMovies_isEmptyListMessageInView() {
-        moviesLD.value = emptyList()
+        every { repo.getMoviesFromDB() } returns Flowable.just(emptyList())
 
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
