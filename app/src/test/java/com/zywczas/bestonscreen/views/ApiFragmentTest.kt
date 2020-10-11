@@ -7,7 +7,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.contrib.RecyclerViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -22,6 +22,7 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
+import com.zywczas.bestonscreen.utilities.ScrollToBottomAction
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
@@ -140,6 +141,31 @@ class ApiFragmentTest {
     }
 
     @Test
+    fun scrollingToBottom_isProgressBarDisplayed() {
+        val viewModelLocal = mockk<ApiVM>(relaxed = true)
+        val picassoLocal = mockk<Picasso>(relaxed = true)
+        val viewModelFactoryLocal = mockk<ViewModelsProviderFactory>()
+        val fragmentsFactoryLocal = mockk<MoviesFragmentsFactory>()
+        val moviesAndCategoryLDLocal = MutableLiveData<Resource<Pair<List<Movie>, Category>>>()
+        moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_2, UPCOMING))
+        val categorySlot = slot<Category>()
+        every { viewModelFactoryLocal.create(ApiVM::class.java) } returns viewModelLocal
+        every { fragmentsFactoryLocal.instantiate(any(), any()) } returns
+                ApiFragment(viewModelFactoryLocal, picassoLocal)
+        every { viewModelLocal.moviesAndCategoryLD } returns moviesAndCategoryLDLocal
+        every { viewModelLocal.getFirstMovies(capture(categorySlot)) } answers
+                { moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) } andThen
+                { moviesAndCategoryLDLocal.value = Resource.success(Pair(TestUtil.moviesList1_10, categorySlot.captured)) }
+
+        @Suppress("UNUSED_VARIABLE")
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactoryLocal)
+        recyclerView.perform(scrollToPosition<ViewHolder>(1))
+        recyclerView.perform(swipeDown())
+
+        onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
         var actualSelectedTabIndex : Int? = null
         var actualItemsCountInRecyclerView : Int? = null
@@ -221,7 +247,7 @@ class ApiFragmentTest {
     }
 
     @Test
-    fun getError_destroyActivity_isStillTheSameDataDisplayedAfterRestoration(){
+    fun getMovies_getError_destroyActivity_isStillTheSameDataDisplayedAfterRestoration(){ //todo to be implemented
         val movies = TestUtil.moviesList1_2
         var actualItemsCountInRecyclerView : Int? = null
         every { repo.getApiMovies(any(), any()) } returns
@@ -229,7 +255,7 @@ class ApiFragmentTest {
                 Flowable.just(Resource.error("some error", null))
 
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
-        //todo recyclerView.perform(scrollToPosition<ViewHolder>(1)).perform(scro)
+//        recyclerView.perform(scrollToPosition<ViewHolder>(1)).perform(scro)
 //        scenario.recreate()
         scenario.onFragment {
             actualItemsCountInRecyclerView = it.recyclerViewApi.adapter?.itemCount
@@ -238,6 +264,18 @@ class ApiFragmentTest {
 //        shadowOf(getMainLooper()).idle()
         assertEquals(2, actualItemsCountInRecyclerView)
         verify(exactly = 2) { repo.getApiMovies(any(), any()) }
+    }
+
+    @Test
+    fun scrollToBottom_isNextPageLoaded(){
+        every { repo.getApiMovies(any(), any()) } returns
+                Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
+                Flowable.just(Resource.success(TestUtil.moviesList1_10))
+
+        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        recyclerView.perform(swipeUp())
+
+        verify(exactly = 2) { repo.getApiMovies(TOP_RATED, any()) }
     }
 
     @Test
@@ -257,12 +295,9 @@ class ApiFragmentTest {
         assertEquals(expectedArgument, navController.backStack.last().arguments?.get("movie"))
     }
 
-
-
-
 }
 
 
 
 //todo czy progress bar sie pokazuje, przy ladowaniu kolejnej strony
-//todo czy recycler view sciaga nowe filmy na przewijanie ekranu
+

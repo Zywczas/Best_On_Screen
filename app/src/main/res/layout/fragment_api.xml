@@ -24,23 +24,22 @@
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="56dp"
                 android:text="@string/top_rated" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="56dp"
                 android:text="@string/popular" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="56dp"
                 android:text="@string/upcoming" />
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
