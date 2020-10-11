@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.DrawableWrapper
 import android.graphics.drawable.GradientDrawable
+import android.os.Looper.getMainLooper
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -22,6 +23,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Request
 import com.zywczas.bestonscreen.BestOnScreenApp
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.NestedScrollViewExtension
@@ -29,6 +31,7 @@ import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
+import io.reactivex.rxjava3.core.Flowable
 import kotlinx.android.synthetic.main.fragment_details.*
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert.*
@@ -36,6 +39,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Captor
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowBitmap
@@ -46,33 +50,25 @@ import org.robolectric.shadows.ShadowToast
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class DetailsFragmentTest {
-    //todo dac repo
-    //todo dac mockowanie osobno przed kazdym testem @After
-    //    fun finish(){
-    //        unmockkAll()
-    //    }
 
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
-    private val viewModel = mockk<DetailsVM>()
+    private val repo = mockk<DetailsRepository>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
     private val directions = DBFragmentDirections.actionToDetails(TestUtil.movie1)
-    private val isMovieInDbLD = MutableLiveData<Event<Boolean>>()
-    private val messageLD = MutableLiveData<Event<String>>()
 
     @Before
     fun init(){
         every { networkCheck.isConnected } returns true
-        every { viewModelFactory.create(DetailsVM::class.java) } returns viewModel
+        every { viewModelFactory.create(DetailsVM::class.java) } returns DetailsVM(repo)
         every { fragmentsFactory.instantiate(any(), any()) } returns DetailsFragment(viewModelFactory, picasso, networkCheck)
-        every { viewModel.isMovieInDbLD } returns isMovieInDbLD
-        every { viewModel.messageLD } returns messageLD
-        every { viewModel.checkIfIsInDb(any()) } just Runs
     }
 
     @Test
     fun isFragmentInView(){
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -94,7 +90,9 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun isDataDisplayed(){
+    fun isDataFromDirectionsDisplayed(){
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -111,7 +109,7 @@ class DetailsFragmentTest {
 
     @Test
     fun movieInDb_isAddToMyListBtnStateChecked(){
-        isMovieInDbLD.value = Event(true)
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -123,7 +121,7 @@ class DetailsFragmentTest {
 
     @Test
     fun movieNotInDb_isAddToMyListBtnStateUnchecked(){
-        isMovieInDbLD.value = Event(false)
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -134,10 +132,11 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun addingMovieToDatabase_isAddToMyListBtnChecked(){
-        isMovieInDbLD.value = Event(false)
-        every { viewModel.addOrDeleteMovie(any(), false) } answers {
-            isMovieInDbLD.value = Event(true) }
+    fun addingMovieToDatabase_isAddToMyListBtnCheckedAndToastShown(){
+        every { repo.checkIfMovieIsInDB(any())} returns
+                Flowable.just(Event(false)) andThen
+                Flowable.just(Event(true))
+        every { repo.addMovieToDB(any())} returns Flowable.just(Event("movie added to database"))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -146,29 +145,20 @@ class DetailsFragmentTest {
 
         onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension())
             .perform(click()).check(matches(isChecked()))
-    }
-
-    @Test
-    fun addingMovieToDatabase_isToastShown(){
-        isMovieInDbLD.value = Event(false)
-        every { viewModel.addOrDeleteMovie(any(), false) } answers {
-            messageLD.value = Event("movie added to database") }
-
-        val scenario = launchFragmentInContainer<DetailsFragment>(
-            factory = fragmentsFactory,
-            fragmentArgs = directions.arguments
-        )
-        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-
         assertEquals("movie added to database", ShadowToast.getTextOfLatestToast())
+        verifySequence {
+            repo.checkIfMovieIsInDB(any())
+            repo.addMovieToDB(any())
+            repo.checkIfMovieIsInDB(any())
+        }
     }
 
     @Test
-    fun deletingMovieFromDatabase_isAddToMyListBtnUnchecked(){
-        isMovieInDbLD.value = Event(true)
-        every { viewModel.addOrDeleteMovie(any(), true) } answers {
-            isMovieInDbLD.value = Event(false)
-        }
+    fun deletingMovieFromDatabase_isAddToMyListBtnUncheckedAndToastShown(){
+        every { repo.checkIfMovieIsInDB(any())} returns
+                Flowable.just(Event(true)) andThen
+                Flowable.just(Event(false))
+        every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -177,26 +167,17 @@ class DetailsFragmentTest {
 
         onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
             .check(matches(not(isChecked())))
-    }
-
-    @Test
-    fun deletingMovieFromDatabase_isToastShown(){
-        isMovieInDbLD.value = Event(true)
-        every { viewModel.addOrDeleteMovie(any(), true) } answers
-                { messageLD.value = Event("movie deleted") }
-
-        val scenario = launchFragmentInContainer<DetailsFragment>(
-            factory = fragmentsFactory,
-            fragmentArgs = directions.arguments
-        )
-        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
-
         assertEquals("movie deleted", ShadowToast.getTextOfLatestToast())
+        verifySequence {
+            repo.checkIfMovieIsInDB(any())
+            repo.deleteMovieFromDB(any())
+            repo.checkIfMovieIsInDB(any())
+        }
     }
 
     @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
-        isMovieInDbLD.value = Event(true)
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -219,16 +200,21 @@ class DetailsFragmentTest {
                 "is so valuable that he hires mercenaries to protect it, and a terrorist group " +
                 "kidnaps his daughter just to get it.")).perform(NestedScrollViewExtension())
             .check(matches(isDisplayed()))
+        verify(exactly = 2) { repo.checkIfMovieIsInDB(any()) }
     }
 
     @Test
-    fun activityDestroyed_isToastNotShownAgainOnFragmentRecreated(){
-        messageLD.value = Event("all good so far")
+    fun deleteMovie_activityDestroyed_isToastNotShownAgainOnFragmentRecreated(){
+        every { repo.checkIfMovieIsInDB(any())} returns
+                Flowable.just(Event(true)) andThen
+                Flowable.just(Event(false))
+        every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
+        onView(withId(R.id.addToMyListBtnDetails)).perform(NestedScrollViewExtension()).perform(click())
         scenario.recreate()
 
         assertEquals(1, ShadowToast.shownToastCount())
@@ -236,6 +222,7 @@ class DetailsFragmentTest {
 
     @Test
     fun noInternet_isToastShown(){
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
         every { networkCheck.isConnected } returns false
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
