@@ -16,8 +16,9 @@ internal class MovieFromApiTest {
                 null, null, null, null)
 
             movieFromApi.convertGenreIdsToDescription()
+            val actual = movieFromApi.genresDescription
 
-            assertEquals(expected, movieFromApi.genresDescription)
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -29,8 +30,9 @@ internal class MovieFromApiTest {
                 null, null, null, null)
 
             movieFromApi.convertGenreIdsToDescription()
+            val actual = movieFromApi.genresDescription
 
-            assertEquals(expected, movieFromApi.genresDescription)
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -42,8 +44,9 @@ internal class MovieFromApiTest {
             )
 
             movieFromApi.convertGenreIdsToDescription()
+            val actual = movieFromApi.genresDescription
 
-            assertEquals(expected, movieFromApi.genresDescription)
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -53,8 +56,9 @@ internal class MovieFromApiTest {
             null, null, null, null)
 
             movieFromApi.convertGenreIdsToDescription()
+            val actual = movieFromApi.genresDescription
 
-            assertEquals(expected, movieFromApi.genresDescription)
+            assertEquals(expected, actual)
         }
 
     }

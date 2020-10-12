@@ -16,11 +16,6 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
     private val movieFromDb1 = TestUtil.movieFromDB1
     private val movieFromDb2 = TestUtil.movieFromDB2
 
-//    it has to have @JvmField annotation to 'make this rule public' - otherwise gives an error in Kotlin
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
     @Test
     fun insert() {
         dao.insertMovie(movieFromDb1).blockingGet()
