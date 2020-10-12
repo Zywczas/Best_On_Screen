@@ -233,6 +233,4 @@ class DetailsFragmentTest {
         assertEquals("Problem with internet. Check your connection and try again.", ShadowToast.getTextOfLatestToast())
     }
 
-    //todo dac test na cofanie navigation
-
 }
