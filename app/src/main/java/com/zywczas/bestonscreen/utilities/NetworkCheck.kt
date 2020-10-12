@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
 

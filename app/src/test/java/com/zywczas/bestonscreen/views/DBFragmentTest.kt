@@ -1,7 +1,6 @@
 package com.zywczas.bestonscreen.views
 
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -21,15 +20,10 @@ import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import io.reactivex.rxjava3.core.Flowable
 import org.hamcrest.core.IsNot.not
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -59,6 +53,7 @@ class DBFragmentTest {
 
     @Test
     fun isFragmentInView() {
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         recyclerView.check(matches(isDisplayed()))
@@ -69,6 +64,7 @@ class DBFragmentTest {
     fun noMovies_isEmptyListMessageInView() {
         every { repo.getMoviesFromDB() } returns Flowable.just(emptyList())
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         onView(withId(R.id.emptyListTextView)).check(matches(isDisplayed()))
@@ -76,6 +72,7 @@ class DBFragmentTest {
 
     @Test
     fun isDataDisplayedOnFragmentInit() {
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         recyclerView.perform(scrollToPosition<ViewHolder>(9))
@@ -114,6 +111,7 @@ class DBFragmentTest {
     fun noInternet_isToastShown(){
         every { networkCheck.isConnected } returns false
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DBFragment>(factory = fragmentsFactory)
 
         assertEquals("Problem with internet. Check your connection and try again.", ShadowToast.getTextOfLatestToast())

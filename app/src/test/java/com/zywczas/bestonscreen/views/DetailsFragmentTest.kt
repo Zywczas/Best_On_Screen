@@ -1,27 +1,12 @@
 package com.zywczas.bestonscreen.views
 
-import android.app.Application
-import android.content.res.Configuration
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.DrawableWrapper
-import android.graphics.drawable.GradientDrawable
-import android.os.Looper.getMainLooper
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.*
-import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Request
-import com.zywczas.bestonscreen.BestOnScreenApp
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.util.TestUtil
@@ -30,21 +15,17 @@ import com.zywczas.bestonscreen.utilities.NestedScrollViewExtension
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.viewmodels.DetailsVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import io.reactivex.rxjava3.core.Flowable
-import kotlinx.android.synthetic.main.fragment_details.*
 import org.hamcrest.core.IsNot.not
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Captor
-import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
-import org.robolectric.shadows.ShadowBitmap
-import org.robolectric.shadows.ShadowBitmapDrawable
-import org.robolectric.shadows.ShadowDrawable
 import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
@@ -69,6 +50,7 @@ class DetailsFragmentTest {
     fun isFragmentInView(){
         every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -93,6 +75,7 @@ class DetailsFragmentTest {
     fun isDataFromDirectionsDisplayed(){
         every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -111,6 +94,7 @@ class DetailsFragmentTest {
     fun movieInDb_isAddToMyListBtnStateChecked(){
         every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -123,6 +107,7 @@ class DetailsFragmentTest {
     fun movieNotInDb_isAddToMyListBtnStateUnchecked(){
         every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -138,6 +123,7 @@ class DetailsFragmentTest {
                 Flowable.just(Event(true))
         every { repo.addMovieToDB(any())} returns Flowable.just(Event("movie added to database"))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -160,6 +146,7 @@ class DetailsFragmentTest {
                 Flowable.just(Event(false))
         every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
@@ -225,6 +212,7 @@ class DetailsFragmentTest {
         every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
         every { networkCheck.isConnected } returns false
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments

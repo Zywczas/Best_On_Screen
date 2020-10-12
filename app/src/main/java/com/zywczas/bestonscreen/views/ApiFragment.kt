@@ -18,7 +18,10 @@ import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
+import com.zywczas.bestonscreen.utilities.Status
+import com.zywczas.bestonscreen.utilities.lazyAndroid
+import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import kotlinx.android.synthetic.main.fragment_api.*

@@ -2,27 +2,24 @@ package com.zywczas.bestonscreen.views
 
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
-import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
-import androidx.test.espresso.contrib.RecyclerViewActions.*
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.adapter.MovieAdapter.*
-import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Category.*
+import com.zywczas.bestonscreen.model.Category.POPULAR
+import com.zywczas.bestonscreen.model.Category.TOP_RATED
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
-import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -58,6 +55,7 @@ class ApiFragmentTestProgressBarOnly {
 
     @Test
     fun loadingMoviesOnInit_isProgressBarDisplayed() {
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
@@ -69,6 +67,7 @@ class ApiFragmentTestProgressBarOnly {
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
         onView(withText("Popular")).perform(click())
 
@@ -86,6 +85,7 @@ class ApiFragmentTestProgressBarOnly {
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
         recyclerView.perform(swipeUp())
 

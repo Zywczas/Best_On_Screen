@@ -2,7 +2,6 @@ package com.zywczas.bestonscreen.di
 
 import android.app.Application
 import com.zywczas.bestonscreen.BestOnScreenApp
-import com.zywczas.bestonscreen.utilities.NetworkCheck
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule

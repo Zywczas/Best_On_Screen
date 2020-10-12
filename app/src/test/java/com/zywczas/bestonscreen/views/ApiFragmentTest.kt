@@ -5,31 +5,34 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
-import androidx.test.espresso.contrib.RecyclerViewActions.*
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.adapter.MovieAdapter.*
+import com.zywczas.bestonscreen.adapter.MovieAdapter.ViewHolder
 import com.zywczas.bestonscreen.model.ApiRepository
-import com.zywczas.bestonscreen.model.Category.*
+import com.zywczas.bestonscreen.model.Category.POPULAR
+import com.zywczas.bestonscreen.model.Category.TOP_RATED
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import io.reactivex.rxjava3.core.Flowable
 import kotlinx.android.synthetic.main.fragment_api.*
-import org.hamcrest.core.IsNot.*
-import org.junit.After
-import org.junit.Assert.*
+import org.hamcrest.core.IsNot.not
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -59,6 +62,7 @@ class ApiFragmentTest {
 
     @Test
     fun isFragmentInView() {
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         recyclerView.check(matches(isDisplayed()))
@@ -162,6 +166,7 @@ class ApiFragmentTest {
         every { repo.getApiMovies(any(), any()) } returns
                 Flowable.just(Resource.error("some error", TestUtil.moviesList1_2))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
 
         shadowOf(getMainLooper()).idle()
@@ -174,6 +179,7 @@ class ApiFragmentTest {
                 Flowable.just(Resource.success(TestUtil.moviesList1_5)) andThen
                 Flowable.just(Resource.success(TestUtil.moviesList1_10))
 
+        @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
         recyclerView.perform(swipeUp())
 
