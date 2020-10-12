@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val openCloseDrawerNavClick = View.OnClickListener {
-        if (drawerLayoutMain.isDrawerOpen(GravityCompat.START)){
-            drawerLayoutMain.closeDrawer(GravityCompat.START)
+        if (drawerLayoutMain.isOpen){
+            drawerLayoutMain.close()
         } else {
             navController.navigateUp(appBarConfiguration)
         }
