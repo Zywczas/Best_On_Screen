@@ -89,7 +89,6 @@ class DetailsFragment @Inject constructor(
     private fun setupOnClickListener() {
         addToMyListBtnDetails.setOnClickListener {
             val isButtonChecked = addToMyListBtnDetails.tag as Boolean
-            val isCheck = addToMyListBtnDetails.isChecked
             viewModel.addOrDeleteMovie(movie, isButtonChecked)
             updateAddToListBtnState()
         }

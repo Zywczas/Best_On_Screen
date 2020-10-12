@@ -44,7 +44,6 @@ class DBFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         startDbUISetupChain()
         checkInternetConnection()
-
     }
 
     private fun startDbUISetupChain() {
