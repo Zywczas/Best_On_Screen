@@ -11,23 +11,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 @ExtendWith(InstantExecutorExtension::class)
 internal class DBVMTest {
 
     private lateinit var viewModel: DBVM
-
-    @Mock
-    private lateinit var repo: DBRepository
-
+    private val repo = mock(DBRepository::class.java)
     private val expectedMovies = TestUtil.moviesList1_2
 
     @BeforeEach
     private fun init() {
-        MockitoAnnotations.initMocks(this)
-        val returnedMovies = Flowable.just(expectedMovies)
-        `when`(repo.getMoviesFromDB()).thenReturn(returnedMovies)
+        `when`(repo.getMoviesFromDB()).thenReturn(Flowable.just(expectedMovies))
         viewModel = DBVM(repo)
     }
 

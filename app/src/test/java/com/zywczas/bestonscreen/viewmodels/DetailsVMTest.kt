@@ -19,15 +19,11 @@ import org.mockito.MockitoAnnotations
 internal class DetailsVMTest {
 
     private lateinit var viewModel: DetailsVM
-
-    @Mock
-    private lateinit var repo: DetailsRepository
-
+    private val repo = mock(DetailsRepository::class.java)
     private val movie = TestUtil.movie1
 
     @BeforeEach
     private fun init() {
-        MockitoAnnotations.initMocks(this)
         viewModel = DetailsVM(repo)
     }
 
@@ -43,6 +39,8 @@ internal class DetailsVMTest {
             val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
 
             assertEquals(true, actual)
+            verify(repo).checkIfMovieIsInDB(777)
+            verifyNoMoreInteractions(repo)
         }
 
         @Test
