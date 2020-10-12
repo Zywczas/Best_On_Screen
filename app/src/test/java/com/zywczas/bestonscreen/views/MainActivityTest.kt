@@ -57,12 +57,12 @@ class MainActivityTest {
 
     @Test
     fun isDrawerClosing(){
-        //todo to be implemented
+        //todo to be implemented after fixing drawer test
     }
 
     @Test
     fun clickNavMenuButtons_isNavigatingToOtherFragments() {
-        //todo to be implemented
+        //todo to be implemented after fixing drawer test
     }
 
 }
