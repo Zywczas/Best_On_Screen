@@ -52,7 +52,7 @@ class MainActivityTest {
             .check(matches(isClosed()))
             .perform(open())
             .check(matches(isOpen()))
-        //todo to be fixed - test fails currently
+        //todo to be fixed - test fails currently, but app works fine
     }
 
     @Test
