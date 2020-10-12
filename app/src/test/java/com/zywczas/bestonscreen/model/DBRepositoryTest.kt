@@ -15,11 +15,6 @@ internal class DBRepositoryTest {
     private val movieDao = mock(MovieDao::class.java)
     private val repo = DBRepository(movieDao)
 
-    @BeforeEach
-    private fun init() {
-        reset(movieDao)
-    }
-
     @Nested
     inner class GetMoviesFromDb {
 

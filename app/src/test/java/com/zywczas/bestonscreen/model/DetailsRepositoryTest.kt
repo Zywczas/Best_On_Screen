@@ -14,13 +14,7 @@ internal class DetailsRepositoryTest {
 
     private val movieDao = mock(MovieDao::class.java)
     private val repo = DetailsRepository(movieDao)
-
     private val movie = TestUtil.movie1
-
-    @BeforeEach
-    private fun init() {
-        reset(movieDao)
-    }
 
     private fun <MovieFromDB> anyMovieFromDB() : MovieFromDB = any()
 

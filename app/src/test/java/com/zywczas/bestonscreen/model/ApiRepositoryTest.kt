@@ -15,14 +15,9 @@ import org.mockito.Mockito.*
 
 
 internal class ApiRepositoryTest {
-//todo poprawic w kazdej klasie te inicjacje
+
     private val apiService = mock(ApiService::class.java)
     private val apiRepository = ApiRepository(apiService)
-
-    @BeforeEach
-    private fun init() {
-        reset(apiService)
-    }
 
     @Nested
     inner class GetApiMoviesReturnMovies {
