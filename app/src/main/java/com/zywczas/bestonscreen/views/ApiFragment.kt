@@ -105,7 +105,7 @@ class ApiFragment @Inject constructor(
                     updateContent(resource.data!!)
                 }
                 Status.ERROR -> {
-                    showToast(resource.message!!)
+                    resource.message?.getContentIfNotHandled()?.let { showToast(it) }
                     resource.data?.let { updateContent(it) }
                 }
             }

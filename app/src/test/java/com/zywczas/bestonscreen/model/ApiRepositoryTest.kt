@@ -15,7 +15,7 @@ import org.mockito.Mockito.*
 
 
 internal class ApiRepositoryTest {
-
+//todo poprawic w kazdej klasie te inicjacje
     private val apiService = mock(ApiService::class.java)
     private val apiRepository = ApiRepository(apiService)
 
@@ -76,59 +76,69 @@ internal class ApiRepositoryTest {
 
         @Test
         fun noMoviesReturned() {
-            val expectedMessage = "No more pages in this category."
             val returnedEmptyApiResponse = Single.just(ApiResponse())
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyApiResponse)
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val actualMessage = repoResponse.message?.getContentIfNotHandled()
+            val actualData = repoResponse.data
 
-            assertEquals(Resource.error(expectedMessage, null), actual)
+            assertEquals("No more pages in this category.", actualMessage)
+            assertEquals(null, actualData)
         }
 
         @Test
         fun emptyListReturned() {
-            val expectedMessage = "No more pages in this category."
             val returnedEmptyData = Single.just(ApiResponse(emptyList()))
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val actualMessage = repoResponse.message?.getContentIfNotHandled()
+            val actualData = repoResponse.data
 
-            assertEquals(Resource.error(expectedMessage, null), actual)
+            assertEquals("No more pages in this category.", actualMessage)
+            assertEquals(null, actualData)
         }
 
         @Test
         fun noMorePagesException() {
-            val expectedMessage = "No more pages in this category."
-            val networkCallStatus = "HTTP 422"
+            val noMorePagesResponseStatus = "HTTP 422"
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
-                .thenReturn(Single.error(Exception(networkCallStatus)))
+                .thenReturn(Single.error(Exception(noMorePagesResponseStatus)))
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val actualMessage = repoResponse.message?.getContentIfNotHandled()
+            val actualData = repoResponse.data
 
-            assertEquals(Resource.error(expectedMessage, null), actual)
+            assertEquals("No more pages in this category.", actualMessage)
+            assertEquals(null, actualData)
         }
 
         @Test
         fun invalidApiKeyException() {
-            val expectedMessage = "Invalid API key. Contact technical support."
-            val networkCallStatus = "HTTP 401"
+            val invalidApiKeyResponseStatus = "HTTP 401"
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
-                .thenReturn(Single.error(Exception(networkCallStatus)))
+                .thenReturn(Single.error(Exception(invalidApiKeyResponseStatus)))
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val actualMessage = repoResponse.message?.getContentIfNotHandled()
+            val actualData = repoResponse.data
 
-            assertEquals(Resource.error(expectedMessage, null), actual)
+            assertEquals("Invalid API key. Contact technical support.", actualMessage)
+            assertEquals(null, actualData)
         }
 
         @Test
         fun otherException() {
-            val expectedMessage = "Problem with downloading movies. Check connection and try again."
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception()))
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val actualMessage = repoResponse.message?.getContentIfNotHandled()
+            val actualData = repoResponse.data
 
-            assertEquals(Resource.error(expectedMessage, null), actual)
+            assertEquals("Problem with downloading movies. Check connection and try again.", actualMessage)
+            assertEquals(null, actualData)
         }
 
     }
