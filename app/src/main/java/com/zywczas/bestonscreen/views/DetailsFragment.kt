@@ -21,18 +21,11 @@ class DetailsFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment() {
+) : Fragment(R.layout.fragment_details) {
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
     private val movie
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

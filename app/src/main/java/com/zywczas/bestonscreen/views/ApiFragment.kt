@@ -30,7 +30,7 @@ import javax.inject.Inject
 class ApiFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso
-) : Fragment() {
+) : Fragment(R.layout.fragment_api) {
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
@@ -40,13 +40,6 @@ class ApiFragment @Inject constructor(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_api, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -27,18 +27,11 @@ class DBFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment() {
+) : Fragment(R.layout.fragment_db) {
 
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter : MovieAdapter
     private val navController by lazyAndroid{ Navigation.findNavController(requireView()) }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_db, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
