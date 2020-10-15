@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
+import com.zywczas.bestonscreen.databinding.FragmentDetailsBinding
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.lazyAndroid
@@ -21,14 +23,29 @@ class DetailsFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment(R.layout.fragment_details) {
+) : Fragment() {
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
     private val movie
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding : FragmentDetailsBinding = DataBindingUtil
+            .inflate(inflater, R.layout.fragment_details, container, false)
+        binding.movie = movie
+        binding.viewModel = viewModel
+        @Suppress("UnnecessaryVariable")
+        val view = binding.root
+        return view
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //todo zmienic nazwe
         setupUIState()
         setupMessageObserver()
         checkInternetConnection()
@@ -41,13 +58,7 @@ class DetailsFragment @Inject constructor(
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-        titleTextViewDetails.text = movie.title
-        val rate = "Rate: ${movie.voteAverage}"
-        rateTextViewDetails.text = rate
-        val releaseDate = "Release date: ${movie.releaseDate}"
-        releaseDateTextViewDetails.text = releaseDate
-        overviewTextViewDetails.text = movie.overview
-        genresTextViewDetails.text = movie.genresDescription
+
         setupAddToMyListBtnStateObserver()
     }
 
