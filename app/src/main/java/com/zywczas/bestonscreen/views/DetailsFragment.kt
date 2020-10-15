@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.squareup.picasso.Picasso
@@ -26,54 +25,39 @@ class DetailsFragment @Inject constructor(
 ) : Fragment() {
 
     private val viewModel: DetailsVM by viewModels { viewModelFactory }
-    private val movie
+    private val movieFromArg
             by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getMovieAndInitIsInDbLD(movieFromArg)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding : FragmentDetailsBinding = DataBindingUtil
-            .inflate(inflater, R.layout.fragment_details, container, false)
-        binding.movie = movie
-        binding.viewModel = viewModel
-        @Suppress("UnnecessaryVariable")
-        val view = binding.root
-        return view
+        return FragmentDetailsBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+            movie = movieFromArg
+            vm = viewModel
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //todo zmienic nazwe
-        setupUIState()
+        displayPoster()
         setupMessageObserver()
         checkInternetConnection()
-        setupOnClickListener()
     }
 
-    private fun setupUIState() {
-        val posterPath = "https://image.tmdb.org/t/p/w300" + movie.posterPath
+    private fun displayPoster() {
+        val posterPath = "https://image.tmdb.org/t/p/w300" + movieFromArg.posterPath
         picasso.load(posterPath)
             .resize(250, 0)
             .error(R.drawable.error_image)
             .into(posterImageViewDetails)
-
-        setupAddToMyListBtnStateObserver()
-    }
-
-    private fun setupAddToMyListBtnStateObserver() {
-        viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { isInDb ->
-                addToMyListBtnDetails.isChecked = isInDb
-                addToMyListBtnDetails.tag = isInDb
-            }
-        }
-        updateAddToListBtnState()
-    }
-
-    private fun updateAddToListBtnState() {
-        viewModel.checkIfIsInDb(movie.id)
     }
 
     private fun setupMessageObserver() {
@@ -87,14 +71,6 @@ class DetailsFragment @Inject constructor(
     private fun checkInternetConnection() {
         if (networkCheck.isConnected.not()) {
             showToast(CONNECTION_PROBLEM)
-        }
-    }
-
-    private fun setupOnClickListener() {
-        addToMyListBtnDetails.setOnClickListener {
-            val isButtonChecked = addToMyListBtnDetails.tag as Boolean
-            viewModel.addOrDeleteMovie(movie, isButtonChecked)
-            updateAddToListBtnState()
         }
     }
 

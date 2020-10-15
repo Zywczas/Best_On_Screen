@@ -44,12 +44,11 @@ class DetailsFragmentTest {
         every { networkCheck.isConnected } returns true
         every { viewModelFactory.create(DetailsVM::class.java) } returns DetailsVM(repo)
         every { fragmentsFactory.instantiate(any(), any()) } returns DetailsFragment(viewModelFactory, picasso, networkCheck)
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(true)
     }
 
     @Test
     fun isFragmentInView(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
-
         @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -73,8 +72,6 @@ class DetailsFragmentTest {
 
     @Test
     fun isDataFromDirectionsDisplayed(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
-
         @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -92,8 +89,6 @@ class DetailsFragmentTest {
 
     @Test
     fun movieInDb_isAddToMyListBtnStateChecked(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
-
         @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
@@ -105,7 +100,7 @@ class DetailsFragmentTest {
 
     @Test
     fun movieNotInDb_isAddToMyListBtnStateUnchecked(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
+        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(false)
 
         @Suppress("UNUSED_VARIABLE")
         val scenario = launchFragmentInContainer<DetailsFragment>(
@@ -119,8 +114,7 @@ class DetailsFragmentTest {
     @Test
     fun addingMovieToDatabase_isAddToMyListBtnCheckedAndToastShown(){
         every { repo.checkIfMovieIsInDB(any())} returns
-                Flowable.just(Event(false)) andThen
-                Flowable.just(Event(true))
+                Flowable.just(false)
         every { repo.addMovieToDB(any())} returns Flowable.just(Event("movie added to database"))
 
         @Suppress("UNUSED_VARIABLE")
@@ -135,15 +129,11 @@ class DetailsFragmentTest {
         verifySequence {
             repo.checkIfMovieIsInDB(any())
             repo.addMovieToDB(any())
-            repo.checkIfMovieIsInDB(any())
         }
     }
 
     @Test
     fun deletingMovieFromDatabase_isAddToMyListBtnUncheckedAndToastShown(){
-        every { repo.checkIfMovieIsInDB(any())} returns
-                Flowable.just(Event(true)) andThen
-                Flowable.just(Event(false))
         every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
         @Suppress("UNUSED_VARIABLE")
@@ -158,15 +148,12 @@ class DetailsFragmentTest {
         verifySequence {
             repo.checkIfMovieIsInDB(any())
             repo.deleteMovieFromDB(any())
-            repo.checkIfMovieIsInDB(any())
         }
     }
 
     @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
-
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+            val scenario = launchFragmentInContainer<DetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -192,9 +179,6 @@ class DetailsFragmentTest {
 
     @Test
     fun deleteMovie_activityDestroyed_isToastNotShownAgainOnFragmentRecreated(){
-        every { repo.checkIfMovieIsInDB(any())} returns
-                Flowable.just(Event(true)) andThen
-                Flowable.just(Event(false))
         every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
         val scenario = launchFragmentInContainer<DetailsFragment>(
@@ -209,7 +193,6 @@ class DetailsFragmentTest {
 
     @Test
     fun noInternet_isToastShown(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
         every { networkCheck.isConnected } returns false
 
         @Suppress("UNUSED_VARIABLE")

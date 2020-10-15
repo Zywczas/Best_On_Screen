@@ -5,7 +5,6 @@ import com.zywczas.bestonscreen.util.TestUtil
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
@@ -28,7 +27,7 @@ internal class DetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                repo.checkIfMovieIsInDB(movieId).blockingFirst()
 
             assertEquals(true, actual)
             verify(movieDao).getIdCount(movieId)
@@ -42,7 +41,7 @@ internal class DetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                repo.checkIfMovieIsInDB(movieId).blockingFirst()
 
             assertEquals(false, actual)
         }

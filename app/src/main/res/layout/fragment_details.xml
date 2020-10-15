@@ -8,7 +8,7 @@
             name="movie"
             type="com.zywczas.bestonscreen.model.Movie" />
         <variable
-            name="viewModel"
+            name="vm"
             type="com.zywczas.bestonscreen.viewmodels.DetailsVM" />
     </data>
 
@@ -134,7 +134,8 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/add_to_list_toggle"
-                    android:checked="false"
+                    android:checked="@{vm.isMovieInDbLD}"
+                    android:onClick="@{()-> vm.addOrDeleteMovie()}"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
                     android:textColor="@android:color/white"

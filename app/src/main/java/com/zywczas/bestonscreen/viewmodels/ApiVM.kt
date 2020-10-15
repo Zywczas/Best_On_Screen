@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.*
+import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
+import com.zywczas.bestonscreen.utilities.NetworkCheck
+import com.zywczas.bestonscreen.utilities.Resource
+import com.zywczas.bestonscreen.utilities.Status
 import javax.inject.Inject
 
 class ApiVM @Inject constructor(
