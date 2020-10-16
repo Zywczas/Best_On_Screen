@@ -6,7 +6,6 @@ import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
