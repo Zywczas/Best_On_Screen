@@ -5,7 +5,6 @@ import com.zywczas.bestonscreen.util.TestUtil
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
