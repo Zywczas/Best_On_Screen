@@ -14,11 +14,11 @@ open class DetailsRepository @Inject constructor(private val movieDao: MovieDao)
     private val deleteSuccess by lazy { "Movie removed from your list." }
     private val deleteError by lazy { "Cannot remove the movie. Close the app. Try again." }
 
-    open fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Boolean>> {
+    open fun checkIfMovieIsInDB(movieId: Int): Flowable<Boolean> {
         val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
         return isMovieInDbFlowable
             .subscribeOn(Schedulers.io())
-            .map { idCount -> Event(toBoolean(idCount)) }
+            .map { idCount -> toBoolean(idCount) }
     }
 
     private fun toBoolean(idCount: Int): Boolean {

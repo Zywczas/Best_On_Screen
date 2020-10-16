@@ -27,7 +27,7 @@ internal class DetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                repo.checkIfMovieIsInDB(movieId).blockingFirst()
 
             assertEquals(true, actual)
             verify(movieDao).getIdCount(movieId)
@@ -41,7 +41,7 @@ internal class DetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                repo.checkIfMovieIsInDB(movieId).blockingFirst()
 
             assertEquals(false, actual)
         }

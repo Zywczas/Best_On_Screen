@@ -30,26 +30,26 @@ internal class DetailsVMTest {
 
         @Test
         fun observeTrue() {
-            val returnedTrue = Flowable.just(Event(true))
+            val returnedTrue = Flowable.just(true)
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
 
-            viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+            viewModel.getMovieAndInitIsInDbLD(movie)
+            val actualIsInDb = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD)
 
-            assertEquals(true, actual)
-            verify(repo).checkIfMovieIsInDB(777)
+            assertEquals(true, actualIsInDb)
+            verify(repo).checkIfMovieIsInDB(movie.id)
             verifyNoMoreInteractions(repo)
         }
 
         @Test
         fun observeFalse() {
-            val returnedFalse = Flowable.just(Event(false))
+            val returnedFalse = Flowable.just(false)
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
 
-            viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+            viewModel.getMovieAndInitIsInDbLD(movie)
+            val actualIsInDb = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD)
 
-            assertEquals(false, actual)
+            assertEquals(false, actualIsInDb)
         }
 
     }
@@ -60,11 +60,13 @@ internal class DetailsVMTest {
         @Test
         fun add_observeMessage() {
             val expectedMessage = "some add outcome"
-            val isInDb = false
+            val returnedFalse = Flowable.just(false)
+            `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
             val returnedData = Flowable.just(Event(expectedMessage))
             `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
-            viewModel.addOrDeleteMovie(movie, isInDb)
+            viewModel.getMovieAndInitIsInDbLD(movie)
+            viewModel.addOrDeleteMovie()
             val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
@@ -75,11 +77,13 @@ internal class DetailsVMTest {
         @Test
         fun delete_observeMessage() {
             val expectedMessage = "some delete outcome"
-            val isInDb = true
+            val returnedTrue = Flowable.just(true)
+            `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
             val returnedData = Flowable.just(Event(expectedMessage))
             `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 
-            viewModel.addOrDeleteMovie(movie, isInDb)
+            viewModel.getMovieAndInitIsInDbLD(movie)
+            viewModel.addOrDeleteMovie()
             val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)

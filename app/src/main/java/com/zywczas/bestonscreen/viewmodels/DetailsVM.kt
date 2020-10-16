@@ -11,27 +11,24 @@ import javax.inject.Inject
 
 open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
 
-    private val isMovieInDbMLD by lazy { MediatorLiveData<Event<Boolean>>() }
     private val messageMLD by lazy { MediatorLiveData<Event<String>>() }
-    val isMovieInDbLD : LiveData<Event<Boolean>> by lazy { isMovieInDbMLD }
     val messageLD : LiveData<Event<String>> by lazy { messageMLD }
+    lateinit var isMovieInDbLD : LiveData<Boolean>
+    lateinit var movie: Movie
 
-    fun checkIfIsInDb(movieId: Int) {
-        val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))
-        isMovieInDbMLD.addSource(source) {
-            isMovieInDbMLD.postValue(it)
-            isMovieInDbMLD.removeSource(source)
+    fun getMovieAndInitIsInDbLD(movieFromFragment: Movie) {
+        movie = movieFromFragment
+        isMovieInDbLD = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movie.id))
+    }
+
+    fun addOrDeleteMovie() {
+        when (isMovieInDbLD.value) {
+            false -> addMovieToDB()
+            true -> deleteMovieFromDB()
         }
     }
 
-    fun addOrDeleteMovie(movie: Movie, isButtonChecked: Boolean) {
-        when (isButtonChecked) {
-            false -> addMovieToDB(movie)
-            true -> deleteMovieFromDB(movie)
-        }
-    }
-
-    private fun addMovieToDB(movie: Movie) {
+    private fun addMovieToDB() {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.addMovieToDB(movie)
         )
@@ -41,7 +38,7 @@ open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : 
         }
     }
 
-    private fun deleteMovieFromDB(movie: Movie) {
+    private fun deleteMovieFromDB() {
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.deleteMovieFromDB(movie)
         )
