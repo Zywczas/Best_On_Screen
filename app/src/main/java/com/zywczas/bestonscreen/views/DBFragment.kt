@@ -77,7 +77,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun setupMoviesObserver() {
-        viewModel.moviesLD.observe(viewLifecycleOwner) { movies ->
+        viewModel.movies.observe(viewLifecycleOwner) { movies ->
             updateDisplayedMovies(movies)
             if (movies.isEmpty()) {
                 showMessageAboutEmptyDB()

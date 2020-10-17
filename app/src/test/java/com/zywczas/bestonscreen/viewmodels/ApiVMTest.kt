@@ -41,7 +41,7 @@ internal class ApiVMTest {
         @Test
         fun observeChange(){
             viewModel.getFirstMovies(POPULAR)
-            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, POPULAR)), actual)
         }
@@ -51,7 +51,7 @@ internal class ApiVMTest {
             every { network.isConnected } returns false
 
             viewModel.getFirstMovies(UPCOMING)
-            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             val actualMessage = liveDataValue.message?.getContentIfNotHandled()
             val actualData = liveDataValue.data
 
@@ -62,9 +62,9 @@ internal class ApiVMTest {
         @Test
         fun tryToGetAgain_observeNoAction(){
             viewModel.getFirstMovies(TOP_RATED)
-            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             viewModel.getFirstMovies(TOP_RATED)
-            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, TOP_RATED)), actualValue)
             verify (exactly = 1) { repo.getApiMovies(TOP_RATED, 1) }
@@ -78,7 +78,7 @@ internal class ApiVMTest {
         @Test
         fun observeChange() {
             viewModel.getNextMoviesIfConnected(POPULAR)
-            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, POPULAR)), actual)
             verify (exactly = 1) { repo.getApiMovies(POPULAR, 1) }
@@ -92,7 +92,7 @@ internal class ApiVMTest {
             every { repo.getApiMovies(category, 1) } returns returnedError
 
             viewModel.getNextMoviesIfConnected(category)
-            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             val actualMessage = liveDataValue.message?.getContentIfNotHandled()
             val actualData = liveDataValue.data
 
@@ -111,9 +111,9 @@ internal class ApiVMTest {
             every { repo.getApiMovies(category, capture(pages)) } returns returnedMovies andThen returnedError
 
             viewModel.getNextMoviesIfConnected(category)
-            val needToPullFirstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val needToPullFirstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             viewModel.getNextMoviesIfConnected(category)
-            val secondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val secondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             val actualMessage = secondValue.message?.getContentIfNotHandled()
             val actualData = secondValue.data
 
@@ -135,9 +135,9 @@ internal class ApiVMTest {
             every { repo.getApiMovies(any(), capture(pages)) } returns returnedMovies1 andThen returnedMovies2
 
             viewModel.getNextMoviesIfConnected(category1)
-            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             viewModel.getNextMoviesIfConnected(category2)
-            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategoryLD)
+            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies2, category2)), actualValue)
             assertEquals(listOf(1,1), pages)

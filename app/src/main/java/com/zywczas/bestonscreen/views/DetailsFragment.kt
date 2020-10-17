@@ -50,7 +50,7 @@ class DetailsFragment @Inject constructor(
     }
 
     private fun setupAddToMyListBtnStateObserver() {
-        viewModel.isMovieInDbLD.observe(viewLifecycleOwner) {
+        viewModel.isMovieInDb.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isInDb ->
                 addToMyListBtnDetails.isChecked = isInDb
                 addToMyListBtnDetails.tag = isInDb
@@ -64,7 +64,7 @@ class DetailsFragment @Inject constructor(
     }
 
     private fun setupMessageObserver() {
-        viewModel.messageLD.observe(viewLifecycleOwner) {
+        viewModel.message.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { message ->
                 showToast(message)
             }

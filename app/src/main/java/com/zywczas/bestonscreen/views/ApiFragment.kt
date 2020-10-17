@@ -89,7 +89,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun setupMoviesObserver(complete: (Boolean) -> Unit) {
-        viewModel.moviesAndCategoryLD.observe(viewLifecycleOwner) { resource ->
+        viewModel.moviesAndCategory.observe(viewLifecycleOwner) { resource ->
             showProgressBar(false)
             when (resource.status) {
                 Status.SUCCESS -> {

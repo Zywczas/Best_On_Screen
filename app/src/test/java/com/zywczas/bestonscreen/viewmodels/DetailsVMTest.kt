@@ -34,7 +34,7 @@ internal class DetailsVMTest {
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
 
             viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDb).getContentIfNotHandled()
 
             assertEquals(true, actual)
             verify(repo).checkIfMovieIsInDB(777)
@@ -47,7 +47,7 @@ internal class DetailsVMTest {
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
 
             viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDbLD).getContentIfNotHandled()
+            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDb).getContentIfNotHandled()
 
             assertEquals(false, actual)
         }
@@ -65,7 +65,7 @@ internal class DetailsVMTest {
             `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
             viewModel.addOrDeleteMovie(movie, isInDb)
-            val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
+            val actualMessage = LiveDataTestUtil.getValue(viewModel.message).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(repo).addMovieToDB(movie)
@@ -80,7 +80,7 @@ internal class DetailsVMTest {
             `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 
             viewModel.addOrDeleteMovie(movie, isInDb)
-            val actualMessage = LiveDataTestUtil.getValue(viewModel.messageLD).getContentIfNotHandled()
+            val actualMessage = LiveDataTestUtil.getValue(viewModel.message).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(repo).deleteMovieFromDB(movie)

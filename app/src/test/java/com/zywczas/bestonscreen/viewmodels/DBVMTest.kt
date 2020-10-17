@@ -27,7 +27,7 @@ internal class DBVMTest {
 
     @Test
     fun observeMoviesWhenLiveDataSet() {
-        val actualMovies = LiveDataTestUtil.getValue(viewModel.moviesLD)
+        val actualMovies = LiveDataTestUtil.getValue(viewModel.movies)
 
         assertEquals(expectedMovies, actualMovies)
     }

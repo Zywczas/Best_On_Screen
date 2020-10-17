@@ -23,10 +23,10 @@ class ApiVM @Inject constructor(
     private var firstMoviesRequested = false
     private val movies by lazy { mutableListOf<Movie>() }
 
-    private val moviesAndCategoryMLD
+    private val _moviesAndCategory
             by lazy { MediatorLiveData<Resource<Pair<List<Movie>, Category>>>() }
-    val moviesAndCategoryLD : LiveData<Resource<Pair<List<Movie>, Category>>>
-            by lazy { moviesAndCategoryMLD }
+    val moviesAndCategory : LiveData<Resource<Pair<List<Movie>, Category>>>
+            by lazy { _moviesAndCategory }
 
 
     fun getFirstMovies(nextCategory: Category) {
@@ -63,7 +63,7 @@ class ApiVM @Inject constructor(
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.getApiMovies(category, page)
         )
-        moviesAndCategoryMLD.addSource(source) { repoResource ->
+        _moviesAndCategory.addSource(source) { repoResource ->
             when (repoResource.status) {
                 Status.SUCCESS -> {
                     updateAndSendData(repoResource.data!!)
@@ -72,18 +72,18 @@ class ApiVM @Inject constructor(
                     repoResource.message!!.getContentIfNotHandled()?.let { sendError(it) }
                 }
             }
-            moviesAndCategoryMLD.removeSource(source)
+            _moviesAndCategory.removeSource(source)
         }
     }
 
     private fun updateAndSendData(data: List<Movie>) {
         movies.addAll(data)
-        moviesAndCategoryMLD.postValue(Resource.success(Pair(movies.toList(), category)))
+        _moviesAndCategory.postValue(Resource.success(Pair(movies.toList(), category)))
         page++
     }
 
     private fun sendError(message: String) {
-        moviesAndCategoryMLD.postValue(Resource.error(message, Pair(movies.toList(), category)))
+        _moviesAndCategory.postValue(Resource.error(message, Pair(movies.toList(), category)))
     }
 
 }

@@ -45,7 +45,7 @@ class ApiFragmentTestProgressBarOnly {
         every { viewModelFactory.create(ApiVM::class.java) } returns viewModel
         every { fragmentsFactory.instantiate(any(), any()) } returns
                 ApiFragment(viewModelFactory, picasso)
-        every { viewModel.moviesAndCategoryLD } returns moviesAndCategoryLD
+        every { viewModel.moviesAndCategory } returns moviesAndCategoryLD
     }
 
     @After
@@ -73,7 +73,7 @@ class ApiFragmentTestProgressBarOnly {
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
         verifySequence {
-            viewModel.moviesAndCategoryLD
+            viewModel.moviesAndCategory
             viewModel.getFirstMovies(TOP_RATED)
             viewModel.getNextMoviesIfConnected(POPULAR)
         }

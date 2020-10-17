@@ -11,16 +11,16 @@ import javax.inject.Inject
 
 open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
 
-    private val isMovieInDbMLD by lazy { MediatorLiveData<Event<Boolean>>() }
-    private val messageMLD by lazy { MediatorLiveData<Event<String>>() }
-    val isMovieInDbLD : LiveData<Event<Boolean>> by lazy { isMovieInDbMLD }
-    val messageLD : LiveData<Event<String>> by lazy { messageMLD }
+    private val _isMovieInDb by lazy { MediatorLiveData<Event<Boolean>>() }
+    private val _message by lazy { MediatorLiveData<Event<String>>() }
+    val isMovieInDb : LiveData<Event<Boolean>> by lazy { _isMovieInDb }
+    val message : LiveData<Event<String>> by lazy { _message }
 
     fun checkIfIsInDb(movieId: Int) {
         val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))
-        isMovieInDbMLD.addSource(source) {
-            isMovieInDbMLD.postValue(it)
-            isMovieInDbMLD.removeSource(source)
+        _isMovieInDb.addSource(source) {
+            _isMovieInDb.postValue(it)
+            _isMovieInDb.removeSource(source)
         }
     }
 
@@ -35,9 +35,9 @@ open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : 
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.addMovieToDB(movie)
         )
-        messageMLD.addSource(source) { event ->
-            messageMLD.postValue(event)
-            messageMLD.removeSource(source)
+        _message.addSource(source) { event ->
+            _message.postValue(event)
+            _message.removeSource(source)
         }
     }
 
@@ -45,9 +45,9 @@ open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : 
         val source = LiveDataReactiveStreams.fromPublisher(
             repo.deleteMovieFromDB(movie)
         )
-        messageMLD.addSource(source) { event ->
-            messageMLD.postValue(event)
-            messageMLD.removeSource(source)
+        _message.addSource(source) { event ->
+            _message.postValue(event)
+            _message.removeSource(source)
         }
     }
 
