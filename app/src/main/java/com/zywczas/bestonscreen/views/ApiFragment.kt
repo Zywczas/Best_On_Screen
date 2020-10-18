@@ -6,7 +6,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -18,7 +18,6 @@ import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
 import com.zywczas.bestonscreen.utilities.Status
-import com.zywczas.bestonscreen.utilities.lazyAndroid
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.ApiVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
@@ -32,7 +31,6 @@ class ApiFragment @Inject constructor(
 
     private val viewModel: ApiVM by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-    private val navController by lazyAndroid { Navigation.findNavController(requireView()) }
     private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +72,7 @@ class ApiFragment @Inject constructor(
 
     private fun goToDetailsFragment(movie: Movie) {
         val destination = ApiFragmentDirections.actionToDetails(movie)
-        navController.navigate(destination)
+        findNavController().navigate(destination)
     }
 
     private fun setupLayoutManager() {

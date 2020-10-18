@@ -6,7 +6,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
@@ -14,7 +14,6 @@ import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
-import com.zywczas.bestonscreen.utilities.lazyAndroid
 import com.zywczas.bestonscreen.utilities.showToast
 import com.zywczas.bestonscreen.viewmodels.DBVM
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
@@ -29,7 +28,6 @@ class DBFragment @Inject constructor(
 
     private val viewModel : DBVM by viewModels { viewModelFactory }
     private lateinit var adapter : MovieAdapter
-    private val navController by lazyAndroid{ Navigation.findNavController(requireView()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,7 +60,7 @@ class DBFragment @Inject constructor(
 
     private fun goToDetailsFragment(movie: Movie) {
         val directions = DBFragmentDirections.actionToDetails(movie)
-        navController.navigate(directions)
+        findNavController().navigate(directions)
     }
 
     private fun setupLayoutManager() {
