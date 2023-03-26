@@ -21,17 +21,16 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 internal class NetworkMoviesViewModelTest {
 
-    private lateinit var viewModel: NetworkMoviesViewModel
     private val repo = mockk<NetworkMoviesRepository>()
     private val network = mockk<NetworkCheck>()
+    private val tested = NetworkMoviesViewModel(repo, network)
+
     private val movies = TestUtil.moviesList1_2
 
     @BeforeEach
     private fun setup() {
-        viewModel = NetworkMoviesViewModel(repo, network)
         every { network.isConnected } returns true
-        every { repo.getApiMovies(any(), any()) } returns
-                Flowable.just(Resource.success(movies))
+        every { repo.getApiMovies(any(), any()) } returns Flowable.just(Resource.success(movies))
     }
 
     @Nested
@@ -39,8 +38,8 @@ internal class NetworkMoviesViewModelTest {
 
         @Test
         fun observeChange() {
-            viewModel.getFirstMovies(POPULAR)
-            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getFirstMovies(POPULAR)
+            val actual = LiveDataTestUtil.getValue(tested.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, POPULAR)), actual)
         }
@@ -49,8 +48,8 @@ internal class NetworkMoviesViewModelTest {
         fun noConnection_observeError() {
             every { network.isConnected } returns false
 
-            viewModel.getFirstMovies(UPCOMING)
-            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getFirstMovies(UPCOMING)
+            val liveDataValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
             val actualMessage = liveDataValue.message?.getContentIfNotHandled()
             val actualData = liveDataValue.data
 
@@ -60,10 +59,10 @@ internal class NetworkMoviesViewModelTest {
 
         @Test
         fun tryToGetAgain_observeNoAction() {
-            viewModel.getFirstMovies(TOP_RATED)
-            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
-            viewModel.getFirstMovies(TOP_RATED)
-            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getFirstMovies(TOP_RATED)
+            val firstValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
+            tested.getFirstMovies(TOP_RATED)
+            val actualValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, TOP_RATED)), actualValue)
             verify(exactly = 1) { repo.getApiMovies(TOP_RATED, 1) }
@@ -76,8 +75,8 @@ internal class NetworkMoviesViewModelTest {
 
         @Test
         fun observeChange() {
-            viewModel.getNextMoviesIfConnected(POPULAR)
-            val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getNextMoviesIfConnected(POPULAR)
+            val actual = LiveDataTestUtil.getValue(tested.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, POPULAR)), actual)
             verify(exactly = 1) { repo.getApiMovies(POPULAR, 1) }
@@ -90,8 +89,8 @@ internal class NetworkMoviesViewModelTest {
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(expectedMessage, null))
             every { repo.getApiMovies(category, 1) } returns returnedError
 
-            viewModel.getNextMoviesIfConnected(category)
-            val liveDataValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getNextMoviesIfConnected(category)
+            val liveDataValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
             val actualMessage = liveDataValue.message?.getContentIfNotHandled()
             val actualData = liveDataValue.data
 
@@ -109,10 +108,10 @@ internal class NetworkMoviesViewModelTest {
             val returnedError: Flowable<Resource<List<Movie>>> = Flowable.just(Resource.error(expectedMessage, null))
             every { repo.getApiMovies(category, capture(pages)) } returns returnedMovies andThen returnedError
 
-            viewModel.getNextMoviesIfConnected(category)
-            val needToPullFirstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
-            viewModel.getNextMoviesIfConnected(category)
-            val secondValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getNextMoviesIfConnected(category)
+            val needToPullFirstValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
+            tested.getNextMoviesIfConnected(category)
+            val secondValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
             val actualMessage = secondValue.message?.getContentIfNotHandled()
             val actualData = secondValue.data
 
@@ -133,10 +132,10 @@ internal class NetworkMoviesViewModelTest {
             val returnedMovies2 = Flowable.just(Resource.success(movies2))
             every { repo.getApiMovies(any(), capture(pages)) } returns returnedMovies1 andThen returnedMovies2
 
-            viewModel.getNextMoviesIfConnected(category1)
-            val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
-            viewModel.getNextMoviesIfConnected(category2)
-            val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
+            tested.getNextMoviesIfConnected(category1)
+            val firstValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
+            tested.getNextMoviesIfConnected(category2)
+            val actualValue = LiveDataTestUtil.getValue(tested.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies2, category2)), actualValue)
             assertEquals(listOf(1, 1), pages)

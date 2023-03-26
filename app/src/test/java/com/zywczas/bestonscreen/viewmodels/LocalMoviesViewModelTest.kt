@@ -15,19 +15,19 @@ import org.mockito.Mockito.mock
 @ExtendWith(InstantExecutorExtension::class)
 internal class LocalMoviesViewModelTest {
 
-    private lateinit var viewModel: LocalMoviesViewModel
+    private lateinit var tested: LocalMoviesViewModel
     private val repo = mock(LocalMoviesRepository::class.java)
     private val expectedMovies = TestUtil.moviesList1_2
 
     @BeforeEach
     private fun init() {
         `when`(repo.getMoviesFromDB()).thenReturn(Flowable.just(expectedMovies))
-        viewModel = LocalMoviesViewModel(repo)
+        tested = LocalMoviesViewModel(repo)
     }
 
     @Test
     fun observeMoviesWhenLiveDataSet() {
-        val actualMovies = LiveDataTestUtil.getValue(viewModel.movies)
+        val actualMovies = LiveDataTestUtil.getValue(tested.movies)
 
         assertEquals(expectedMovies, actualMovies)
     }

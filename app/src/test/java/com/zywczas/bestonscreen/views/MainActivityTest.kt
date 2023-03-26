@@ -2,9 +2,7 @@ package com.zywczas.bestonscreen.views
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
-import androidx.test.espresso.contrib.DrawerMatchers.isOpen
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -32,7 +30,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun isFragmentInContainerInView(){
+    fun isFragmentInContainerInView() {
         onView(withId(R.id.recyclerViewDB)).check(matches(isDisplayed()))
     }
 
@@ -45,23 +43,23 @@ class MainActivityTest {
         onView(withId(R.id.recyclerViewDB)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun isDrawerOpening(){
-//        onView(withId(R.id.drawerLayoutMain))
-//            .check(matches(isDisplayed()))
-//            .check(matches(isClosed()))
-//            .perform(open())
-//            .check(matches(isOpen()))
-        //todo to be fixed - test fails currently, but app works fine
-    }
+//    @Test
+//    fun isDrawerOpening(){
+////        onView(withId(R.id.drawerLayoutMain))
+////            .check(matches(isDisplayed()))
+////            .check(matches(isClosed()))
+////            .perform(open())
+////            .check(matches(isOpen()))
+//        //todo to be fixed - test fails currently
+//    }
 
-    @Test
-    fun isDrawerClosing(){
-        //todo to be implemented after fixing drawer test
-    }
+//    @Test
+//    fun isDrawerClosing(){
+//        //todo to be implemented after fixing drawer test
+//    }
 
-    @Test
-    fun clickNavMenuButtons_isNavigatingToOtherFragments() {
-        //todo to be implemented after fixing drawer test
-    }
+//    @Test
+//    fun clickNavMenuButtons_isNavigatingToOtherFragments() {
+//        //todo to be implemented after fixing drawer test
+//    }
 }
