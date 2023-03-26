@@ -2,17 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainNavGraph"
-    app:startDestination="@id/destinationDb">
+    app:startDestination="@id/destinationLocalMovies">
 
     <fragment
-        android:id="@+id/destinationApi"
+        android:id="@+id/destinationNetworkMovies"
         android:name="com.zywczas.bestonscreen.views.NetworkMoviesFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_network_movies">
 
         <action
             android:id="@+id/actionToDetails"
-            app:destination="@id/destinationDetails"
+            app:destination="@id/destinationMovieDetails"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -20,7 +20,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/destinationDetails"
+        android:id="@+id/destinationMovieDetails"
         android:name="com.zywczas.bestonscreen.views.MovieDetailsFragment"
         android:label="@string/movie_details"
         tools:layout="@layout/fragment_movie_details">
@@ -30,14 +30,14 @@
     </fragment>
 
     <fragment
-        android:id="@+id/destinationDb"
+        android:id="@+id/destinationLocalMovies"
         android:name="com.zywczas.bestonscreen.views.LocalMoviesFragment"
         android:label="@string/my_to_watch_list"
         tools:layout="@layout/fragment_local_movies">
 
         <action
             android:id="@+id/actionToDetails"
-            app:destination="@id/destinationDetails"
+            app:destination="@id/destinationMovieDetails"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"

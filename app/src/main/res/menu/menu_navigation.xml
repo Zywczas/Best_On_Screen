@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--todo change names of destinations-->
+
     <item
-        android:id="@+id/destinationDb"
+        android:id="@+id/destinationLocalMovies"
         android:checkable="false"
         android:icon="@drawable/star_in_circle_icon"
         android:title="@string/my_to_watch_list" />
 
     <item
-        android:id="@+id/destinationApi"
+        android:id="@+id/destinationNetworkMovies"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/find_movies" />
 </menu>
