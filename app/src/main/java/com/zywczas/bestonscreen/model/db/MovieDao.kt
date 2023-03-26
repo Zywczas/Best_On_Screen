@@ -10,13 +10,13 @@ interface MovieDao {
 
     @Throws(SQLiteConstraintException::class)
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertMovie(movieFromDB: MovieFromDB): Single<Long>
+    fun insertMovie(movie: LocalMovie): Single<Long>
 
     @Delete
-    fun deleteMovie(movieFromDB: MovieFromDB): Single<Int>
+    fun deleteMovie(movie: LocalMovie): Single<Int>
 
     @Query("SELECT * FROM movies ORDER BY title ASC")
-    fun getMovies(): Flowable<List<MovieFromDB>>
+    fun getMovies(): Flowable<List<LocalMovie>>
 
     @Query("SELECT COUNT(id) FROM movies WHERE id ==  :movieId")
     fun getIdCount(movieId: Int): Flowable<Int>

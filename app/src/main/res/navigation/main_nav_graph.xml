@@ -4,12 +4,11 @@
     android:id="@+id/mainNavGraph"
     app:startDestination="@id/destinationDb">
 
-
     <fragment
         android:id="@+id/destinationApi"
-        android:name="com.zywczas.bestonscreen.views.ApiFragment"
+        android:name="com.zywczas.bestonscreen.views.NetworkMoviesFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_api">
+        tools:layout="@layout/fragment_network_movies">
 
         <action
             android:id="@+id/actionToDetails"
@@ -22,9 +21,9 @@
 
     <fragment
         android:id="@+id/destinationDetails"
-        android:name="com.zywczas.bestonscreen.views.DetailsFragment"
+        android:name="com.zywczas.bestonscreen.views.MovieDetailsFragment"
         android:label="@string/movie_details"
-        tools:layout="@layout/fragment_details">
+        tools:layout="@layout/fragment_movie_details">
         <argument
             android:name="movie"
             app:argType="com.zywczas.bestonscreen.model.Movie" />
@@ -32,9 +31,9 @@
 
     <fragment
         android:id="@+id/destinationDb"
-        android:name="com.zywczas.bestonscreen.views.DBFragment"
+        android:name="com.zywczas.bestonscreen.views.LocalMoviesFragment"
         android:label="@string/my_to_watch_list"
-        tools:layout="@layout/fragment_db">
+        tools:layout="@layout/fragment_local_movies">
 
         <action
             android:id="@+id/actionToDetails"
@@ -45,7 +44,4 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpToInclusive="false" />
     </fragment>
-
-
-
 </navigation>

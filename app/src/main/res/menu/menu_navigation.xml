@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<!--todo change names of destinations-->
     <item
         android:id="@+id/destinationDb"
         android:checkable="false"
@@ -11,5 +11,4 @@
         android:id="@+id/destinationApi"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/find_movies" />
-
 </menu>

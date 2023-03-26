@@ -3,7 +3,7 @@ package com.zywczas.bestonscreen.model.webservice
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class MovieFromApi(
+data class NetworkMovie(
 
     @SerializedName("id")
     @Expose

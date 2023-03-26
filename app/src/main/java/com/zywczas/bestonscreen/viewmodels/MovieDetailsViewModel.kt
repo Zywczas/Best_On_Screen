@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import com.zywczas.bestonscreen.model.DetailsRepository
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.repositories.MovieDetailsRepository
 import com.zywczas.bestonscreen.utilities.Event
 import javax.inject.Inject
 
-open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : ViewModel() {
+open class MovieDetailsViewModel @Inject constructor(private val repo: MovieDetailsRepository) : ViewModel() {
 
-    private val _isMovieInDb by lazy { MediatorLiveData<Event<Boolean>>() }
-    private val _message by lazy { MediatorLiveData<Event<String>>() }
-    val isMovieInDb : LiveData<Event<Boolean>> by lazy { _isMovieInDb }
-    val message : LiveData<Event<String>> by lazy { _message }
+    private val _isMovieInDb = MediatorLiveData<Event<Boolean>>()
+    private val _message = MediatorLiveData<Event<String>>()
+    val isMovieInDb: LiveData<Event<Boolean>> = _isMovieInDb
+    val message: LiveData<Event<String>> = _message
 
     fun checkIfIsInDb(movieId: Int) {
         val source = LiveDataReactiveStreams.fromPublisher(repo.checkIfMovieIsInDB(movieId))
@@ -50,6 +50,5 @@ open class DetailsVM @Inject constructor(private val repo: DetailsRepository) : 
             _message.removeSource(source)
         }
     }
-
 
 }

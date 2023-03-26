@@ -1,32 +1,32 @@
 package com.zywczas.bestonscreen.model
 
-import com.zywczas.bestonscreen.model.db.MovieFromDB
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.model.db.LocalMovie
+import com.zywczas.bestonscreen.model.webservice.NetworkMovie
 
-fun toMovie(movieFromApi: MovieFromApi): Movie {
-    movieFromApi.convertGenreIdsToDescription()
+fun toMovie(networkMovie: NetworkMovie): Movie {
+    networkMovie.convertGenreIdsToDescription()
     return Movie(
-        movieFromApi.id ?: 0,
-        movieFromApi.posterPath ?: "",
-        movieFromApi.title ?: "",
-        movieFromApi.voteAverage ?: 0.0,
-        movieFromApi.overview ?: "",
-        movieFromApi.releaseDate ?: "",
-        movieFromApi.genresDescription
+        networkMovie.id ?: 0,
+        networkMovie.posterPath ?: "",
+        networkMovie.title ?: "",
+        networkMovie.voteAverage ?: 0.0,
+        networkMovie.overview ?: "",
+        networkMovie.releaseDate ?: "",
+        networkMovie.genresDescription
     )
 }
 
-fun toMovie(movieFromDB: MovieFromDB) = Movie(
-    movieFromDB.id,
-    movieFromDB.posterPath,
-    movieFromDB.title,
-    movieFromDB.voteAverage,
-    movieFromDB.overview,
-    movieFromDB.releaseDate,
-    movieFromDB.genresDescription
+fun toMovie(localMovie: LocalMovie) = Movie(
+    localMovie.id,
+    localMovie.posterPath,
+    localMovie.title,
+    localMovie.voteAverage,
+    localMovie.overview,
+    localMovie.releaseDate,
+    localMovie.genresDescription
 )
 
-fun toMovieFromDB(movie: Movie) = MovieFromDB(
+fun toLocalMovie(movie: Movie) = LocalMovie(
     movie.id,
     movie.posterPath,
     movie.title,

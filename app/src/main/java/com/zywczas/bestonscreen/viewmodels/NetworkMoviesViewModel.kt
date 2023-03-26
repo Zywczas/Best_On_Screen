@@ -4,30 +4,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.Resource
 import com.zywczas.bestonscreen.utilities.Status
 import javax.inject.Inject
 
-class ApiVM @Inject constructor(
-    private val repo: ApiRepository,
+class NetworkMoviesViewModel @Inject constructor(
+    private val repo: NetworkMoviesRepository,
     private val networkCheck: NetworkCheck
 ) : ViewModel() {
 
     private var page = 1
     private var category = Category.UPCOMING
     private var firstMoviesRequested = false
-    private val movies by lazy { mutableListOf<Movie>() }
+    private val movies = mutableListOf<Movie>()
 
-    private val _moviesAndCategory
-            by lazy { MediatorLiveData<Resource<Pair<List<Movie>, Category>>>() }
-    val moviesAndCategory : LiveData<Resource<Pair<List<Movie>, Category>>>
-            by lazy { _moviesAndCategory }
-
+    private val _moviesAndCategory = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
+    val moviesAndCategory: LiveData<Resource<Pair<List<Movie>, Category>>> = _moviesAndCategory
 
     fun getFirstMovies(nextCategory: Category) {
         if (firstMoviesRequested.not()) {
@@ -45,7 +42,7 @@ class ApiVM @Inject constructor(
         }
     }
 
-    private fun getNextMovies(nextCategory: Category){
+    private fun getNextMovies(nextCategory: Category) {
         val isNewCategory = nextCategory != category
         if (isNewCategory) {
             resetData()

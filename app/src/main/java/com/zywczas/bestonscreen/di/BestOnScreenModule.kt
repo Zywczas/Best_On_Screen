@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.model.db.MovieDao
 import com.zywczas.bestonscreen.model.db.MoviesDataBase
-import com.zywczas.bestonscreen.model.webservice.ApiService
+import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -17,12 +17,12 @@ import javax.inject.Singleton
 object BestOnScreenModule {
 
     @Provides
-    fun provideTMDBService(): ApiService = Retrofit.Builder()
+    fun provideTMDBService(): NetworkMovieService = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-        .create(ApiService::class.java)
+        .create(NetworkMovieService::class.java)
 
     @Provides
     @Singleton

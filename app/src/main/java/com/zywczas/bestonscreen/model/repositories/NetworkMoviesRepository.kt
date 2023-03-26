@@ -1,14 +1,17 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.model.repositories
 
-import com.zywczas.bestonscreen.model.webservice.ApiService
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.toMovie
+import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
+import com.zywczas.bestonscreen.model.webservice.NetworkMovie
 import com.zywczas.bestonscreen.utilities.API_KEY
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-open class ApiRepository @Inject constructor(private val apiService: ApiService) {
+open class NetworkMoviesRepository @Inject constructor(private val networkMovieService: NetworkMovieService) {
 
     private val apiKey by lazy { API_KEY }
     private val invalidApiKeyStatus by lazy { "HTTP 401" }
@@ -35,17 +38,17 @@ open class ApiRepository @Inject constructor(private val apiService: ApiService)
 
     private fun getApiSingle(category: Category, page: Int) = when (category) {
         Category.POPULAR -> {
-            apiService.getPopularMovies(apiKey, page)
+            networkMovieService.getPopularMovies(apiKey, page)
         }
         Category.TOP_RATED -> {
-            apiService.getTopRatedMovies(apiKey, page)
+            networkMovieService.getTopRatedMovies(apiKey, page)
         }
         Category.UPCOMING -> {
-            apiService.getUpcomingMovies(apiKey, page)
+            networkMovieService.getUpcomingMovies(apiKey, page)
         }
     }
 
-    private fun convertToMovies(moviesFromApi: List<MovieFromApi>): List<Movie> {
+    private fun convertToMovies(moviesFromApi: List<NetworkMovie>): List<Movie> {
         val movies = mutableListOf<Movie>()
         for (m in moviesFromApi) {
             movies.add(toMovie(m))

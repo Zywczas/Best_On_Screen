@@ -16,26 +16,28 @@ import com.zywczas.bestonscreen.adapter.MovieAdapter
 import com.zywczas.bestonscreen.model.Category
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.utilities.CONFIGURATION_CHANGE
 import com.zywczas.bestonscreen.utilities.Status
 import com.zywczas.bestonscreen.utilities.showToast
-import com.zywczas.bestonscreen.viewmodels.ApiVM
+import com.zywczas.bestonscreen.viewmodels.NetworkMoviesViewModel
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import kotlinx.android.synthetic.main.fragment_api.*
+import kotlinx.android.synthetic.main.fragment_network_movies.*
 import javax.inject.Inject
 
-class ApiFragment @Inject constructor(
+class NetworkMoviesFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso
-) : Fragment(R.layout.fragment_api) {
+) : Fragment(R.layout.fragment_network_movies) {
 
-    private val viewModel: ApiVM by viewModels { viewModelFactory }
+    private val KEY_DISPLAYED_CATEGORY = "KEY_DISPLAYED_CATEGORY"
+
+    private val viewModel: NetworkMoviesViewModel by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
     private var displayedCategory: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.getSerializable(CONFIGURATION_CHANGE)?.let { displayedCategory = it as Category }
+        savedInstanceState?.getSerializable(KEY_DISPLAYED_CATEGORY)
+            ?.let { displayedCategory = it as Category }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +73,7 @@ class ApiFragment @Inject constructor(
     }
 
     private fun goToDetailsFragment(movie: Movie) {
-        val destination = ApiFragmentDirections.actionToDetails(movie)
+        val destination = NetworkMoviesFragmentDirections.actionToDetails(movie)
         findNavController().navigate(destination)
     }
 
@@ -191,8 +193,7 @@ class ApiFragment @Inject constructor(
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(CONFIGURATION_CHANGE, displayedCategory)
+        outState.putSerializable(KEY_DISPLAYED_CATEGORY, displayedCategory)
     }
-
 
 }
