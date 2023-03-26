@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class LocalMoviesViewModel @Inject constructor(repo: LocalMoviesRepository) : ViewModel() {
 
-    val movies = LiveDataReactiveStreams.fromPublisher(repo.getMoviesFromDB())
+    val movies by lazy { LiveDataReactiveStreams.fromPublisher(repo.getMoviesFromDB()) }
 
 }

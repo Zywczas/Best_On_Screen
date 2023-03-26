@@ -13,7 +13,7 @@ import org.mockito.Mockito.*
 internal class MovieDetailsRepositoryTest {
 
     private val movieDao = mock(MovieDao::class.java)
-    private val repo = MovieDetailsRepository(movieDao)
+    private val tested = MovieDetailsRepository(movieDao)
     private val movie = TestUtil.movie1
 
     private fun <MovieFromDB> anyMovieFromDB() : MovieFromDB = any()
@@ -28,7 +28,7 @@ internal class MovieDetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                tested.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
 
             assertEquals(true, actual)
             verify(movieDao).getIdCount(movieId)
@@ -42,7 +42,7 @@ internal class MovieDetailsRepositoryTest {
             `when`(movieDao.getIdCount(movieId)).thenReturn(returnedIdCount)
 
             val actual =
-                repo.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
+                tested.checkIfMovieIsInDB(movieId).blockingFirst().getContentIfNotHandled()
 
             assertEquals(false, actual)
         }
@@ -58,7 +58,7 @@ internal class MovieDetailsRepositoryTest {
             val returnedRowId = Single.just(1L)
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
-            val actualMessage = repo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+            val actualMessage = tested.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(movieDao).insertMovie(anyMovieFromDB())
@@ -71,7 +71,7 @@ internal class MovieDetailsRepositoryTest {
             val returnedRowId = Single.just(0L)
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedRowId)
 
-            val actualMessage = repo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+            val actualMessage = tested.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
         }
@@ -82,7 +82,7 @@ internal class MovieDetailsRepositoryTest {
             val returnedException = Single.error<Long>(Exception())
             `when`(movieDao.insertMovie(anyMovieFromDB())).thenReturn(returnedException)
 
-            val actualMessage = repo.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
+            val actualMessage = tested.addMovieToDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
         }
@@ -99,7 +99,7 @@ internal class MovieDetailsRepositoryTest {
             `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
             val actualMessage =
-                repo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+                tested.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(movieDao).deleteMovie(anyMovieFromDB())
@@ -113,7 +113,7 @@ internal class MovieDetailsRepositoryTest {
             `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(numberOfRowsRemoved)
 
             val actualMessage =
-                repo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+                tested.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
         }
@@ -125,7 +125,7 @@ internal class MovieDetailsRepositoryTest {
             `when`(movieDao.deleteMovie(anyMovieFromDB())).thenReturn(returnedError)
 
             val actualMessage =
-                repo.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
+                tested.deleteMovieFromDB(movie).blockingFirst().getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
         }

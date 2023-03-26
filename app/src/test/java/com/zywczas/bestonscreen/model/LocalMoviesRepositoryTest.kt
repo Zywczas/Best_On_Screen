@@ -13,7 +13,7 @@ import org.mockito.Mockito.*
 internal class LocalMoviesRepositoryTest {
 
     private val movieDao = mock(MovieDao::class.java)
-    private val repo = LocalMoviesRepository(movieDao)
+    private val tested = LocalMoviesRepository(movieDao)
 
     @Nested
     inner class GetMoviesFromDb {
@@ -25,7 +25,7 @@ internal class LocalMoviesRepositoryTest {
             val returnedMoviesFromDb = Flowable.just(moviesFromDB)
             `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
-            val actualMovies = repo.getMoviesFromDB().blockingFirst()
+            val actualMovies = tested.getMoviesFromDB().blockingFirst()
 
             assertEquals(expectedMovies, actualMovies)
             verify(movieDao).getMovies()
@@ -37,7 +37,7 @@ internal class LocalMoviesRepositoryTest {
             val returnedMoviesFromDb = Flowable.just(emptyList<LocalMovie>())
             `when`(movieDao.getMovies()).thenReturn(returnedMoviesFromDb)
 
-            val actual = repo.getMoviesFromDB().blockingFirst()
+            val actual = tested.getMoviesFromDB().blockingFirst()
 
             assertEquals(emptyList<Movie>(), actual)
         }

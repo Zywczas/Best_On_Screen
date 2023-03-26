@@ -7,7 +7,6 @@ import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
 import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,14 +15,10 @@ import org.mockito.Mockito.*
 @ExtendWith(InstantExecutorExtension::class)
 internal class MovieDetailsViewModelTest {
 
-    private lateinit var viewModel: MovieDetailsViewModel
     private val repo = mock(MovieDetailsRepository::class.java)
-    private val movie = TestUtil.movie1
+    private val tested = MovieDetailsViewModel(repo)
 
-    @BeforeEach
-    private fun init() {
-        viewModel = MovieDetailsViewModel(repo) //todo remove this initialization
-    }
+    private val movie = TestUtil.movie1
 
     @Nested
     inner class CheckIfIsInDb {
@@ -33,8 +28,8 @@ internal class MovieDetailsViewModelTest {
             val returnedTrue = Flowable.just(Event(true))
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedTrue)
 
-            viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDb).getContentIfNotHandled()
+            tested.checkIfIsInDb(777)
+            val actual = LiveDataTestUtil.getValue(tested.isMovieInDb).getContentIfNotHandled()
 
             assertEquals(true, actual)
             verify(repo).checkIfMovieIsInDB(777)
@@ -46,8 +41,8 @@ internal class MovieDetailsViewModelTest {
             val returnedFalse = Flowable.just(Event(false))
             `when`(repo.checkIfMovieIsInDB(anyInt())).thenReturn(returnedFalse)
 
-            viewModel.checkIfIsInDb(777)
-            val actual = LiveDataTestUtil.getValue(viewModel.isMovieInDb).getContentIfNotHandled()
+            tested.checkIfIsInDb(777)
+            val actual = LiveDataTestUtil.getValue(tested.isMovieInDb).getContentIfNotHandled()
 
             assertEquals(false, actual)
         }
@@ -63,8 +58,8 @@ internal class MovieDetailsViewModelTest {
             val returnedData = Flowable.just(Event(expectedMessage))
             `when`(repo.addMovieToDB(movie)).thenReturn(returnedData)
 
-            viewModel.addOrDeleteMovie(movie, isInDb)
-            val actualMessage = LiveDataTestUtil.getValue(viewModel.message).getContentIfNotHandled()
+            tested.addOrDeleteMovie(movie, isInDb)
+            val actualMessage = LiveDataTestUtil.getValue(tested.message).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(repo).addMovieToDB(movie)
@@ -78,8 +73,8 @@ internal class MovieDetailsViewModelTest {
             val returnedData = Flowable.just(Event(expectedMessage))
             `when`(repo.deleteMovieFromDB(movie)).thenReturn(returnedData)
 
-            viewModel.addOrDeleteMovie(movie, isInDb)
-            val actualMessage = LiveDataTestUtil.getValue(viewModel.message).getContentIfNotHandled()
+            tested.addOrDeleteMovie(movie, isInDb)
+            val actualMessage = LiveDataTestUtil.getValue(tested.message).getContentIfNotHandled()
 
             assertEquals(expectedMessage, actualMessage)
             verify(repo).deleteMovieFromDB(movie)

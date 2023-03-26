@@ -18,7 +18,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var moviesFragmentsFactory: MoviesFragmentsFactory
     private val navHostFragment by lazy { supportFragmentManager.findFragmentById(R.id.navHostFragmentView) as NavHostFragment }
     private val navController by lazy { navHostFragment.navController }
-    private val appBarConfiguration by lazy { AppBarConfiguration(setOf(R.id.destinationLocalMovies, R.id.destinationNetworkMovies), drawerLayoutMain) }
+    private val appBarConfiguration by lazy {
+        AppBarConfiguration(setOf(R.id.destinationLocalMovies, R.id.destinationNetworkMovies), drawerLayoutMain)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -37,5 +39,4 @@ class MainActivity : AppCompatActivity() {
             navController.navigateUp(appBarConfiguration)
         }
     }
-
 }
