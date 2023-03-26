@@ -1,6 +1,7 @@
 package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.MovieDao
+import com.zywczas.bestonscreen.model.repositories.MovieDetailsRepository
 import com.zywczas.bestonscreen.util.TestUtil
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -9,10 +10,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 
-internal class DetailsRepositoryTest {
+internal class MovieDetailsRepositoryTest {
 
     private val movieDao = mock(MovieDao::class.java)
-    private val repo = DetailsRepository(movieDao)
+    private val repo = MovieDetailsRepository(movieDao)
     private val movie = TestUtil.movie1
 
     private fun <MovieFromDB> anyMovieFromDB() : MovieFromDB = any()
@@ -128,8 +129,5 @@ internal class DetailsRepositoryTest {
 
             assertEquals(expectedMessage, actualMessage)
         }
-
-
     }
-
 }

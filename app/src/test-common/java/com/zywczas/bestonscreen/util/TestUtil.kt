@@ -1,13 +1,13 @@
 package com.zywczas.bestonscreen.util
 
 import com.zywczas.bestonscreen.model.Movie
-import com.zywczas.bestonscreen.model.db.MovieFromDB
-import com.zywczas.bestonscreen.model.webservice.ApiResponse
-import com.zywczas.bestonscreen.model.webservice.MovieFromApi
+import com.zywczas.bestonscreen.model.db.LocalMovie
+import com.zywczas.bestonscreen.model.webservice.MovieResponse
+import com.zywczas.bestonscreen.model.webservice.NetworkMovie
 
 object TestUtil {
 
-    val movieFromApi1 = MovieFromApi(
+    val movieFromApi1 = NetworkMovie(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         genres = listOf(28, 53),
@@ -27,7 +27,7 @@ object TestUtil {
         "Genres: Action, Thriller"
     )
 
-    val movieFromDB1 = MovieFromDB(
+    val movieFromDB1 = LocalMovie(
         724989,
         "/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
         "Hard Kill",
@@ -37,7 +37,7 @@ object TestUtil {
         "Genres: Action, Thriller"
     )
 
-    private val movieFromApi2 = MovieFromApi(
+    private val movieFromApi2 = NetworkMovie(
         438396, "/sMO1v5TUf8GOJHbJieDXsgWT2Ud.jpg",
         listOf(18, 53),
         "Unknown Origins", 6.2,
@@ -55,7 +55,7 @@ object TestUtil {
         "Genres: Drama, Thriller"
     )
 
-    val movieFromDB2 = MovieFromDB(
+    val movieFromDB2 = LocalMovie(
         438396,
         "/sMO1v5TUf8GOJHbJieDXsgWT2Ud.jpg",
         "Unknown Origins",
@@ -148,10 +148,11 @@ object TestUtil {
     val moviesList1_2 = listOf(movie1, movie2)
     val moviesFromDb = listOf(movieFromDB1, movieFromDB2)
     private val moviesFromApi = listOf(movieFromApi1, movieFromApi2)
-    val apiResponse = ApiResponse(moviesFromApi)
-    val moviesList1_10 = listOf(movie1, movie2, movie3, movie4, movie5, movie6, movie7,
-    movie8, movie9, movie10)
+    val apiResponse = MovieResponse(moviesFromApi)
+    val moviesList1_10 = listOf(
+        movie1, movie2, movie3, movie4, movie5, movie6, movie7,
+        movie8, movie9, movie10
+    )
     val moviesList1_5 = listOf(movie1, movie2, movie3, movie4, movie5)
     val moviesList6_8 = listOf(movie6, movie7, movie8)
-
 }

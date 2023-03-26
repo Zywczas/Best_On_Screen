@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import com.zywczas.bestonscreen.model.DBRepository
+import com.zywczas.bestonscreen.model.repositories.LocalMoviesRepository
 import com.zywczas.bestonscreen.util.LiveDataTestUtil
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
@@ -13,16 +13,16 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
 @ExtendWith(InstantExecutorExtension::class)
-internal class DBVMTest {
+internal class LocalMoviesViewModelTest {
 
-    private lateinit var viewModel: DBVM
-    private val repo = mock(DBRepository::class.java)
+    private lateinit var viewModel: LocalMoviesViewModel
+    private val repo = mock(LocalMoviesRepository::class.java)
     private val expectedMovies = TestUtil.moviesList1_2
 
     @BeforeEach
     private fun init() {
         `when`(repo.getMoviesFromDB()).thenReturn(Flowable.just(expectedMovies))
-        viewModel = DBVM(repo)
+        viewModel = LocalMoviesViewModel(repo)
     }
 
     @Test
@@ -31,6 +31,4 @@ internal class DBVMTest {
 
         assertEquals(expectedMovies, actualMovies)
     }
-
-
 }

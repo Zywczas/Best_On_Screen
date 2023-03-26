@@ -28,5 +28,4 @@ object LiveDataTestUtil {
         @Suppress("UNCHECKED_CAST")
         return data as T
     }
-
 }

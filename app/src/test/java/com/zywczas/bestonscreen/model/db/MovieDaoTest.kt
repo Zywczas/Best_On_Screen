@@ -51,7 +51,7 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
 
     @Test
     fun insertMovies_deleteThem_getEmptyList() {
-        val expectedMoviesFromDB = emptyList<MovieFromDB>()
+        val expectedMoviesFromDB = emptyList<LocalMovie>()
 
         dao.insertMovie(movieFromDb1).blockingGet()
         dao.insertMovie(movieFromDb2).blockingGet()
@@ -77,5 +77,4 @@ internal class MovieDaoTest : MoviesDataBaseTest() {
 
         assertEquals(0, actualMoviesRemoved)
     }
-
 }

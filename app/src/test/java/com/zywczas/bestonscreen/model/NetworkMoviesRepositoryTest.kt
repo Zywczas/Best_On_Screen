@@ -1,7 +1,8 @@
 package com.zywczas.bestonscreen.model
 
-import com.zywczas.bestonscreen.model.webservice.ApiResponse
-import com.zywczas.bestonscreen.model.webservice.ApiService
+import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
+import com.zywczas.bestonscreen.model.webservice.MovieResponse
+import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Single
@@ -13,10 +14,10 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
 
 
-internal class ApiRepositoryTest {
+internal class NetworkMoviesRepositoryTest {
 
-    private val apiService = mock(ApiService::class.java)
-    private val apiRepository = ApiRepository(apiService)
+    private val apiService = mock(NetworkMovieService::class.java)
+    private val repo = NetworkMoviesRepository(apiService)
 
     @Nested
     inner class GetApiMoviesReturnMovies {
@@ -28,7 +29,7 @@ internal class ApiRepositoryTest {
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getPopularMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
-            val actual = apiRepository.getApiMovies(Category.POPULAR, 4).blockingFirst()
+            val actual = repo.getApiMovies(Category.POPULAR, 4).blockingFirst()
 
             assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getPopularMovies(anyString(), anyInt())
@@ -42,7 +43,7 @@ internal class ApiRepositoryTest {
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getTopRatedMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
-            val actual = apiRepository.getApiMovies(Category.TOP_RATED, 6).blockingFirst()
+            val actual = repo.getApiMovies(Category.TOP_RATED, 6).blockingFirst()
 
             assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getTopRatedMovies(anyString(), anyInt())
@@ -56,13 +57,12 @@ internal class ApiRepositoryTest {
             val returnedApiResponse = Single.just(apiResponse)
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedApiResponse)
 
-            val actual = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val actual = repo.getApiMovies(Category.UPCOMING, 1).blockingFirst()
 
             assertEquals(Resource.success(expectedMovies), actual)
             verify(apiService).getUpcomingMovies(anyString(), anyInt())
             verifyNoMoreInteractions(apiService)
         }
-
     }
 
     @Nested
@@ -70,10 +70,10 @@ internal class ApiRepositoryTest {
 
         @Test
         fun noMoviesReturned() {
-            val returnedEmptyApiResponse = Single.just(ApiResponse())
+            val returnedEmptyApiResponse = Single.just(MovieResponse())
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyApiResponse)
 
-            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val repoResponse = repo.getApiMovies(Category.UPCOMING, 1).blockingFirst()
             val actualMessage = repoResponse.message?.getContentIfNotHandled()
             val actualData = repoResponse.data
 
@@ -83,10 +83,10 @@ internal class ApiRepositoryTest {
 
         @Test
         fun emptyListReturned() {
-            val returnedEmptyData = Single.just(ApiResponse(emptyList()))
+            val returnedEmptyData = Single.just(MovieResponse(emptyList()))
             `when`(apiService.getUpcomingMovies(anyString(), anyInt())).thenReturn(returnedEmptyData)
 
-            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 1).blockingFirst()
+            val repoResponse = repo.getApiMovies(Category.UPCOMING, 1).blockingFirst()
             val actualMessage = repoResponse.message?.getContentIfNotHandled()
             val actualData = repoResponse.data
 
@@ -100,7 +100,7 @@ internal class ApiRepositoryTest {
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception(noMorePagesResponseStatus)))
 
-            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = repo.getApiMovies(Category.UPCOMING, 5).blockingFirst()
             val actualMessage = repoResponse.message?.getContentIfNotHandled()
             val actualData = repoResponse.data
 
@@ -114,7 +114,7 @@ internal class ApiRepositoryTest {
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception(invalidApiKeyResponseStatus)))
 
-            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = repo.getApiMovies(Category.UPCOMING, 5).blockingFirst()
             val actualMessage = repoResponse.message?.getContentIfNotHandled()
             val actualData = repoResponse.data
 
@@ -127,14 +127,12 @@ internal class ApiRepositoryTest {
             `when`(apiService.getUpcomingMovies(anyString(), anyInt()))
                 .thenReturn(Single.error(Exception()))
 
-            val repoResponse = apiRepository.getApiMovies(Category.UPCOMING, 5).blockingFirst()
+            val repoResponse = repo.getApiMovies(Category.UPCOMING, 5).blockingFirst()
             val actualMessage = repoResponse.message?.getContentIfNotHandled()
             val actualData = repoResponse.data
 
             assertEquals("Problem with downloading movies. Check connection and try again.", actualMessage)
             assertEquals(null, actualData)
         }
-
     }
-
 }

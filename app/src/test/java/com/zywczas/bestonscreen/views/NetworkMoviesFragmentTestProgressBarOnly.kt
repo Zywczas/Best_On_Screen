@@ -16,7 +16,7 @@ import com.zywczas.bestonscreen.model.Category.TOP_RATED
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
-import com.zywczas.bestonscreen.viewmodels.ApiVM
+import com.zywczas.bestonscreen.viewmodels.NetworkMoviesViewModel
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
@@ -28,35 +28,33 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-class ApiFragmentTestProgressBarOnly {
+class NetworkMoviesFragmentTestProgressBarOnly {
 
     @MockK(relaxUnitFun = true)
-    private lateinit var viewModel : ApiVM
+    private lateinit var viewModel: NetworkMoviesViewModel
     private val picasso = mockk<Picasso>(relaxed = true)
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-    private  lateinit var  moviesAndCategoryLD : MutableLiveData<Resource<Pair<List<Movie>, Category>>>
+    private lateinit var moviesAndCategoryLD: MutableLiveData<Resource<Pair<List<Movie>, Category>>>
     private val recyclerView = onView(withId(R.id.recyclerViewApi))
 
     @Before
-    fun init(){
+    fun setup() {
         MockKAnnotations.init(this)
         moviesAndCategoryLD = MutableLiveData<Resource<Pair<List<Movie>, Category>>>()
-        every { viewModelFactory.create(ApiVM::class.java) } returns viewModel
-        every { fragmentsFactory.instantiate(any(), any()) } returns
-                ApiFragment(viewModelFactory, picasso)
+        every { viewModelFactory.create(NetworkMoviesViewModel::class.java) } returns viewModel
+        every { fragmentsFactory.instantiate(any(), any()) } returns NetworkMoviesFragment(viewModelFactory, picasso)
         every { viewModel.moviesAndCategory } returns moviesAndCategoryLD
     }
 
     @After
-    fun finish(){
+    fun finish() {
         unmockkAll()
     }
 
     @Test
     fun loadingMoviesOnInit_isProgressBarDisplayed() {
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        launchFragmentInContainer<NetworkMoviesFragment>(factory = fragmentsFactory)
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
     }
@@ -67,8 +65,7 @@ class ApiFragmentTestProgressBarOnly {
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        launchFragmentInContainer<NetworkMoviesFragment>(factory = fragmentsFactory)
         onView(withText("Popular")).perform(click())
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
@@ -85,12 +82,10 @@ class ApiFragmentTestProgressBarOnly {
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<ApiFragment>(factory = fragmentsFactory)
+        launchFragmentInContainer<NetworkMoviesFragment>(factory = fragmentsFactory)
         recyclerView.perform(swipeUp())
 
         onView(withId(R.id.progressBarApi)).check(matches(isDisplayed()))
-        verify (exactly = 1) { viewModel.getNextMoviesIfConnected() }
+        verify(exactly = 1) { viewModel.getNextMoviesIfConnected() }
     }
-
 }

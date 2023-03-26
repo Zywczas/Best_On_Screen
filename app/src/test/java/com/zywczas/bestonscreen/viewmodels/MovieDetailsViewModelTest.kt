@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import com.zywczas.bestonscreen.model.DetailsRepository
+import com.zywczas.bestonscreen.model.repositories.MovieDetailsRepository
 import com.zywczas.bestonscreen.util.LiveDataTestUtil
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Event
@@ -14,15 +14,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.*
 
 @ExtendWith(InstantExecutorExtension::class)
-internal class DetailsVMTest {
+internal class MovieDetailsViewModelTest {
 
-    private lateinit var viewModel: DetailsVM
-    private val repo = mock(DetailsRepository::class.java)
+    private lateinit var viewModel: MovieDetailsViewModel
+    private val repo = mock(MovieDetailsRepository::class.java)
     private val movie = TestUtil.movie1
 
     @BeforeEach
     private fun init() {
-        viewModel = DetailsVM(repo)
+        viewModel = MovieDetailsViewModel(repo) //todo remove this initialization
     }
 
     @Nested
@@ -51,7 +51,6 @@ internal class DetailsVMTest {
 
             assertEquals(false, actual)
         }
-
     }
 
     @Nested
@@ -86,7 +85,5 @@ internal class DetailsVMTest {
             verify(repo).deleteMovieFromDB(movie)
             verifyNoMoreInteractions(repo)
         }
-
     }
-
 }

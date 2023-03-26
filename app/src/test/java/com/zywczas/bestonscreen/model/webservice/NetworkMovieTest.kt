@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class MovieFromApiTest {
+internal class NetworkMovieTest {
 
     @Nested
     inner class ConvertGenres {
@@ -12,11 +12,13 @@ internal class MovieFromApiTest {
         @Test
         fun returnSuccess() {
             val expected = "Genres: Action, Fantasy, Family, Romance, Western"
-            val movieFromApi = MovieFromApi(null, null, listOf(28, 14, 10751, 10749, 37),
-                null, null, null, null)
+            val movie = NetworkMovie(
+                null, null, listOf(28, 14, 10751, 10749, 37),
+                null, null, null, null
+            )
 
-            movieFromApi.convertGenreIdsToDescription()
-            val actual = movieFromApi.genresDescription
+            movie.convertGenreIdsToDescription()
+            val actual = movie.genresDescription
 
             assertEquals(expected, actual)
         }
@@ -26,11 +28,13 @@ internal class MovieFromApiTest {
             val expected = "Genres: missing info, Fantasy, missing info"
             val wrongId1 = 123456
             val wrongId2 = 0
-            val movieFromApi = MovieFromApi(null, null, listOf(wrongId1, 14, wrongId2),
-                null, null, null, null)
+            val movie = NetworkMovie(
+                null, null, listOf(wrongId1, 14, wrongId2),
+                null, null, null, null
+            )
 
-            movieFromApi.convertGenreIdsToDescription()
-            val actual = movieFromApi.genresDescription
+            movie.convertGenreIdsToDescription()
+            val actual = movie.genresDescription
 
             assertEquals(expected, actual)
         }
@@ -38,13 +42,14 @@ internal class MovieFromApiTest {
         @Test
         fun otherThan1To5GenresInList_returnMissingInfo() {
             val expected = "Genres: missing information"
-            val movieFromApi = MovieFromApi(null, null,
+            val movie = NetworkMovie(
+                null, null,
                 listOf(12, 16, 80, 28, 14, 10751, 10749, 37), null, null,
                 null, null
             )
 
-            movieFromApi.convertGenreIdsToDescription()
-            val actual = movieFromApi.genresDescription
+            movie.convertGenreIdsToDescription()
+            val actual = movie.genresDescription
 
             assertEquals(expected, actual)
         }
@@ -52,15 +57,15 @@ internal class MovieFromApiTest {
         @Test
         fun nullIds_returnNoInformation() {
             val expected = "Genres: no information"
-            val movieFromApi = MovieFromApi(null, null, null,
-            null, null, null, null)
+            val movie = NetworkMovie(
+                null, null, null,
+                null, null, null, null
+            )
 
-            movieFromApi.convertGenreIdsToDescription()
-            val actual = movieFromApi.genresDescription
+            movie.convertGenreIdsToDescription()
+            val actual = movie.genresDescription
 
             assertEquals(expected, actual)
         }
-
     }
-
 }
