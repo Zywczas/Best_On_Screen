@@ -10,9 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Category.POPULAR
-import com.zywczas.bestonscreen.model.Category.TOP_RATED
+import com.zywczas.bestonscreen.model.MovieCategory
+import com.zywczas.bestonscreen.model.MovieCategory.POPULAR
+import com.zywczas.bestonscreen.model.MovieCategory.TOP_RATED
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
@@ -35,13 +35,13 @@ class NetworkMoviesFragmentTestProgressBarOnly {
     private val picasso = mockk<Picasso>(relaxed = true)
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-    private lateinit var moviesAndCategoryLD: MutableLiveData<Resource<Pair<List<Movie>, Category>>>
+    private lateinit var moviesAndCategoryLD: MutableLiveData<Resource<Pair<List<Movie>, MovieCategory>>>
     private val recyclerView = onView(withId(R.id.recyclerViewApi))
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        moviesAndCategoryLD = MutableLiveData<Resource<Pair<List<Movie>, Category>>>()
+        moviesAndCategoryLD = MutableLiveData<Resource<Pair<List<Movie>, MovieCategory>>>()
         every { viewModelFactory.create(NetworkMoviesViewModel::class.java) } returns viewModel
         every { fragmentsFactory.instantiate(any(), any()) } returns NetworkMoviesFragment(viewModelFactory, picasso)
         every { viewModel.moviesAndCategory } returns moviesAndCategoryLD
@@ -61,7 +61,7 @@ class NetworkMoviesFragmentTestProgressBarOnly {
 
     @Test
     fun changingCategory_isProgressBarDisplayed() {
-        val categorySlot = slot<Category>()
+        val categorySlot = slot<MovieCategory>()
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 
@@ -78,7 +78,7 @@ class NetworkMoviesFragmentTestProgressBarOnly {
 
     @Test
     fun scrollingToBottom_loadingNextPage_isProgressBarDisplayed() {
-        val categorySlot = slot<Category>()
+        val categorySlot = slot<MovieCategory>()
         every { viewModel.getFirstMovies(capture(categorySlot)) } answers
                 { moviesAndCategoryLD.value = Resource.success(Pair(TestUtil.moviesList1_2, categorySlot.captured)) }
 

@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import com.zywczas.bestonscreen.model.Category.*
+import com.zywczas.bestonscreen.model.MovieCategory.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.util.LiveDataTestUtil

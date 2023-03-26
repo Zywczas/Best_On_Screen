@@ -16,8 +16,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.model.Category.POPULAR
-import com.zywczas.bestonscreen.model.Category.TOP_RATED
+import com.zywczas.bestonscreen.model.MovieCategory.POPULAR
+import com.zywczas.bestonscreen.model.MovieCategory.TOP_RATED
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.util.TestUtil

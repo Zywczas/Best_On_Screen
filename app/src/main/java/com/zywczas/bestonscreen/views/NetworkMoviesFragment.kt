@@ -13,8 +13,8 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.adapter.MovieAdapter
-import com.zywczas.bestonscreen.model.Category
-import com.zywczas.bestonscreen.model.Category.*
+import com.zywczas.bestonscreen.model.MovieCategory
+import com.zywczas.bestonscreen.model.MovieCategory.*
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.Status
 import com.zywczas.bestonscreen.utilities.showToast
@@ -32,12 +32,12 @@ class NetworkMoviesFragment @Inject constructor(
 
     private val viewModel: NetworkMoviesViewModel by viewModels { viewModelFactory }
     private lateinit var adapter: MovieAdapter
-    private var displayedCategory: Category? = null
+    private var displayedCategory: MovieCategory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceState?.getSerializable(KEY_DISPLAYED_CATEGORY)
-            ?.let { displayedCategory = it as Category }
+            ?.let { displayedCategory = it as MovieCategory }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,7 +108,7 @@ class NetworkMoviesFragment @Inject constructor(
         progressBarApi.isVisible = visible
     }
 
-    private fun updateContent(data: Pair<List<Movie>, Category>) {
+    private fun updateContent(data: Pair<List<Movie>, MovieCategory>) {
         updateDisplayedMovies(data.first)
         displayedCategory = data.second
         updateSelectedTab(displayedCategory!!)
@@ -118,7 +118,7 @@ class NetworkMoviesFragment @Inject constructor(
         adapter.submitList(movies.toMutableList())
     }
 
-    private fun updateSelectedTab(category: Category) {
+    private fun updateSelectedTab(category: MovieCategory) {
         val index = when (category) {
             TOP_RATED -> 0
             POPULAR -> 1
@@ -172,7 +172,7 @@ class NetworkMoviesFragment @Inject constructor(
     private val categoryClickListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let {
-                val category = it.tag as Category
+                val category = it.tag as MovieCategory
                 if (category != displayedCategory) {
                     downloadNewCategory(category)
                 }
@@ -183,7 +183,7 @@ class NetworkMoviesFragment @Inject constructor(
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
 
-    private fun downloadNewCategory(category: Category) {
+    private fun downloadNewCategory(category: MovieCategory) {
         showProgressBar(true)
         adapter.submitList(emptyList())
         recyclerViewApi.scrollToPosition(0)
@@ -195,5 +195,4 @@ class NetworkMoviesFragment @Inject constructor(
         super.onSaveInstanceState(outState)
         outState.putSerializable(KEY_DISPLAYED_CATEGORY, displayedCategory)
     }
-
 }
