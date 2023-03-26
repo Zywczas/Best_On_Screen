@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen.model.repositories
 
-import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.MovieCategory
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.toMovie
 import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-open class NetworkMoviesRepository @Inject constructor(private val networkMovieService: NetworkMovieService) {
+class NetworkMoviesRepository @Inject constructor(private val networkMovieService: NetworkMovieService) {
 
     private val apiKey by lazy { API_KEY }
     private val invalidApiKeyStatus by lazy { "HTTP 401" }
@@ -20,7 +20,7 @@ open class NetworkMoviesRepository @Inject constructor(private val networkMovieS
     private val noMorePagesError by lazy { "No more pages in this category." }
     private val generalApiError by lazy { "Problem with downloading movies. Check connection and try again." }
 
-    open fun getApiMovies(category: Category, page: Int): Flowable<Resource<List<Movie>>> {
+    fun getApiMovies(category: MovieCategory, page: Int): Flowable<Resource<List<Movie>>> {
         val apiSingle = getApiSingle(category, page)
         return apiSingle
             .subscribeOn(Schedulers.io())
@@ -36,14 +36,14 @@ open class NetworkMoviesRepository @Inject constructor(private val networkMovieS
             .toFlowable()
     }
 
-    private fun getApiSingle(category: Category, page: Int) = when (category) {
-        Category.POPULAR -> {
+    private fun getApiSingle(category: MovieCategory, page: Int) = when (category) {
+        MovieCategory.POPULAR -> {
             networkMovieService.getPopularMovies(apiKey, page)
         }
-        Category.TOP_RATED -> {
+        MovieCategory.TOP_RATED -> {
             networkMovieService.getTopRatedMovies(apiKey, page)
         }
-        Category.UPCOMING -> {
+        MovieCategory.UPCOMING -> {
             networkMovieService.getUpcomingMovies(apiKey, page)
         }
     }
@@ -67,5 +67,4 @@ open class NetworkMoviesRepository @Inject constructor(private val networkMovieS
             }
         }
     }
-
 }

@@ -1,6 +1,6 @@
 package com.zywczas.bestonscreen.model
 
-enum class Category {
+enum class MovieCategory {
 
     TOP_RATED {
         override fun toString(): String {
@@ -19,5 +19,4 @@ enum class Category {
             return "Upcoming"
         }
     };
-
 }

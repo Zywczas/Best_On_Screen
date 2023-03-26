@@ -8,8 +8,8 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.repositories.MovieDetailsRepository
 import com.zywczas.bestonscreen.utilities.Event
 import javax.inject.Inject
-//todo close this class and others
-open class MovieDetailsViewModel @Inject constructor(private val repo: MovieDetailsRepository) : ViewModel() {
+
+class MovieDetailsViewModel @Inject constructor(private val repo: MovieDetailsRepository) : ViewModel() {
 
     private val _isMovieInDb = MediatorLiveData<Event<Boolean>>()
     private val _message = MediatorLiveData<Event<String>>()

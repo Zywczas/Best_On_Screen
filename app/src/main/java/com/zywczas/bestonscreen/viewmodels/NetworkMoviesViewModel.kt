@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import com.zywczas.bestonscreen.model.Category
+import com.zywczas.bestonscreen.model.MovieCategory
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
@@ -19,14 +19,14 @@ class NetworkMoviesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var page = 1
-    private var category = Category.UPCOMING
+    private var category = MovieCategory.UPCOMING
     private var firstMoviesRequested = false
     private val movies = mutableListOf<Movie>()
 
-    private val _moviesAndCategory = MediatorLiveData<Resource<Pair<List<Movie>, Category>>>()
-    val moviesAndCategory: LiveData<Resource<Pair<List<Movie>, Category>>> = _moviesAndCategory
+    private val _moviesAndCategory = MediatorLiveData<Resource<Pair<List<Movie>, MovieCategory>>>()
+    val moviesAndCategory: LiveData<Resource<Pair<List<Movie>, MovieCategory>>> = _moviesAndCategory
 
-    fun getFirstMovies(nextCategory: Category) {
+    fun getFirstMovies(nextCategory: MovieCategory) {
         if (firstMoviesRequested.not()) {
             firstMoviesRequested = true
             category = nextCategory
@@ -34,7 +34,7 @@ class NetworkMoviesViewModel @Inject constructor(
         }
     }
 
-    fun getNextMoviesIfConnected(nextCategory: Category = category) {
+    fun getNextMoviesIfConnected(nextCategory: MovieCategory = category) {
         if (networkCheck.isConnected) {
             getNextMovies(nextCategory)
         } else {
@@ -42,7 +42,7 @@ class NetworkMoviesViewModel @Inject constructor(
         }
     }
 
-    private fun getNextMovies(nextCategory: Category) {
+    private fun getNextMovies(nextCategory: MovieCategory) {
         val isNewCategory = nextCategory != category
         if (isNewCategory) {
             resetData()
