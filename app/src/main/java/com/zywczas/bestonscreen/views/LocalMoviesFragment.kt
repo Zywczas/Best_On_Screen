@@ -15,19 +15,19 @@ import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
 import com.zywczas.bestonscreen.utilities.showToast
-import com.zywczas.bestonscreen.viewmodels.DBVM
+import com.zywczas.bestonscreen.viewmodels.LocalMoviesViewModel
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import kotlinx.android.synthetic.main.fragment_db.*
+import kotlinx.android.synthetic.main.fragment_local_movies.*
 import javax.inject.Inject
 
-class DBFragment @Inject constructor(
+class LocalMoviesFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment(R.layout.fragment_db) {
+) : Fragment(R.layout.fragment_local_movies) {
 
-    private val viewModel : DBVM by viewModels { viewModelFactory }
-    private lateinit var adapter : MovieAdapter
+    private val viewModel: LocalMoviesViewModel by viewModels { viewModelFactory }
+    private lateinit var adapter: MovieAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,7 +59,7 @@ class DBFragment @Inject constructor(
     }
 
     private fun goToDetailsFragment(movie: Movie) {
-        val directions = DBFragmentDirections.actionToDetails(movie)
+        val directions = LocalMoviesFragmentDirections.actionToDetails(movie)
         findNavController().navigate(directions)
     }
 

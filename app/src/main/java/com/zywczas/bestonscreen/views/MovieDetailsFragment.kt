@@ -8,22 +8,22 @@ import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
 import com.zywczas.bestonscreen.utilities.CONNECTION_PROBLEM
 import com.zywczas.bestonscreen.utilities.NetworkCheck
-import com.zywczas.bestonscreen.utilities.lazyAndroid
 import com.zywczas.bestonscreen.utilities.showToast
-import com.zywczas.bestonscreen.viewmodels.DetailsVM
+import com.zywczas.bestonscreen.viewmodels.MovieDetailsViewModel
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
-import kotlinx.android.synthetic.main.fragment_details.*
+import kotlinx.android.synthetic.main.fragment_movie_details.*
 import javax.inject.Inject
 
-class DetailsFragment @Inject constructor(
+class MovieDetailsFragment @Inject constructor(
     private val viewModelFactory: ViewModelsProviderFactory,
     private val picasso: Picasso,
     private val networkCheck: NetworkCheck
-) : Fragment(R.layout.fragment_details) {
+) : Fragment(R.layout.fragment_movie_details) {
 
-    private val viewModel: DetailsVM by viewModels { viewModelFactory }
-    private val movie
-            by lazyAndroid { requireArguments().let { DetailsFragmentArgs.fromBundle(it).movie } }
+    private val viewModel: MovieDetailsViewModel by viewModels { viewModelFactory }
+    private val movie by lazy {
+        requireArguments().let { MovieDetailsFragmentArgs.fromBundle(it).movie }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

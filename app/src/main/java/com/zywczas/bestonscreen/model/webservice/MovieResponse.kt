@@ -3,11 +3,11 @@ package com.zywczas.bestonscreen.model.webservice
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class ApiResponse(
+class MovieResponse(
 
     @SerializedName("results")
     @Expose
-    var movies: List<MovieFromApi>? = null
+    var movies: List<NetworkMovie>? = null
 
 )
 

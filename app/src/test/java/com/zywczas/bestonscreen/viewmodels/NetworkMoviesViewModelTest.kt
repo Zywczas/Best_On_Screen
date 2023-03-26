@@ -1,8 +1,8 @@
 package com.zywczas.bestonscreen.viewmodels
 
-import com.zywczas.bestonscreen.model.ApiRepository
 import com.zywczas.bestonscreen.model.Category.*
 import com.zywczas.bestonscreen.model.Movie
+import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.util.LiveDataTestUtil
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.InstantExecutorExtension
@@ -18,18 +18,17 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-
 @ExtendWith(InstantExecutorExtension::class)
-internal class ApiVMTest {
+internal class NetworkMoviesViewModelTest {
 
-    private lateinit var viewModel : ApiVM
-    private val repo = mockk<ApiRepository>()
+    private lateinit var viewModel: NetworkMoviesViewModel
+    private val repo = mockk<NetworkMoviesRepository>()
     private val network = mockk<NetworkCheck>()
     private val movies = TestUtil.moviesList1_2
 
     @BeforeEach
-    private fun init() {
-        viewModel = ApiVM(repo, network)
+    private fun setup() {
+        viewModel = NetworkMoviesViewModel(repo, network)
         every { network.isConnected } returns true
         every { repo.getApiMovies(any(), any()) } returns
                 Flowable.just(Resource.success(movies))
@@ -39,7 +38,7 @@ internal class ApiVMTest {
     inner class GetFirstMovies {
 
         @Test
-        fun observeChange(){
+        fun observeChange() {
             viewModel.getFirstMovies(POPULAR)
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
@@ -47,7 +46,7 @@ internal class ApiVMTest {
         }
 
         @Test
-        fun noConnection_observeError(){
+        fun noConnection_observeError() {
             every { network.isConnected } returns false
 
             viewModel.getFirstMovies(UPCOMING)
@@ -60,14 +59,14 @@ internal class ApiVMTest {
         }
 
         @Test
-        fun tryToGetAgain_observeNoAction(){
+        fun tryToGetAgain_observeNoAction() {
             viewModel.getFirstMovies(TOP_RATED)
             val firstValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
             viewModel.getFirstMovies(TOP_RATED)
             val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, TOP_RATED)), actualValue)
-            verify (exactly = 1) { repo.getApiMovies(TOP_RATED, 1) }
+            verify(exactly = 1) { repo.getApiMovies(TOP_RATED, 1) }
         }
 
     }
@@ -81,7 +80,7 @@ internal class ApiVMTest {
             val actual = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies, POPULAR)), actual)
-            verify (exactly = 1) { repo.getApiMovies(POPULAR, 1) }
+            verify(exactly = 1) { repo.getApiMovies(POPULAR, 1) }
         }
 
         @Test
@@ -98,7 +97,7 @@ internal class ApiVMTest {
 
             assertEquals(expectedMessage, actualMessage)
             assertEquals(Pair(emptyList<Movie>(), category), actualData)
-            verify (exactly = 1) { repo.getApiMovies(category, 1) }
+            verify(exactly = 1) { repo.getApiMovies(category, 1) }
         }
 
         @Test
@@ -119,12 +118,12 @@ internal class ApiVMTest {
 
             assertEquals(expectedMessage, actualMessage)
             assertEquals(Pair(movies, category), actualData)
-            verify (exactly = 2) { repo.getApiMovies(category, any()) }
-            assertEquals(listOf(1,2), pages)
+            verify(exactly = 2) { repo.getApiMovies(category, any()) }
+            assertEquals(listOf(1, 2), pages)
         }
 
         @Test
-        fun changeCategory_observeNewCategory(){
+        fun changeCategory_observeNewCategory() {
             val category1 = TOP_RATED
             val category2 = UPCOMING
             val movies1 = TestUtil.moviesList1_2
@@ -140,9 +139,7 @@ internal class ApiVMTest {
             val actualValue = LiveDataTestUtil.getValue(viewModel.moviesAndCategory)
 
             assertEquals(Resource.success(Pair(movies2, category2)), actualValue)
-            assertEquals(listOf(1,1), pages)
+            assertEquals(listOf(1, 1), pages)
         }
-
     }
-
 }

@@ -8,28 +8,7 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="destinationApi">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="215" />
-                            <option name="y" value="238" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="actionToDetails">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="destinationDb">
+                  <entry key="destinationLocalMovies">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
@@ -50,7 +29,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="destinationDetails">
+                  <entry key="destinationMovieDetails">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
@@ -58,6 +37,27 @@
                             <option name="x" value="500" />
                             <option name="y" value="54" />
                           </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="destinationNetworkMovies">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="256" />
+                            <option name="y" value="191" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="actionToDetails">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

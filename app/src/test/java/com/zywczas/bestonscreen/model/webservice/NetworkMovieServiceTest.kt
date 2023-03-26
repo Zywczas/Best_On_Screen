@@ -14,10 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.net.HttpURLConnection
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class ApiServiceTest {
+internal class NetworkMovieServiceTest {
 
     private val mockWebServer = MockWebServer()
-    private lateinit var apiService: ApiService
+    private lateinit var apiService: NetworkMovieService
 
     @BeforeAll
     private fun init() {
@@ -27,7 +27,7 @@ internal class ApiServiceTest {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
+            .create(NetworkMovieService::class.java)
     }
 
     @AfterAll
@@ -76,9 +76,5 @@ internal class ApiServiceTest {
                 apiService.getPopularMovies("anyString", 777).blockingGet()
             }
         }
-
     }
-
-
 }
-

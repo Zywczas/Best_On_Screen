@@ -1,13 +1,15 @@
-package com.zywczas.bestonscreen.model
+package com.zywczas.bestonscreen.model.repositories
 
+import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.db.MovieDao
+import com.zywczas.bestonscreen.model.toLocalMovie
 import com.zywczas.bestonscreen.utilities.Event
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-open class DetailsRepository @Inject constructor(private val movieDao: MovieDao) {
+open class MovieDetailsRepository @Inject constructor(private val movieDao: MovieDao) {
 
     private val addSuccess by lazy { "Movie added to your list." }
     private val addError by lazy { "Cannot add the movie. Close the app. Try again." }
@@ -29,7 +31,7 @@ open class DetailsRepository @Inject constructor(private val movieDao: MovieDao)
     }
 
     open fun addMovieToDB(movie: Movie): Flowable<Event<String>> {
-        val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toMovieFromDB(movie)))
+        val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toLocalMovie(movie)))
         return single
             .subscribeOn(Schedulers.io())
             .flatMapPublisher { rowId ->
@@ -43,7 +45,7 @@ open class DetailsRepository @Inject constructor(private val movieDao: MovieDao)
     }
 
     open fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> {
-        val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toMovieFromDB(movie)))
+        val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toLocalMovie(movie)))
         return single
             .subscribeOn(Schedulers.io())
             .flatMapPublisher { numberOfRowsRemoved ->

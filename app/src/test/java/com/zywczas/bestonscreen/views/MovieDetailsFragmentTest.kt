@@ -8,12 +8,12 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.squareup.picasso.Picasso
 import com.zywczas.bestonscreen.R
-import com.zywczas.bestonscreen.model.DetailsRepository
+import com.zywczas.bestonscreen.model.repositories.MovieDetailsRepository
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Event
 import com.zywczas.bestonscreen.utilities.NestedScrollViewExtension
 import com.zywczas.bestonscreen.utilities.NetworkCheck
-import com.zywczas.bestonscreen.viewmodels.DetailsVM
+import com.zywczas.bestonscreen.viewmodels.MovieDetailsViewModel
 import com.zywczas.bestonscreen.viewmodels.ViewModelsProviderFactory
 import io.mockk.every
 import io.mockk.mockk
@@ -30,28 +30,27 @@ import org.robolectric.shadows.ShadowToast
 
 @RunWith(AndroidJUnit4::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-class DetailsFragmentTest {
+class MovieDetailsFragmentTest {
 
     private val picasso = mockk<Picasso>(relaxed = true)
     private val networkCheck = mockk<NetworkCheck>()
-    private val repo = mockk<DetailsRepository>()
+    private val repo = mockk<MovieDetailsRepository>()
     private val viewModelFactory = mockk<ViewModelsProviderFactory>()
     private val fragmentsFactory = mockk<MoviesFragmentsFactory>()
-    private val directions = DBFragmentDirections.actionToDetails(TestUtil.movie1)
+    private val directions = LocalMoviesFragmentDirections.actionToDetails(TestUtil.movie1)
 
     @Before
-    fun init(){
+    fun init() {
         every { networkCheck.isConnected } returns true
-        every { viewModelFactory.create(DetailsVM::class.java) } returns DetailsVM(repo)
-        every { fragmentsFactory.instantiate(any(), any()) } returns DetailsFragment(viewModelFactory, picasso, networkCheck)
+        every { viewModelFactory.create(MovieDetailsViewModel::class.java) } returns MovieDetailsViewModel(repo)
+        every { fragmentsFactory.instantiate(any(), any()) } returns MovieDetailsFragment(viewModelFactory, picasso, networkCheck)
     }
 
     @Test
-    fun isFragmentInView(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+    fun isFragmentInView() {
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(true))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -72,11 +71,10 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun isDataFromDirectionsDisplayed(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+    fun isDataFromDirectionsDisplayed() {
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(true))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -85,17 +83,22 @@ class DetailsFragmentTest {
         onView(withId(R.id.rateTextViewDetails)).check(matches(withText("Rate: 5.5")))
         onView(withId(R.id.releaseDateTextViewDetails)).check(matches(withText("Release date: 2020-08-25")))
         onView(withId(R.id.genresTextViewDetails)).check(matches(withText("Genres: Action, Thriller")))
-        onView(withId(R.id.overviewTextViewDetails)).check(matches(withText("The work of " +
-                "billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to " +
-                "protect it, and a terrorist group kidnaps his daughter just to get it.")))
+        onView(withId(R.id.overviewTextViewDetails)).check(
+            matches(
+                withText(
+                    "The work of " +
+                            "billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to " +
+                            "protect it, and a terrorist group kidnaps his daughter just to get it."
+                )
+            )
+        )
     }
 
     @Test
-    fun movieInDb_isAddToMyListBtnStateChecked(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+    fun movieInDb_isAddToMyListBtnStateChecked() {
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(true))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -104,11 +107,10 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun movieNotInDb_isAddToMyListBtnStateUnchecked(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
+    fun movieNotInDb_isAddToMyListBtnStateUnchecked() {
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(false))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -117,14 +119,13 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun addingMovieToDatabase_isAddToMyListBtnCheckedAndToastShown(){
-        every { repo.checkIfMovieIsInDB(any())} returns
+    fun addingMovieToDatabase_isAddToMyListBtnCheckedAndToastShown() {
+        every { repo.checkIfMovieIsInDB(any()) } returns
                 Flowable.just(Event(false)) andThen
                 Flowable.just(Event(true))
-        every { repo.addMovieToDB(any())} returns Flowable.just(Event("movie added to database"))
+        every { repo.addMovieToDB(any()) } returns Flowable.just(Event("movie added to database"))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -140,14 +141,13 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun deletingMovieFromDatabase_isAddToMyListBtnUncheckedAndToastShown(){
-        every { repo.checkIfMovieIsInDB(any())} returns
+    fun deletingMovieFromDatabase_isAddToMyListBtnUncheckedAndToastShown() {
+        every { repo.checkIfMovieIsInDB(any()) } returns
                 Flowable.just(Event(true)) andThen
                 Flowable.just(Event(false))
         every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -164,9 +164,9 @@ class DetailsFragmentTest {
 
     @Test
     fun activityDestroyed_isInstanceStateSavedAndRestored() {
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(true))
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(true))
 
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        val scenario = launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -183,21 +183,25 @@ class DetailsFragmentTest {
             .check(matches(isDisplayed()))
         onView(withText("Genres: Action, Thriller")).perform(NestedScrollViewExtension())
             .check(matches(isDisplayed()))
-        onView(withText("The work of billionaire tech CEO Donovan Chalmers " +
-                "is so valuable that he hires mercenaries to protect it, and a terrorist group " +
-                "kidnaps his daughter just to get it.")).perform(NestedScrollViewExtension())
+        onView(
+            withText(
+                "The work of billionaire tech CEO Donovan Chalmers " +
+                        "is so valuable that he hires mercenaries to protect it, and a terrorist group " +
+                        "kidnaps his daughter just to get it."
+            )
+        ).perform(NestedScrollViewExtension())
             .check(matches(isDisplayed()))
         verify(exactly = 2) { repo.checkIfMovieIsInDB(any()) }
     }
 
     @Test
-    fun deleteMovie_activityDestroyed_isToastNotShownAgainOnFragmentRecreated(){
-        every { repo.checkIfMovieIsInDB(any())} returns
+    fun deleteMovie_activityDestroyed_isToastNotShownAgainOnFragmentRecreated() {
+        every { repo.checkIfMovieIsInDB(any()) } returns
                 Flowable.just(Event(true)) andThen
                 Flowable.just(Event(false))
         every { repo.deleteMovieFromDB(any()) } returns Flowable.just(Event("movie deleted"))
 
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        val scenario = launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
@@ -208,17 +212,15 @@ class DetailsFragmentTest {
     }
 
     @Test
-    fun noInternet_isToastShown(){
-        every { repo.checkIfMovieIsInDB(any())} returns Flowable.just(Event(false))
+    fun noInternet_isToastShown() {
+        every { repo.checkIfMovieIsInDB(any()) } returns Flowable.just(Event(false))
         every { networkCheck.isConnected } returns false
 
-        @Suppress("UNUSED_VARIABLE")
-        val scenario = launchFragmentInContainer<DetailsFragment>(
+        launchFragmentInContainer<MovieDetailsFragment>(
             factory = fragmentsFactory,
             fragmentArgs = directions.arguments
         )
 
         assertEquals("Problem with internet. Check your connection and try again.", ShadowToast.getTextOfLatestToast())
     }
-
 }

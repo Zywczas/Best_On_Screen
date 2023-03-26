@@ -22,7 +22,6 @@
             android:theme="@style/ToolbarTheme"
             app:buttonGravity="center_vertical"
             app:layout_scrollFlags="scroll|enterAlways" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -53,10 +52,6 @@
             app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
             app:itemTextColor="@android:color/black"
             app:menu="@menu/menu_navigation">
-
         </com.google.android.material.navigation.NavigationView>
-
     </androidx.drawerlayout.widget.DrawerLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

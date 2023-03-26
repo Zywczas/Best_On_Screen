@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.DBFragment">
+    tools:context=".views.LocalMoviesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDB"
@@ -37,5 +37,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible"
         tools:textColor="@android:color/holo_red_light"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
