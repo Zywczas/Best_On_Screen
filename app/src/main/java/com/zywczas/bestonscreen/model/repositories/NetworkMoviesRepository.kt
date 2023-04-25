@@ -3,14 +3,14 @@ package com.zywczas.bestonscreen.model.repositories
 import com.zywczas.bestonscreen.model.Movie
 import com.zywczas.bestonscreen.model.MovieCategory
 import com.zywczas.bestonscreen.model.toMovie
-import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
+import com.zywczas.bestonscreen.model.webservice.MovieRetrofitApi
 import com.zywczas.bestonscreen.utilities.API_KEY
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class NetworkMoviesRepository @Inject constructor(private val networkMovieService: NetworkMovieService) {
+class NetworkMoviesRepository @Inject constructor(private val movieRetrofitApi: MovieRetrofitApi) {
 
     private val apiKey = API_KEY
     private val invalidApiKeyStatus by lazy { "HTTP 401" }
@@ -33,9 +33,9 @@ class NetworkMoviesRepository @Inject constructor(private val networkMovieServic
         .toFlowable()
 
     private fun getApiSingle(category: MovieCategory, page: Int) = when (category) {
-        MovieCategory.POPULAR -> networkMovieService.getPopularMovies(apiKey, page)
-        MovieCategory.TOP_RATED -> networkMovieService.getTopRatedMovies(apiKey, page)
-        MovieCategory.UPCOMING -> networkMovieService.getUpcomingMovies(apiKey, page)
+        MovieCategory.POPULAR -> movieRetrofitApi.getPopularMovies(apiKey, page)
+        MovieCategory.TOP_RATED -> movieRetrofitApi.getTopRatedMovies(apiKey, page)
+        MovieCategory.UPCOMING -> movieRetrofitApi.getUpcomingMovies(apiKey, page)
     }
 
     private fun getError(e: Throwable): Resource<List<Movie>> = when (e.message.toString().trim()) {
