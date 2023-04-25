@@ -12,44 +12,21 @@ internal class NetworkMovieTest {
         @Test
         fun returnSuccess() {
             val expected = "Genres: Action, Fantasy, Family, Romance, Western"
-            val movie = NetworkMovie(
-                null, null, listOf(28, 14, 10751, 10749, 37),
-                null, null, null, null
-            )
+            val movie = NetworkMovie(null, null, listOf(28, 14, 10751, 10749, 37), null, null, null, null)
 
-            movie.convertGenreIdsToDescription()
-            val actual = movie.genresDescription
+            val actual = movie.getGenresDescription()
 
             assertEquals(expected, actual)
         }
 
         @Test
         fun wrongID_returnMissingInfo() {
-            val expected = "Genres: missing info, Fantasy, missing info"
+            val expected = "Genres: unknown, Fantasy, unknown"
             val wrongId1 = 123456
             val wrongId2 = 0
-            val movie = NetworkMovie(
-                null, null, listOf(wrongId1, 14, wrongId2),
-                null, null, null, null
-            )
+            val movie = NetworkMovie(null, null, listOf(wrongId1, 14, wrongId2), null, null, null, null)
 
-            movie.convertGenreIdsToDescription()
-            val actual = movie.genresDescription
-
-            assertEquals(expected, actual)
-        }
-
-        @Test
-        fun otherThan1To5GenresInList_returnMissingInfo() {
-            val expected = "Genres: missing information"
-            val movie = NetworkMovie(
-                null, null,
-                listOf(12, 16, 80, 28, 14, 10751, 10749, 37), null, null,
-                null, null
-            )
-
-            movie.convertGenreIdsToDescription()
-            val actual = movie.genresDescription
+            val actual = movie.getGenresDescription()
 
             assertEquals(expected, actual)
         }
@@ -57,13 +34,29 @@ internal class NetworkMovieTest {
         @Test
         fun nullIds_returnNoInformation() {
             val expected = "Genres: no information"
-            val movie = NetworkMovie(
-                null, null, null,
-                null, null, null, null
-            )
+            val movie = NetworkMovie(null, null, null, null, null, null, null)
 
-            movie.convertGenreIdsToDescription()
-            val actual = movie.genresDescription
+            val actual = movie.getGenresDescription()
+
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        fun emptyIdsList_returnNoInformation() {
+            val expected = "Genres: no information"
+            val movie = NetworkMovie(null, null, emptyList(), null, null, null, null)
+
+            val actual = movie.getGenresDescription()
+
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        fun moreThan1GenreInList_returnSuccess() {
+            val expected = "Genres: Adventure, Animation"
+            val movie = NetworkMovie(null, null, listOf(12, 16), null, null, null, null)
+
+            val actual = movie.getGenresDescription()
 
             assertEquals(expected, actual)
         }
