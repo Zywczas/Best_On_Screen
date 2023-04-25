@@ -2,7 +2,7 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.repositories.NetworkMoviesRepository
 import com.zywczas.bestonscreen.model.webservice.MovieResponse
-import com.zywczas.bestonscreen.model.webservice.NetworkMovieService
+import com.zywczas.bestonscreen.model.webservice.MovieRetrofitApi
 import com.zywczas.bestonscreen.util.TestUtil
 import com.zywczas.bestonscreen.utilities.Resource
 import io.reactivex.rxjava3.core.Single
@@ -16,7 +16,7 @@ import org.mockito.Mockito.*
 
 internal class NetworkMoviesRepositoryTest {
 
-    private val apiService = mock(NetworkMovieService::class.java)
+    private val apiService = mock(MovieRetrofitApi::class.java)
     private val tested = NetworkMoviesRepository(apiService)
 
     @Nested

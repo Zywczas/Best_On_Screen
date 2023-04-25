@@ -8,7 +8,7 @@ import retrofit2.http.Query
 /**
  * Interface for contacting with https://www.themoviedb.org/
  */
-interface NetworkMovieService {
+interface MovieRetrofitApi {
 
     @Throws(HttpException::class)
     @GET("movie/popular")
@@ -30,5 +30,4 @@ interface NetworkMovieService {
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): Single<MovieResponse>
-
 }

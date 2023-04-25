@@ -11,7 +11,7 @@ internal class MovieMapperKtTest {
         val expectedMovie = TestUtil.movie1
         val movieFromApi = TestUtil.movieFromApi1
 
-        val actualMovie = toMovie(movieFromApi)
+        val actualMovie = movieFromApi.toMovie()
 
         assertEquals(expectedMovie, actualMovie)
     }
@@ -21,7 +21,7 @@ internal class MovieMapperKtTest {
         val expectedMovie = TestUtil.movie1
         val movieFromDb = TestUtil.movieFromDB1
 
-        val actualMovie = toMovie(movieFromDb)
+        val actualMovie = movieFromDb.toMovie()
 
         assertEquals(expectedMovie, actualMovie)
     }
@@ -31,7 +31,7 @@ internal class MovieMapperKtTest {
         val expectedMovieFromDB = TestUtil.movieFromDB1
         val movie = TestUtil.movie1
 
-        val actualMovieFromDB = toLocalMovie(movie)
+        val actualMovieFromDB = movie.toLocalMovie()
 
         assertEquals(expectedMovieFromDB, actualMovieFromDB)
     }

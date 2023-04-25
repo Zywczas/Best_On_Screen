@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
-    BestOnScreenModule::class,
+    AppProvidesModule::class,
     AndroidInjectionModule::class,
     FragmentFactoryModule::class,
     ViewModelFactoryModule::class,
@@ -22,5 +22,4 @@ interface BestOnScreenComponent : AndroidInjector<BestOnScreenApp> {
     interface Factory {
         fun create(@BindsInstance app: Application) : BestOnScreenComponent
     }
-
 }

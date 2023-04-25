@@ -33,48 +33,36 @@ data class NetworkMovie(
     @Expose
     val releaseDate: String?
 ) {
-    lateinit var genresDescription : String
 
-    fun convertGenreIdsToDescription() {
-        genresDescription = if (genres != null) {
-            when (genres.size) {
-                1 -> "Genre: ${toStr(genres[0])}"
-                2 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}"
-                3 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}"
-                4 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}, " +
-                        toStr(genres[3])
-                5 -> "Genres: ${toStr(genres[0])}, ${toStr(genres[1])}, ${toStr(genres[2])}, " +
-                        "${toStr(genres[3])}, ${toStr(genres[4])}"
-                else -> "Genres: missing information"
-            }
-        } else {
+    fun getGenresDescription(): String =
+        if (genres.isNullOrEmpty()) {
             "Genres: no information"
+        } else if (genres.size == 1) {
+            "Genre: ${genres[0].toGenre()}"
+        } else {
+            "Genres: " + genres.joinToString(separator = ", ") { it.toGenre() }
         }
-    }
 
-    private fun toStr(id: Int): String {
-        return when (id) {
-            28 -> "Action"
-            12 -> "Adventure"
-            16 -> "Animation"
-            35 -> "Comedy"
-            80 -> "Crime"
-            99 -> "Documentary"
-            18 -> "Drama"
-            10751 -> "Family"
-            14 -> "Fantasy"
-            36 -> "History"
-            27 -> "Horror"
-            10402 -> "Music"
-            9648 -> "Mystery"
-            10749 -> "Romance"
-            878 -> "Science Fiction"
-            10770 -> "TV Movie"
-            53 -> "Thriller"
-            10752 -> "War"
-            37 -> "Western"
-            else -> "missing info"
-        }
+    private fun Int.toGenre(): String = when (this) {
+        28 -> "Action"
+        12 -> "Adventure"
+        16 -> "Animation"
+        35 -> "Comedy"
+        80 -> "Crime"
+        99 -> "Documentary"
+        18 -> "Drama"
+        10751 -> "Family"
+        14 -> "Fantasy"
+        36 -> "History"
+        27 -> "Horror"
+        10402 -> "Music"
+        9648 -> "Mystery"
+        10749 -> "Romance"
+        878 -> "Science Fiction"
+        10770 -> "TV Movie"
+        53 -> "Thriller"
+        10752 -> "War"
+        37 -> "Western"
+        else -> "unknown"
     }
-
 }
