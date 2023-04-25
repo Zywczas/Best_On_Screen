@@ -34,15 +34,13 @@ data class NetworkMovie(
     val releaseDate: String?
 ) {
 
-    private val genresSeparator = ", "
-
     fun getGenresDescription(): String =
         if (genres.isNullOrEmpty()) {
             "Genres: no information"
         } else if (genres.size == 1) {
             "Genre: ${genres[0].toGenre()}"
         } else {
-            "Genres: " + genres.joinToString(separator = genresSeparator) { it.toGenre() }
+            "Genres: " + genres.joinToString(separator = ", ") { it.toGenre() }
         }
 
     private fun Int.toGenre(): String = when (this) {

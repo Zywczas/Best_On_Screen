@@ -16,45 +16,34 @@ class MovieDetailsRepository @Inject constructor(private val movieDao: MovieDao)
     private val deleteSuccess by lazy { "Movie removed from your list." }
     private val deleteError by lazy { "Cannot remove the movie. Close the app. Try again." }
 
-    fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Boolean>> {
-        val isMovieInDbFlowable = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
-        return isMovieInDbFlowable
-            .subscribeOn(Schedulers.io())
-            .map { idCount -> Event(toBoolean(idCount)) }
+    fun checkIfMovieIsInDB(movieId: Int): Flowable<Event<Boolean>> = RxJavaBridge.toV3Flowable(movieDao.getIdCount(movieId))
+        .subscribeOn(Schedulers.io())
+        .map { idCount -> Event(toBoolean(idCount)) }
+
+    private fun toBoolean(idCount: Int): Boolean = when (idCount) {
+        0 -> false
+        else -> true
     }
 
-    private fun toBoolean(idCount: Int): Boolean {
-        return when (idCount) {
-            0 -> false
-            else -> true
+    fun addMovieToDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.insertMovie(toLocalMovie(movie)))
+        .subscribeOn(Schedulers.io())
+        .flatMapPublisher { rowId ->
+            if (rowId > 0) {
+                Flowable.just(Event(addSuccess))
+            } else {
+                Flowable.just(Event(addError))
+            }
         }
-    }
+        .onErrorReturn { Event(addError) }
 
-    fun addMovieToDB(movie: Movie): Flowable<Event<String>> {
-        val single = RxJavaBridge.toV3Single(movieDao.insertMovie(toLocalMovie(movie)))
-        return single
-            .subscribeOn(Schedulers.io())
-            .flatMapPublisher { rowId ->
-                if (rowId > 0) {
-                    Flowable.just(Event(addSuccess))
-                } else {
-                    Flowable.just(Event(addError))
-                }
+    fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.deleteMovie(toLocalMovie(movie)))
+        .subscribeOn(Schedulers.io())
+        .flatMapPublisher { numberOfRowsRemoved ->
+            if (numberOfRowsRemoved > 0) {
+                Flowable.just(Event(deleteSuccess))
+            } else {
+                Flowable.just(Event(deleteError))
             }
-            .onErrorReturn { Event(addError) }
-    }
-
-    fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> {
-        val single = RxJavaBridge.toV3Single(movieDao.deleteMovie(toLocalMovie(movie)))
-        return single
-            .subscribeOn(Schedulers.io())
-            .flatMapPublisher { numberOfRowsRemoved ->
-                if (numberOfRowsRemoved > 0) {
-                    Flowable.just(Event(deleteSuccess))
-                } else {
-                    Flowable.just(Event(deleteError))
-                }
-            }
-            .onErrorReturn { Event(deleteError) }
-    }
+        }
+        .onErrorReturn { Event(deleteError) }
 }

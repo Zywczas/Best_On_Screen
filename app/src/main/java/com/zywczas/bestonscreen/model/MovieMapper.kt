@@ -2,7 +2,7 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.LocalMovie
 import com.zywczas.bestonscreen.model.webservice.NetworkMovie
-
+//todo zamienic na extentions fun
 fun toMovie(movie: NetworkMovie): Movie = Movie(
     id = movie.id ?: 0,
     posterPath = movie.posterPath ?: "",

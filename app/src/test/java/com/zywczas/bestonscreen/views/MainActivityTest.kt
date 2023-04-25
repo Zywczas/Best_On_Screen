@@ -6,13 +6,13 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.annotation.LooperMode
 
-@RunWith(AndroidJUnit4::class)
-@LooperMode(LooperMode.Mode.PAUSED)
+//@RunWith(AndroidJUnit4::class)
+//@LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
 
-    @Rule
-    @JvmField
-    val activity = ActivityScenarioRule(MainActivity::class.java)
+//    @Rule
+//    @JvmField
+//    val activity = ActivityScenarioRule(MainActivity::class.java)
 
 //    @Test
 //    fun isActivityInView() {

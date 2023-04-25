@@ -8,7 +8,4 @@ class MovieResponse(
     @SerializedName("results")
     @Expose
     var movies: List<NetworkMovie>? = null
-
 )
-
-
