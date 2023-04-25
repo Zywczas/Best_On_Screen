@@ -22,7 +22,7 @@ class NetworkMoviesRepository @Inject constructor(private val movieRetrofitApi: 
     fun getApiMovies(category: MovieCategory, page: Int): Flowable<Resource<List<Movie>>> = getApiSingle(category, page)
         .subscribeOn(Schedulers.io())
         .map { apiResponse ->
-            val movies = apiResponse.movies?.map { toMovie(it) }
+            val movies = apiResponse.movies?.map { it.toMovie() }
             if (movies.isNullOrEmpty()) {
                 Resource.error(noMorePagesError, null)
             } else {

@@ -25,7 +25,7 @@ class MovieDetailsRepository @Inject constructor(private val movieDao: MovieDao)
         else -> true
     }
 
-    fun addMovieToDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.insertMovie(toLocalMovie(movie)))
+    fun addMovieToDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.insertMovie(movie.toLocalMovie()))
         .subscribeOn(Schedulers.io())
         .flatMapPublisher { rowId ->
             if (rowId > 0) {
@@ -36,7 +36,7 @@ class MovieDetailsRepository @Inject constructor(private val movieDao: MovieDao)
         }
         .onErrorReturn { Event(addError) }
 
-    fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.deleteMovie(toLocalMovie(movie)))
+    fun deleteMovieFromDB(movie: Movie): Flowable<Event<String>> = RxJavaBridge.toV3Single(movieDao.deleteMovie(movie.toLocalMovie()))
         .subscribeOn(Schedulers.io())
         .flatMapPublisher { numberOfRowsRemoved ->
             if (numberOfRowsRemoved > 0) {

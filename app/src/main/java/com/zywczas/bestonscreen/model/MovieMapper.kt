@@ -2,33 +2,33 @@ package com.zywczas.bestonscreen.model
 
 import com.zywczas.bestonscreen.model.db.LocalMovie
 import com.zywczas.bestonscreen.model.webservice.NetworkMovie
-//todo zamienic na extentions fun
-fun toMovie(movie: NetworkMovie): Movie = Movie(
-    id = movie.id ?: 0,
-    posterPath = movie.posterPath ?: "",
-    title = movie.title ?: "",
-    voteAverage = movie.voteAverage ?: 0.0,
-    overview = movie.overview ?: "",
-    releaseDate = movie.releaseDate ?: "",
-    genresDescription = movie.getGenresDescription()
+
+fun NetworkMovie.toMovie(): Movie = Movie(
+    id = this.id ?: 0,
+    posterPath = this.posterPath ?: "",
+    title = this.title ?: "",
+    voteAverage = this.voteAverage ?: 0.0,
+    overview = this.overview ?: "",
+    releaseDate = this.releaseDate ?: "",
+    genresDescription = this.getGenresDescription()
 )
 
-fun toMovie(movie: LocalMovie) = Movie(
-    id = movie.id,
-    posterPath = movie.posterPath,
-    title = movie.title,
-    voteAverage = movie.voteAverage,
-    overview = movie.overview,
-    releaseDate = movie.releaseDate,
-    genresDescription = movie.genresDescription
+fun LocalMovie.toMovie(): Movie = Movie(
+    id = this.id,
+    posterPath = this.posterPath,
+    title = this.title,
+    voteAverage = this.voteAverage,
+    overview = this.overview,
+    releaseDate = this.releaseDate,
+    genresDescription = this.genresDescription
 )
 
-fun toLocalMovie(movie: Movie) = LocalMovie(
-    id = movie.id,
-    posterPath = movie.posterPath,
-    title = movie.title,
-    voteAverage = movie.voteAverage,
-    overview = movie.overview,
-    releaseDate = movie.releaseDate,
-    genresDescription = movie.genresDescription
+fun Movie.toLocalMovie(): LocalMovie = LocalMovie(
+    id = this.id,
+    posterPath = this.posterPath,
+    title = this.title,
+    voteAverage = this.voteAverage,
+    overview = this.overview,
+    releaseDate = this.releaseDate,
+    genresDescription = this.genresDescription
 )

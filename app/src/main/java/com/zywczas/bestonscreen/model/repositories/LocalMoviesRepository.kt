@@ -13,5 +13,5 @@ class LocalMoviesRepository @Inject constructor(private val movieDao: MovieDao) 
     fun getMoviesFromDB(): Flowable<List<Movie>> = RxJavaBridge.toV3Flowable(movieDao.getMovies())
         .subscribeOn(Schedulers.io())
         .onBackpressureBuffer()
-        .map { moviesFromDB -> moviesFromDB.map { toMovie(it) } }
+        .map { moviesFromDB -> moviesFromDB.map { it.toMovie() } }
 }
